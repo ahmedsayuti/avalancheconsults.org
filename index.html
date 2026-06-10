@@ -5,32 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   
   <title>Avalanche Consulting — CarbonScope360 | Industrial Decarbonization Platform</title>
-  <meta name="title" content="Avalanche Consulting — CarbonScope360">
   <meta name="description" content="Infrastructure for the industrial carbon economy. CarbonScope360 delivers compliance technology, financial modeling, and market access for U.S. and Nigerian manufacturers.">
   
-  <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.avalancheconsults.org/">
   <meta property="og:title" content="Avalanche Consulting — Infrastructure for the industrial carbon economy">
-  <meta property="og:description" content="CarbonScope360: AI-accelerated industrial carbon intelligence. Measure, manage, and monetize emissions across US and Nigerian markets.">
+  <meta property="og:description" content="CarbonScope360: AI-accelerated industrial carbon intelligence.">
   <meta property="og:image" content="https://www.avalancheconsults.org/assets/images/linkimage.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   
-  <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:url" content="https://www.avalancheconsults.org/">
   <meta property="twitter:title" content="Avalanche Consulting — CarbonScope360">
   <meta property="twitter:description" content="AI-powered platform for industrial carbon management. Pilot active Q1 2026.">
   <meta property="twitter:image" content="https://www.avalancheconsults.org/assets/images/linkimage.png">
   
-  <!-- Favicon -->
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
   <link rel="manifest" href="/site.webmanifest">
   
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   
@@ -49,7 +44,6 @@
       --text-light-muted: #6B7280;
       --border-light: #E5E7EB;
       --accent-blue: #2563EB;
-      --accent-blue-light: #3B82F6;
     }
 
     .section-dark {
@@ -63,6 +57,7 @@
       --card-border: rgba(255,255,255,0.06);
       --accent-blue: #38BDF8;
       --accent-blue-rgb: 56, 189, 248;
+      background: #0A0E14; /* explicit dark background */
     }
 
     .section-light {
@@ -76,6 +71,7 @@
       --card-border: #E5E7EB;
       --accent-blue: #2563EB;
       --accent-blue-rgb: 37, 99, 235;
+      background: #FFFFFF; /* explicit light background */
     }
 
     body {
@@ -84,7 +80,6 @@
       color: var(--text-light-primary);
       line-height: 1.5;
       overflow-x: hidden;
-      overflow-y: auto; /* ensure normal scroll */
     }
 
     h1, h2, h3 {
@@ -150,7 +145,6 @@
       height: 80px;
       width: auto;
       display: block;
-      transition: filter 0.3s ease;
     }
     .navbar-dark .logo img {
       filter: brightness(0) invert(1);
@@ -275,25 +269,7 @@
       .mobile-menu-container { padding: 1.5rem; }
     }
 
-    /* Responsive */
-    @media (max-width: 900px) {
-      .mobile-menu-btn { display: flex; }
-      .nav-links { display: none !important; }
-      .logo img { height: 60px; }
-      section { padding: 4rem 0; }
-      .container { padding: 0 1.5rem; }
-      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
-      .hero-dark { padding-top: 80px; }
-      .hero-stats { flex-wrap: wrap; gap: 1.5rem; }
-      .stat-number { font-size: 1.6rem; }
-    }
-    @media (max-width: 480px) {
-      .logo img { height: 50px; }
-      h1 { font-size: 2rem !important; }
-      .btn-primary, .btn-outline { padding: 0.6rem 1.2rem; font-size: 0.8rem; }
-    }
-
-    /* Buttons, cards, etc. */
+    /* Buttons & Cards */
     .btn-primary {
       background: var(--accent-blue);
       color: white;
@@ -331,12 +307,23 @@
       padding: 2rem;
       transition: all 0.4s ease;
       box-shadow: 0 20px 35px -12px rgba(0,0,0,0.05);
+      height: 100%;
     }
     .card-premium:hover {
       transform: translateY(-6px);
       border-color: var(--accent-blue);
     }
 
+    /* Grid System - FIXED for mobile: single column with spacing */
+    .grid-2, .grid-3, .grid-4 {
+      display: grid;
+      gap: 2rem;
+    }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+    /* Ensure proper text contrast in dark sections */
     .section-dark,
     .section-dark .card-premium,
     .section-dark p,
@@ -403,21 +390,41 @@
       border-radius: 1rem;
       margin-bottom: 1rem;
     }
-    .grid-2, .grid-3, .grid-4 { display: grid; gap: 2rem; }
-    .grid-2 { grid-template-columns: repeat(2, 1fr); }
-    .grid-3 { grid-template-columns: repeat(3, 1fr); }
-    .grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+    /* RESPONSIVE: single column for mobile, proper spacing */
+    @media (max-width: 900px) {
+      .grid-2, .grid-3, .grid-4 {
+        grid-template-columns: 1fr !important;
+        gap: 2rem;
+      }
+      .card-premium {
+        margin-bottom: 0;
+      }
+      .nav-links { display: none !important; }
+      .mobile-menu-btn { display: flex; }
+      .logo img { height: 60px; }
+      section { padding: 4rem 0; }
+      .container { padding: 0 1.5rem; }
+      .hero-dark { padding-top: 80px; min-height: auto; }
+      .hero-stats { flex-wrap: wrap; gap: 1.5rem; }
+      .stat-number { font-size: 1.6rem; }
+      .hero-stats > div { flex: 1; min-width: 120px; }
+    }
+
+    @media (max-width: 480px) {
+      .logo img { height: 50px; }
+      h1 { font-size: 2rem !important; }
+      .btn-primary, .btn-outline { padding: 0.6rem 1.2rem; font-size: 0.8rem; }
+      .eyebrow { font-size: 0.6rem; }
+      .card-premium { padding: 1.5rem; }
+    }
   </style>
 </head>
 <body>
 
 <nav class="navbar navbar-light" id="navbar">
   <div class="nav-container">
-    <a href="/" class="logo-link">
-      <div class="logo">
-        <img src="/assets/images/logo.png" alt="Avalanche Consulting Logo" onerror="this.style.display='none'">
-      </div>
-    </a>
+    <a href="/" class="logo-link"><div class="logo"><img src="/assets/images/logo.png" alt="Avalanche Consulting Logo"></div></a>
     <div class="nav-links">
       <a href="/">Home</a>
       <a href="/about/">About</a>
@@ -426,16 +433,12 @@
       <a href="#" class="btn-outline-nav">Investor access</a>
     </div>
     <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">
-      <span class="hamburger-line"></span>
-      <span class="hamburger-line"></span>
-      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span><span class="hamburger-line"></span><span class="hamburger-line"></span>
     </button>
   </div>
   <div class="mobile-menu-overlay" id="mobileMenuOverlay">
     <div class="mobile-menu-container">
-      <div class="mobile-menu-header">
-        <button class="mobile-menu-close" id="mobileMenuClose">&times;</button>
-      </div>
+      <div class="mobile-menu-header"><button class="mobile-menu-close" id="mobileMenuClose">&times;</button></div>
       <ul class="mobile-nav-links">
         <li><a href="index.html">Home</a></li>
         <li><a href="about.html">About</a></li>
@@ -448,86 +451,88 @@
 </nav>
 
 <main>
+  <!-- Hero section -->
   <div class="hero-dark section-dark">
     <div class="hero-canvas"><canvas id="heroParticles"></canvas></div>
-    <div class="container" style="position: relative; z-index: 2;">
+    <div class="container">
       <div class="hero-content">
         <div class="eyebrow" data-animate>PILOT ACTIVE · Q1 2026 · LARGO, MD / ABUJA, NG</div>
         <h1 style="font-size: clamp(2rem, 6vw, 4.5rem); line-height: 1.1; margin-bottom: 1.5rem;" data-animate>
           Infrastructure for the <span class="text-accent">industrial carbon economy</span>
         </h1>
         <p style="font-size: 1.1rem; max-width: 560px; margin-bottom: 2rem;" data-animate>
-          Avalanche Consulting builds the compliance technology, financial modeling, and carbon market infrastructure that empowers U.S. and Nigerian manufacturers to measure, manage, and monetize emissions — starting with CarbonScope360.
+          Avalanche Consulting builds the compliance technology, financial modeling, and carbon market infrastructure that empowers U.S. and Nigerian manufacturers.
         </p>
         <div style="display: flex; gap: 1rem; flex-wrap: wrap;" data-animate>
           <a href="#" class="btn-primary">Explore CarbonScope360 →</a>
           <a href="#" class="btn-outline">Investor relations</a>
         </div>
         <div class="hero-stats" data-animate>
-          <div><div class="stat-number">$4.2<span class="text-accent">B</span></div><div class="text-muted" style="font-size:0.75rem;">SAM by 2030</div></div>
-          <div><div class="stat-number">8,400<span class="text-accent">+</span></div><div class="text-muted" style="font-size:0.75rem;">Target facilities (US + NG)</div></div>
-          <div><div class="stat-number">±2.3<span class="text-accent">%</span></div><div class="text-muted" style="font-size:0.75rem;">Pilot accuracy</div></div>
-          <div><div class="stat-number">142</div><div class="text-muted" style="font-size:0.75rem;">Global jobs by 2036</div></div>
+          <div><div class="stat-number">$4.2<span class="text-accent">B</span></div><div class="text-muted">SAM by 2030</div></div>
+          <div><div class="stat-number">8,400<span class="text-accent">+</span></div><div class="text-muted">Target facilities</div></div>
+          <div><div class="stat-number">±2.3<span class="text-accent">%</span></div><div class="text-muted">Pilot accuracy</div></div>
+          <div><div class="stat-number">142</div><div class="text-muted">Global jobs by 2036</div></div>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- Marquee -->
   <div class="section-light" style="padding: 0;">
-    <div class="marquee-strip">
-      <div class="marquee-content">
-        <span class="marquee-item">EPA 40 CFR Part 98 aligned</span><span class="marquee-item">·</span>
-        <span class="marquee-item">SEC climate disclosure ready</span><span class="marquee-item">·</span>
-        <span class="marquee-item">IRA grant eligible</span><span class="marquee-item">·</span>
-        <span class="marquee-item">GHG Protocol certified</span><span class="marquee-item">·</span>
-        <span class="marquee-item">Scope 1,2,3 coverage</span><span class="marquee-item">·</span>
-        <span class="marquee-item">AWS GovCloud</span><span class="marquee-item">·</span>
-        <span class="marquee-item">IPCC AR6 GWP values</span><span class="marquee-item">·</span>
-        <span class="marquee-item">NAFDAC compliance (Nigeria)</span><span class="marquee-item">·</span>
-        <span class="marquee-item">Maryland HQ / Abuja office</span>
-      </div>
-    </div>
+    <div class="marquee-strip"><div class="marquee-content">
+      <span class="marquee-item">EPA 40 CFR Part 98 aligned</span><span class="marquee-item">·</span>
+      <span class="marquee-item">SEC climate disclosure ready</span><span class="marquee-item">·</span>
+      <span class="marquee-item">IRA grant eligible</span><span class="marquee-item">·</span>
+      <span class="marquee-item">GHG Protocol certified</span><span class="marquee-item">·</span>
+      <span class="marquee-item">Scope 1,2,3 coverage</span><span class="marquee-item">·</span>
+      <span class="marquee-item">AWS GovCloud</span><span class="marquee-item">·</span>
+      <span class="marquee-item">IPCC AR6 GWP values</span><span class="marquee-item">·</span>
+      <span class="marquee-item">NAFDAC compliance (Nigeria)</span><span class="marquee-item">·</span>
+      <span class="marquee-item">Maryland HQ / Abuja office</span>
+    </div></div>
   </div>
 
-  <section class="section-light" style="background: var(--bg-primary);">
+  <!-- Section 1: Rigorous Data - Light -->
+  <section class="section-light">
     <div class="container">
       <div class="eyebrow" data-animate>ENGINE FOR INDUSTRIAL DECARBONIZATION</div>
-      <h2 style="font-size: clamp(1.6rem, 4vw, 3rem); max-width: 700px;" data-animate>Rigorous data. <span class="text-accent">Real outcomes.</span></h2>
+      <h2 data-animate>Rigorous data. <span class="text-accent">Real outcomes.</span></h2>
       <p style="color: var(--text-secondary); max-width: 600px; margin-bottom: 3rem;" data-animate>Use our industry-leading methodologies to uncover operational efficiencies hidden in your carbon data.</p>
       <div class="grid-2">
         <div class="card-premium" data-animate>
-          <img class="showcase-img" src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80&auto=format" alt="Data analytics dashboard">
+          <img class="showcase-img" src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80&auto=format" alt="Data analytics">
           <h3>EmissionsCore™</h3>
-          <p>Foundational GHG engine using EPA 40 CFR Part 98 + IPCC AR6. Pilot accuracy within ±2.3% of third-party audit benchmarks.</p>
+          <p>Foundational GHG engine using EPA 40 CFR Part 98 + IPCC AR6. Pilot accuracy within ±2.3%.</p>
           <div style="margin-top: 1.5rem;"><span class="text-accent" style="font-weight:600;">● LIVE Q1 2026</span></div>
         </div>
         <div class="card-premium" data-animate>
           <img class="showcase-img" src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80&auto=format" alt="Financial modeling">
           <h3>CreditSimulator™</h3>
-          <p>Monte Carlo engine for carbon credit surplus/deficit under Base, Tightened, and Crisis regulatory scenarios.</p>
-          <div style="margin-top: 1.5rem;"><span style="color: var(--accent-blue); font-weight:600;">● IN DEVELOPMENT · Q3 2026</span></div>
+          <p>Monte Carlo engine for carbon credit surplus/deficit under regulatory scenarios.</p>
+          <div style="margin-top: 1.5rem;"><span class="text-accent" style="font-weight:600;">● IN DEVELOPMENT · Q3 2026</span></div>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="section-dark" style="background: #11161E;">
+  <!-- Section 2: CarbonScope360 - Dark -->
+  <section class="section-dark">
     <div class="container">
       <div class="eyebrow" data-animate>FLAGSHIP PLATFORM</div>
-      <h2 style="font-size: clamp(1.6rem, 4vw, 2.6rem); margin-bottom: 2rem;" data-animate>CarbonScope360™<br><span class="text-accent">AI-accelerated industrial carbon intelligence</span></h2>
+      <h2 data-animate>CarbonScope360™<br><span class="text-accent">AI-accelerated industrial carbon intelligence</span></h2>
       <div class="grid-3">
         <div class="card-premium" data-animate>
-          <img class="showcase-img" src="https://images.unsplash.com/photo-1727434032773-af3cd98375ba?q=80&w=1332&auto=format&fit=crop" alt="AI agents">
+          <img class="showcase-img" src="https://images.unsplash.com/photo-1727434032773-af3cd98375ba?w=600&q=80&auto=format" alt="AI agents">
           <h3>Agents to accelerate work</h3>
           <p>Data cleaning, formatting, and automated emissions factor mapping. Get actionable data 80% faster.</p>
         </div>
         <div class="card-premium" data-animate>
-          <img class="showcase-img" src="https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?q=80&w=1170&auto=format&fit=crop" alt="RegWatch">
+          <img class="showcase-img" src="https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=600&q=80&auto=format" alt="RegWatch">
           <h3>RegWatch™ real-time</h3>
-          <p>Monitors EPA permit thresholds, SEC climate disclosure timelines, and emerging Nigerian carbon pricing frameworks.</p>
+          <p>Monitors EPA, SEC, and Nigerian NESREA frameworks. Auto-generates disclosure-ready reports.</p>
         </div>
         <div class="card-premium" data-animate>
-          <img class="showcase-img" src="https://images.unsplash.com/photo-1768055104895-e6185762f2a9?q=80&w=1332&auto=format&fit=crop" alt="TradeDesk">
+          <img class="showcase-img" src="https://images.unsplash.com/photo-1768055104895-e6185762f2a9?w=600&q=80&auto=format" alt="TradeDesk">
           <h3>TradeDesk™</h3>
           <p>Direct API to Xpansiv CBL and CME carbon futures. Immutable audit trail.</p>
           <div style="margin-top: 1rem;"><span class="text-accent">ROADMAP Q2 2027</span></div>
@@ -539,26 +544,28 @@
     </div>
   </section>
 
-  <section class="section-light" style="background: var(--bg-primary);">
+  <!-- Section 3: Market Opportunity - Light -->
+  <section class="section-light">
     <div class="container">
       <div class="eyebrow" data-animate>MARKET OPPORTUNITY</div>
-      <h2 style="font-size: clamp(1.6rem, 4vw, 2.6rem); max-width: 750px;" data-animate>A $4.2B underserved market for industrial carbon management (US + Nigeria)</h2>
+      <h2 data-animate>A $4.2B underserved market for industrial carbon management (US + Nigeria)</h2>
       <div class="grid-3" style="margin-top: 2rem;">
         <div class="card-premium" data-animate><div class="stat-number" style="font-size: 2rem;">$18.5<span class="text-accent">B</span></div><div style="font-weight: 500;">Total addressable market 2030</div><p class="text-muted">Global carbon accounting, trading, and ESG disclosure automation.</p></div>
         <div class="card-premium" style="border-color: var(--accent-blue);" data-animate><div class="stat-number" style="font-size: 2rem;">$4.2<span class="text-accent">B</span></div><div style="font-weight: 500;">Serviceable addressable market 2030</div><p class="text-muted">U.S. + Nigerian industrial manufacturers subject to mandatory GHG reporting.</p></div>
         <div class="card-premium" data-animate><div class="stat-number" style="font-size: 2rem;">130<span class="text-accent">+</span></div><div style="font-weight: 500;">Target clients by 2036</div><p class="text-muted">Average contract value $280K–$500K + transaction fees.</p></div>
       </div>
       <div class="grid-2" style="margin-top: 2.5rem;">
-        <div class="card-premium" data-animate><h3>Regulatory tailwinds (US & Nigeria)</h3><ul><li>→ EPA 40 CFR Part 98: ~8,000 reporting facilities</li><li>→ SEC Climate Disclosure Rules: 6,000+ registrants</li><li>→ Nigeria: NESREA GHG reporting guidelines, upcoming carbon tax</li><li>→ IRA Sections 45Q, 48C: direct financial incentives</li></ul></div>
+        <div class="card-premium" data-animate><h3>Regulatory tailwinds (US & Nigeria)</h3><ul><li>→ EPA 40 CFR Part 98: ~8,000 reporting facilities</li><li>→ SEC Climate Disclosure Rules: 6,000+ registrants</li><li>→ Nigeria: NESREA GHG guidelines, upcoming carbon tax</li><li>→ IRA Sections 45Q, 48C: direct incentives</li></ul></div>
         <div class="card-premium" data-animate><h3>Ideal customer profile</h3><ul><li>◉ GHG >25,000 MT CO₂e per year</li><li>◉ Revenue >$250M (US) or >₦5B (Nigeria)</li><li>◉ Chemicals, metals, cement, automotive, food</li><li>◉ Multi-national supply chains</li></ul></div>
       </div>
     </div>
   </section>
 
-  <section class="section-dark" style="background: #11161E;">
+  <!-- Section 4: Strategic Roadmap - Dark -->
+  <section class="section-dark">
     <div class="container">
       <div class="eyebrow" data-animate>STRATEGIC ROADMAP</div>
-      <h2 style="font-size: clamp(1.6rem, 4vw, 2.6rem); max-width: 700px;" data-animate>From pilot to market standard: 2026–2036</h2>
+      <h2 data-animate>From pilot to market standard: 2026–2036</h2>
       <div class="grid-4" style="margin-top: 2rem;">
         <div class="card-premium" data-animate><div style="font-weight: 800; font-size: 2rem;">I</div><div class="stat-number" style="font-size: 1.2rem;">2026–2027</div><p><strong>Prove It</strong><br>Anchor clients in US (3) + Nigeria (2). Seed funding closed.</p></div>
         <div class="card-premium" data-animate><div style="font-weight: 800; font-size: 2rem;">II</div><div class="stat-number" style="font-size: 1.2rem;">2028–2029</div><p><strong>Sell It</strong><br>25 clients, EBITDA-positive. Series B, TradeDesk™ launch.</p></div>
@@ -568,51 +575,54 @@
     </div>
   </section>
 
-  <section class="section-light" style="background: var(--bg-primary);">
+  <!-- Section 5: ESG Impact - Light -->
+  <section class="section-light">
     <div class="container">
       <div class="eyebrow" data-animate>ESG & ECONOMIC IMPACT</div>
-      <h2 style="font-size: clamp(1.6rem, 3vw, 2.3rem); max-width: 800px;" data-animate>Built for people, planet, and profit — accelerating the climate economy</h2>
+      <h2 data-animate>Built for people, planet, and profit — accelerating the climate economy</h2>
       <div class="grid-3" style="margin-top: 2rem;">
-        <div class="card-premium" data-animate><img class="showcase-img" src="https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=600&q=80&auto=format" alt="Environmental"><h3>Environmental</h3><p>Projected 50–100 million metric tons CO₂e cumulative reductions by 2036.</p></div>
-        <div class="card-premium" data-animate><img class="showcase-img" src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&q=80&auto=format" alt="Economic"><h3>Economic</h3><p>142 direct FTEs, $170M cumulative payroll, $65M+ tax contributions.</p></div>
-        <div class="card-premium" data-animate><img class="showcase-img" src="https://images.unsplash.com/photo-1531482615713-2afd69097998?w=600&q=80&auto=format" alt="Social"><h3>Social & Governance</h3><p>Minority-founded, dual HQ, HBCU & Nigerian university hiring pipeline.</p></div>
+        <div class="card-premium" data-animate><img class="showcase-img" src="https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=600&q=80&auto=format" alt="Environmental"><h3>Environmental</h3><p>Projected 50–100 million metric tons CO₂e reductions by 2036.</p></div>
+        <div class="card-premium" data-animate><img class="showcase-img" src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&q=80&auto=format" alt="Economic"><h3>Economic</h3><p>142 direct FTEs, $170M payroll, $65M+ tax contributions.</p></div>
+        <div class="card-premium" data-animate><img class="showcase-img" src="https://images.unsplash.com/photo-1531482615713-2afd69097998?w=600&q=80&auto=format" alt="Social"><h3>Social & Governance</h3><p>Minority-founded, dual HQ, HBCU & Nigerian university pipeline.</p></div>
       </div>
     </div>
   </section>
 
-  <section class="section-dark" style="background: #11161E;">
+  <!-- Section 6: Leadership - Dark -->
+  <section class="section-dark">
     <div class="container">
       <div class="eyebrow" data-animate>LEADERSHIP</div>
       <h2 data-animate>Founding team & mission-driven execution</h2>
       <div class="card-premium" style="margin-top: 2rem; display: flex; gap: 2rem; flex-wrap: wrap; align-items: center;" data-animate>
-        <div style="width: 100px; height: 100px; background: linear-gradient(135deg, #38BDF8, #0284C7); border-radius: 50%; background-size: cover; background-image: url('/assets/images/henrietta.jpg'); background-position: center;"></div>
-        <div style="flex:1;"><h3>Henrietta Happy Ighomrore</h3><div style="color: var(--accent-blue); margin-bottom: 1rem;">Founder & Chief Executive Officer</div><p>Principal architect of CarbonScope360, bringing strategic vision across regulatory infrastructure, carbon markets, and enterprise SaaS.</p></div>
+        <div style="width: 100px; height: 100px; background: linear-gradient(135deg, #38BDF8, #0284C7); border-radius: 50%; background-image: url('/assets/images/henrietta.jpg'); background-size: cover; background-position: center;"></div>
+        <div style="flex:1;"><h3>Henrietta Happy Ighomrore</h3><div style="color: var(--accent-blue); margin-bottom: 1rem;">Founder & CEO</div><p>Principal architect of CarbonScope360, leading dual-market expansion in US and Nigeria.</p></div>
       </div>
       <div style="margin-top: 2rem; background: #171E28; border-radius: 1rem; padding: 1.5rem;" data-animate>
-        <p>🔹 2026 seed-stage hiring: CTO, Lead Data Engineer, Regulatory Manager, Head of Sales. Nigerian country director to be appointed Q3 2026.</p>
+        <p>🔹 2026 seed-stage hiring: CTO, Lead Data Engineer, Regulatory Manager, Head of Sales. Nigerian country director Q3 2026.</p>
       </div>
     </div>
   </section>
 
+  <!-- CTA Investor - Light -->
   <section class="section-light" style="border-bottom: none;">
     <div class="container" style="text-align: center; max-width: 800px;">
       <div class="eyebrow" data-animate>INVESTOR RELATIONS</div>
-      <h2 style="margin-bottom: 1.5rem;" data-animate>Join the infrastructure for the global carbon transition</h2>
-      <p style="color: var(--text-secondary); margin-bottom: 2rem;" data-animate>Seeking $750K Seed + Grants in 2026. First mover in a $4.2B SAM. IRA grant-eligible and Nigerian climate finance ready. Pilot-stage product. EBITDA-positive by 2029.</p>
+      <h2 data-animate>Join the infrastructure for the global carbon transition</h2>
+      <p style="color: var(--text-secondary); margin-bottom: 2rem;" data-animate>Seeking $750K Seed + Grants in 2026. First mover in a $4.2B SAM. IRA grant-eligible. Pilot-stage product. EBITDA-positive by 2029.</p>
       <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;" data-animate>
         <a href="#" class="btn-primary">Request investor deck →</a>
         <a href="#" class="btn-outline">Explore CarbonScope360</a>
       </div>
       <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
         <div><span class="text-muted">Avalanche Consulting & Management Services, LLC (USA) / Avalanche Consulting Nigeria Ltd (RC: 1234567)</span></div>
-        <div><span class="text-muted">📍 10025 Campus Way South, Largo, MD 20774, USA & Plot 1148, Cadastral Zone B06, Abuja, Nigeria</span></div>
+        <div><span class="text-muted">📍 10025 Campus Way South, Largo, MD 20774, USA & Plot 1148, Abuja, Nigeria</span></div>
         <div><span class="text-muted">US Dept. ID W25761792 · Nigeria RC: 1234567</span></div>
       </div>
     </div>
   </section>
 </main>
 
-<footer class="section-dark" style="border-top: 1px solid rgba(255,255,255,0.08); padding: 2rem 0; background: #0A0E14;">
+<footer class="section-dark" style="border-top: 1px solid rgba(255,255,255,0.08); padding: 2rem 0;">
   <div class="container" style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
     <div style="font-size: 0.7rem; color: #9CA3AF;">© 2026 Avalanche Consulting — US & Nigeria. All rights reserved.</div>
     <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
@@ -624,7 +634,6 @@
 </footer>
 
 <script>
-  // GSAP ScrollTrigger animations
   gsap.registerPlugin(ScrollTrigger);
   document.querySelectorAll('[data-animate]').forEach(el => {
     gsap.from(el, {
@@ -633,20 +642,14 @@
     });
   });
 
-  // Hero canvas particles
+  // Hero particles
   const canvas = document.getElementById('heroParticles');
   if (canvas) {
     let ctx = canvas.getContext('2d');
-    let width = window.innerWidth, height = window.innerHeight;
-    let particles = [];
-    function resizeCanvas() {
-      width = window.innerWidth;
-      height = window.innerHeight;
-      canvas.width = width;
-      canvas.height = height;
-      initParticles();
-    }
-    function initParticles() {
+    let width, height, particles = [];
+    const resizeCanvas = () => {
+      width = window.innerWidth; height = window.innerHeight;
+      canvas.width = width; canvas.height = height;
       particles = [];
       let count = Math.min(120, Math.floor(width * height / 10000));
       for (let i = 0; i < count; i++) {
@@ -658,8 +661,8 @@
           alpha: Math.random() * 0.4 + 0.1,
         });
       }
-    }
-    function draw() {
+    };
+    const draw = () => {
       if (!ctx) return;
       ctx.clearRect(0, 0, width, height);
       for (let p of particles) {
@@ -667,32 +670,26 @@
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(56, 189, 248, ${p.alpha})`;
         ctx.fill();
-        p.x += p.speedX;
-        p.y += p.speedY;
-        if (p.x < 0) p.x = width;
-        if (p.x > width) p.x = 0;
-        if (p.y < 0) p.y = height;
-        if (p.y > height) p.y = 0;
+        p.x += p.speedX; p.y += p.speedY;
+        if (p.x < 0) p.x = width; if (p.x > width) p.x = 0;
+        if (p.y < 0) p.y = height; if (p.y > height) p.y = 0;
       }
       requestAnimationFrame(draw);
-    }
+    };
     window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
-    draw();
+    resizeCanvas(); draw();
   }
 
-  // Navbar scroll style
+  // Navbar scroll
   const navbar = document.getElementById('navbar');
   const heroSection = document.querySelector('.hero-dark');
   window.addEventListener('scroll', () => {
     if (!heroSection) return;
     const heroBottom = heroSection.offsetTop + heroSection.offsetHeight;
     if (window.scrollY + 100 < heroBottom) {
-      navbar.classList.remove('navbar-light');
-      navbar.classList.add('navbar-dark');
+      navbar.classList.remove('navbar-light'); navbar.classList.add('navbar-dark');
     } else {
-      navbar.classList.remove('navbar-dark');
-      navbar.classList.add('navbar-light');
+      navbar.classList.remove('navbar-dark'); navbar.classList.add('navbar-light');
     }
   });
   window.dispatchEvent(new Event('scroll'));
@@ -702,20 +699,12 @@
   const mobileOverlay = document.getElementById('mobileMenuOverlay');
   const mobileClose = document.getElementById('mobileMenuClose');
   if (mobileBtn && mobileOverlay && mobileClose) {
-    const openMenu = () => {
-      mobileOverlay.classList.add('open');
-      document.body.style.overflow = 'hidden';
-    };
-    const closeMenu = () => {
-      mobileOverlay.classList.remove('open');
-      document.body.style.overflow = '';
-    };
-    mobileBtn.addEventListener('click', openMenu);
-    mobileClose.addEventListener('click', closeMenu);
-    mobileOverlay.addEventListener('click', (e) => {
-      if (e.target === mobileOverlay) closeMenu();
-    });
-    document.querySelectorAll('.mobile-nav-links a').forEach(link => link.addEventListener('click', closeMenu));
+    const open = () => { mobileOverlay.classList.add('open'); document.body.style.overflow = 'hidden'; };
+    const close = () => { mobileOverlay.classList.remove('open'); document.body.style.overflow = ''; };
+    mobileBtn.addEventListener('click', open);
+    mobileClose.addEventListener('click', close);
+    mobileOverlay.addEventListener('click', (e) => { if (e.target === mobileOverlay) close(); });
+    document.querySelectorAll('.mobile-nav-links a').forEach(link => link.addEventListener('click', close));
   }
 </script>
 </body>
