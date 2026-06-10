@@ -4,12 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   
-  <!-- Primary Meta Tags -->
   <title>Avalanche Consulting — CarbonScope360 | Industrial Decarbonization Platform</title>
-  <meta name="title" content="Avalanche Consulting — CarbonScope360 | Industrial Decarbonization Platform">
+  <meta name="title" content="Avalanche Consulting — CarbonScope360">
   <meta name="description" content="Infrastructure for the industrial carbon economy. CarbonScope360 delivers compliance technology, financial modeling, and market access for U.S. and Nigerian manufacturers.">
-  <meta name="keywords" content="carbon accounting, industrial decarbonization, ESG, carbon credits, EPA 40 CFR, Nigeria carbon market, CarbonScope360">
-  <meta name="author" content="Avalanche Consulting & Management Services, LLC">
   
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
@@ -19,28 +16,24 @@
   <meta property="og:image" content="https://www.avalancheconsults.org/assets/images/linkimage.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:site_name" content="Avalanche Consulting">
   
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:url" content="https://www.avalancheconsults.org/">
-  <meta property="twitter:title" content="Avalanche Consulting — CarbonScope360 | Industrial Decarbonization">
-  <meta property="twitter:description" content="AI-powered platform for industrial carbon management. Pilot active Q1 2026. US + Nigeria.">
+  <meta property="twitter:title" content="Avalanche Consulting — CarbonScope360">
+  <meta property="twitter:description" content="AI-powered platform for industrial carbon management. Pilot active Q1 2026.">
   <meta property="twitter:image" content="https://www.avalancheconsults.org/assets/images/linkimage.png">
   
-  <!-- Favicon tags (as provided) -->
+  <!-- Favicon -->
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
   <link rel="manifest" href="/site.webmanifest">
   
-  <!-- Google Fonts: Inter only, clean and simple -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
-  <!-- GSAP & ScrollTrigger -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <!-- Lenis smooth scroll -->
-  <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+  
   <style>
     * {
       margin: 0;
@@ -48,7 +41,6 @@
       box-sizing: border-box;
     }
 
-    /* Base light theme */
     :root {
       --bg-light: #FFFFFF;
       --bg-light-secondary: #F8FAFE;
@@ -58,11 +50,8 @@
       --border-light: #E5E7EB;
       --accent-blue: #2563EB;
       --accent-blue-light: #3B82F6;
-      --card-shadow-light: 0 20px 35px -12px rgba(0, 0, 0, 0.05);
-      --card-hover-shadow-light: 0 30px 40px -18px rgba(0, 0, 0, 0.1);
     }
 
-    /* Dark theme overrides (applied to .section-dark) */
     .section-dark {
       --bg-primary: #0A0E14;
       --bg-secondary: #11161E;
@@ -72,13 +61,10 @@
       --border-color: rgba(255,255,255,0.08);
       --card-bg: #171E28;
       --card-border: rgba(255,255,255,0.06);
-      --card-shadow: 0 20px 35px -12px rgba(0,0,0,0.4);
-      --card-hover-shadow: 0 30px 40px -18px rgba(0,0,0,0.5);
       --accent-blue: #38BDF8;
       --accent-blue-rgb: 56, 189, 248;
     }
 
-    /* Light theme overrides (applied to .section-light) */
     .section-light {
       --bg-primary: #FFFFFF;
       --bg-secondary: #F8FAFE;
@@ -88,8 +74,6 @@
       --border-color: #E5E7EB;
       --card-bg: #FFFFFF;
       --card-border: #E5E7EB;
-      --card-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.05);
-      --card-hover-shadow: 0 30px 40px -18px rgba(0, 0, 0, 0.1);
       --accent-blue: #2563EB;
       --accent-blue-rgb: 37, 99, 235;
     }
@@ -100,20 +84,17 @@
       color: var(--text-light-primary);
       line-height: 1.5;
       overflow-x: hidden;
+      overflow-y: auto; /* ensure normal scroll */
     }
 
-    /* Typography - all headings use Inter, simple */
-    h1, h2, h3, .heading-heavy {
+    h1, h2, h3 {
       font-family: 'Inter', sans-serif;
       font-weight: 700;
       letter-spacing: -0.01em;
     }
 
-    .text-accent {
-      color: var(--accent-blue);
-    }
+    .text-accent { color: var(--accent-blue); }
 
-    /* Eyebrow styling adapts to theme */
     .eyebrow {
       font-size: 0.7rem;
       font-weight: 600;
@@ -137,10 +118,9 @@
     section {
       padding: 7rem 0;
       position: relative;
-      transition: background-color 0.3s ease;
     }
 
-    /* Navbar - adapts background based on scroll */
+    /* Navbar */
     .navbar {
       position: fixed;
       top: 0;
@@ -166,20 +146,14 @@
       justify-content: space-between;
       align-items: center;
     }
-    /* Logo image styling - dynamic contrast */
     .logo img {
       height: 80px;
       width: auto;
       display: block;
       transition: filter 0.3s ease;
     }
-    /* When navbar is dark, apply brightness + invert to make any dark logo visible (greyscale/light) */
     .navbar-dark .logo img {
       filter: brightness(0) invert(1);
-    }
-    /* Optional fallback text hidden if image fails */
-    .logo-fallback {
-      display: none;
     }
     .nav-links {
       display: flex;
@@ -202,7 +176,124 @@
       background: transparent;
     }
 
-    /* Buttons - dynamic color via CSS variables */
+    /* Mobile menu button */
+    .mobile-menu-btn {
+      display: none;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0.5rem;
+      z-index: 1001;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .hamburger-line {
+      width: 25px;
+      height: 2px;
+      background-color: currentColor;
+      transition: 0.3s;
+      display: block;
+    }
+    .navbar-light .mobile-menu-btn { color: #111827; }
+    .navbar-dark .mobile-menu-btn { color: #FFFFFF; }
+
+    /* Mobile glass overlay */
+    .mobile-menu-overlay {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 75%;
+      max-width: 350px;
+      height: 100vh;
+      background: rgba(10, 14, 20, 0.94);
+      backdrop-filter: blur(16px);
+      z-index: 1050;
+      transition: right 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      overflow-y: auto;
+      box-shadow: -5px 0 30px rgba(0, 0, 0, 0.3);
+      border-left: 1px solid rgba(255,255,255,0.1);
+    }
+    .navbar-light .mobile-menu-overlay {
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(16px);
+      border-left-color: rgba(0,0,0,0.05);
+    }
+    .mobile-menu-overlay.open { right: 0; }
+    .mobile-menu-container {
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+      padding: 2rem 1.5rem;
+      justify-content: flex-start;
+    }
+    .mobile-menu-header {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 2.5rem;
+    }
+    .mobile-menu-close {
+      background: transparent;
+      border: none;
+      font-size: 2rem;
+      cursor: pointer;
+      line-height: 1;
+      color: currentColor;
+      padding: 0.5rem;
+    }
+    .mobile-nav-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1.8rem;
+    }
+    .mobile-nav-links a {
+      text-decoration: none;
+      font-size: 1.2rem;
+      font-weight: 500;
+      display: block;
+      padding: 0.5rem 0;
+      transition: 0.2s;
+    }
+    .navbar-light .mobile-nav-links a { color: #111827; }
+    .navbar-dark .mobile-nav-links a { color: #FFFFFF; }
+    .mobile-nav-links a:hover {
+      color: var(--accent-blue);
+      transform: translateX(5px);
+    }
+    .mobile-nav-links .btn-outline-nav {
+      display: inline-block;
+      text-align: center;
+      margin-top: 0.5rem;
+      padding: 0.6rem 1.2rem;
+      border: 1px solid currentColor;
+      border-radius: 2rem;
+      background: transparent;
+    }
+    @media (max-height: 600px) {
+      .mobile-nav-links { gap: 1rem; }
+      .mobile-nav-links a { font-size: 1rem; padding: 0.3rem 0; }
+      .mobile-menu-container { padding: 1.5rem; }
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .mobile-menu-btn { display: flex; }
+      .nav-links { display: none !important; }
+      .logo img { height: 60px; }
+      section { padding: 4rem 0; }
+      .container { padding: 0 1.5rem; }
+      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+      .hero-dark { padding-top: 80px; }
+      .hero-stats { flex-wrap: wrap; gap: 1.5rem; }
+      .stat-number { font-size: 1.6rem; }
+    }
+    @media (max-width: 480px) {
+      .logo img { height: 50px; }
+      h1 { font-size: 2rem !important; }
+      .btn-primary, .btn-outline { padding: 0.6rem 1.2rem; font-size: 0.8rem; }
+    }
+
+    /* Buttons, cards, etc. */
     .btn-primary {
       background: var(--accent-blue);
       color: white;
@@ -227,25 +318,25 @@
       font-weight: 500;
       text-decoration: none;
       transition: 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
     }
     .btn-outline:hover { border-color: var(--accent-blue); background: rgba(var(--accent-blue-rgb), 0.08); }
 
-    /* Cards - fully themable */
     .card-premium {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: 1.5rem;
       padding: 2rem;
       transition: all 0.4s ease;
-      box-shadow: var(--card-shadow);
+      box-shadow: 0 20px 35px -12px rgba(0,0,0,0.05);
     }
     .card-premium:hover {
       transform: translateY(-6px);
-      box-shadow: var(--card-hover-shadow);
       border-color: var(--accent-blue);
     }
 
-    /* Ensure all text inside dark sections uses proper contrast */
     .section-dark,
     .section-dark .card-premium,
     .section-dark p,
@@ -257,14 +348,10 @@
       color: var(--text-primary);
     }
     .section-dark .text-secondary,
-    .section-dark .card-premium p {
-      color: var(--text-secondary);
-    }
-    .section-dark .text-muted {
-      color: var(--text-muted);
-    }
+    .section-dark .card-premium p { color: var(--text-secondary); }
+    .section-dark .text-muted { color: var(--text-muted); }
 
-    /* Hero specific (dark) */
+    /* Hero */
     .hero-dark {
       background: linear-gradient(135deg, #05080F 0%, #0A0E14 100%);
       position: relative;
@@ -272,21 +359,11 @@
       min-height: 100vh;
       display: flex;
       align-items: center;
+      padding-top: 100px;
     }
-    .hero-canvas {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-    }
-    .hero-canvas canvas {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-    .hero-content {
-      position: relative;
-      z-index: 2;
-    }
+    .hero-canvas { position: absolute; inset: 0; z-index: 0; }
+    .hero-canvas canvas { width: 100%; height: 100%; display: block; }
+    .hero-content { position: relative; z-index: 2; }
     .hero-stats {
       display: flex;
       gap: 3rem;
@@ -294,8 +371,9 @@
       padding-top: 2rem;
       border-top: 1px solid rgba(255,255,255,0.1);
     }
+    .stat-number { font-size: 2rem; font-weight: 700; }
 
-    /* Marquee - adapts */
+    /* Marquee */
     .marquee-strip {
       overflow: hidden;
       white-space: nowrap;
@@ -303,14 +381,8 @@
       border-top: 1px solid;
       border-bottom: 1px solid;
     }
-    .section-dark .marquee-strip {
-      background: #11161E;
-      border-color: rgba(255,255,255,0.08);
-    }
-    .section-light .marquee-strip {
-      background: var(--bg-light-secondary);
-      border-color: var(--border-light);
-    }
+    .section-dark .marquee-strip { background: #11161E; border-color: rgba(255,255,255,0.08); }
+    .section-light .marquee-strip { background: var(--bg-light-secondary); border-color: var(--border-light); }
     .marquee-content {
       display: inline-flex;
       animation: marquee 35s linear infinite;
@@ -319,43 +391,31 @@
     .marquee-item { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.05em; }
     .section-dark .marquee-item { color: #9CA3AF; }
     .section-light .marquee-item { color: var(--text-light-muted); }
-    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
 
-    /* Image placeholder styling */
     .showcase-img {
       width: 100%;
       height: 200px;
       object-fit: cover;
       border-radius: 1rem;
       margin-bottom: 1rem;
-      transition: transform 0.5s ease;
     }
     .grid-2, .grid-3, .grid-4 { display: grid; gap: 2rem; }
     .grid-2 { grid-template-columns: repeat(2, 1fr); }
     .grid-3 { grid-template-columns: repeat(3, 1fr); }
     .grid-4 { grid-template-columns: repeat(4, 1fr); }
-
-    @media (max-width: 900px) {
-      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
-      .nav-links { display: none; }
-      .hero-stats { flex-wrap: wrap; gap: 1.5rem; }
-      section { padding: 4rem 0; }
-      .container { padding: 0 1.5rem; }
-      .logo img { height: 80px; }
-    }
   </style>
 </head>
 <body>
 
 <nav class="navbar navbar-light" id="navbar">
   <div class="nav-container">
-    <a href="index.html" class="logo-link">
+    <a href="/" class="logo-link">
       <div class="logo">
-        <img src="assets/images/logo.png" alt="Avalanche Consulting Logo" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='block';">
-        <div class="logo-fallback" style="display:none;">
-          <h3>Avalanche Consulting</h3>
-          <span>Management Services, LLC</span>
-        </div>
+        <img src="/assets/images/logo.png" alt="Avalanche Consulting Logo" onerror="this.style.display='none'">
       </div>
     </a>
     <div class="nav-links">
@@ -365,25 +425,41 @@
       <a href="/contact/">Contact</a>
       <a href="#" class="btn-outline-nav">Investor access</a>
     </div>
+    <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+    </button>
+  </div>
+  <div class="mobile-menu-overlay" id="mobileMenuOverlay">
+    <div class="mobile-menu-container">
+      <div class="mobile-menu-header">
+        <button class="mobile-menu-close" id="mobileMenuClose">&times;</button>
+      </div>
+      <ul class="mobile-nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="#" class="btn-outline-nav">Investor access</a></li>
+      </ul>
+    </div>
   </div>
 </nav>
 
 <main>
-  <!-- Hero Section - Dark -->
-  <div class="hero-dark section-dark" style="padding-top: 100px;">
-    <div class="hero-canvas">
-      <canvas id="heroParticles"></canvas>
-    </div>
+  <div class="hero-dark section-dark">
+    <div class="hero-canvas"><canvas id="heroParticles"></canvas></div>
     <div class="container" style="position: relative; z-index: 2;">
       <div class="hero-content">
         <div class="eyebrow" data-animate>PILOT ACTIVE · Q1 2026 · LARGO, MD / ABUJA, NG</div>
-        <h1 style="font-size: clamp(2.5rem, 6vw, 4.5rem); line-height: 1.1; margin-bottom: 1.5rem;" data-animate>
+        <h1 style="font-size: clamp(2rem, 6vw, 4.5rem); line-height: 1.1; margin-bottom: 1.5rem;" data-animate>
           Infrastructure for the <span class="text-accent">industrial carbon economy</span>
         </h1>
         <p style="font-size: 1.1rem; max-width: 560px; margin-bottom: 2rem;" data-animate>
           Avalanche Consulting builds the compliance technology, financial modeling, and carbon market infrastructure that empowers U.S. and Nigerian manufacturers to measure, manage, and monetize emissions — starting with CarbonScope360.
         </p>
-        <div style="display: flex; gap: 1rem;" data-animate>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;" data-animate>
           <a href="#" class="btn-primary">Explore CarbonScope360 →</a>
           <a href="#" class="btn-outline">Investor relations</a>
         </div>
@@ -397,7 +473,6 @@
     </div>
   </div>
 
-  <!-- Marquee Strip (light background) -->
   <div class="section-light" style="padding: 0;">
     <div class="marquee-strip">
       <div class="marquee-content">
@@ -414,124 +489,117 @@
     </div>
   </div>
 
-  <!-- Section 1: Rigorous Data - Light -->
   <section class="section-light" style="background: var(--bg-primary);">
     <div class="container">
       <div class="eyebrow" data-animate>ENGINE FOR INDUSTRIAL DECARBONIZATION</div>
-      <h2 style="font-size: clamp(1.8rem, 4vw, 3rem); max-width: 700px; margin-bottom: 1rem;" data-animate>Rigorous data. <span class="text-accent">Real outcomes.</span></h2>
+      <h2 style="font-size: clamp(1.6rem, 4vw, 3rem); max-width: 700px;" data-animate>Rigorous data. <span class="text-accent">Real outcomes.</span></h2>
       <p style="color: var(--text-secondary); max-width: 600px; margin-bottom: 3rem;" data-animate>Use our industry-leading methodologies to uncover operational efficiencies hidden in your carbon data.</p>
       <div class="grid-2">
         <div class="card-premium" data-animate>
           <img class="showcase-img" src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80&auto=format" alt="Data analytics dashboard">
-          <h3 style="margin-bottom: 0.75rem;">EmissionsCore™</h3>
-          <p>Foundational GHG engine using EPA 40 CFR Part 98 + IPCC AR6. Pilot accuracy within ±2.3% of third-party audit benchmarks. Validated for chemical, steel, and food manufacturing.</p>
+          <h3>EmissionsCore™</h3>
+          <p>Foundational GHG engine using EPA 40 CFR Part 98 + IPCC AR6. Pilot accuracy within ±2.3% of third-party audit benchmarks.</p>
           <div style="margin-top: 1.5rem;"><span class="text-accent" style="font-weight:600;">● LIVE Q1 2026</span></div>
         </div>
         <div class="card-premium" data-animate>
           <img class="showcase-img" src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80&auto=format" alt="Financial modeling">
-          <h3 style="margin-bottom: 0.75rem;">CreditSimulator™</h3>
-          <p>Monte Carlo engine for carbon credit surplus/deficit under Base, Tightened, and Crisis regulatory scenarios. Provides CFOs with probabilistic intelligence to optimize credit procurement timing.</p>
+          <h3>CreditSimulator™</h3>
+          <p>Monte Carlo engine for carbon credit surplus/deficit under Base, Tightened, and Crisis regulatory scenarios.</p>
           <div style="margin-top: 1.5rem;"><span style="color: var(--accent-blue); font-weight:600;">● IN DEVELOPMENT · Q3 2026</span></div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Section 2: CarbonScope360 - Dark -->
   <section class="section-dark" style="background: #11161E;">
     <div class="container">
       <div class="eyebrow" data-animate>FLAGSHIP PLATFORM</div>
-      <h2 style="font-size: clamp(1.8rem, 4vw, 2.6rem); margin-bottom: 2rem;" data-animate>CarbonScope360™<br><span class="text-accent">AI-accelerated industrial carbon intelligence</span></h2>
+      <h2 style="font-size: clamp(1.6rem, 4vw, 2.6rem); margin-bottom: 2rem;" data-animate>CarbonScope360™<br><span class="text-accent">AI-accelerated industrial carbon intelligence</span></h2>
       <div class="grid-3">
         <div class="card-premium" data-animate>
           <img class="showcase-img" src="https://images.unsplash.com/photo-1727434032773-af3cd98375ba?q=80&w=1332&auto=format&fit=crop" alt="AI agents">
-          <h3 style="margin: 1rem 0 0.5rem;">Agents to accelerate work</h3>
-          <p>Data cleaning, formatting, and automated emissions factor mapping. Get actionable data 80% faster. Built-in OCR for utility bills and manual records.</p>
+          <h3>Agents to accelerate work</h3>
+          <p>Data cleaning, formatting, and automated emissions factor mapping. Get actionable data 80% faster.</p>
         </div>
         <div class="card-premium" data-animate>
           <img class="showcase-img" src="https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?q=80&w=1170&auto=format&fit=crop" alt="RegWatch">
-          <h3 style="margin: 1rem 0 0.5rem;">RegWatch™ real-time</h3>
-          <p>Monitors EPA permit thresholds, SEC climate disclosure timelines, and emerging Nigerian carbon pricing frameworks. Auto-generates disclosure-ready reports for EPA e-GGRT, SEC Reg S-K, and NESREA (Nigeria).</p>
+          <h3>RegWatch™ real-time</h3>
+          <p>Monitors EPA permit thresholds, SEC climate disclosure timelines, and emerging Nigerian carbon pricing frameworks.</p>
         </div>
         <div class="card-premium" data-animate>
           <img class="showcase-img" src="https://images.unsplash.com/photo-1768055104895-e6185762f2a9?q=80&w=1332&auto=format&fit=crop" alt="TradeDesk">
-          <h3 style="margin: 1rem 0 0.5rem;">TradeDesk™</h3>
-          <p>Direct API to Xpansiv CBL and CME carbon futures. Immutable audit trail via distributed ledger for full regulatory defensibility across VCS, ACR, and Gold Standard credits.</p>
+          <h3>TradeDesk™</h3>
+          <p>Direct API to Xpansiv CBL and CME carbon futures. Immutable audit trail.</p>
           <div style="margin-top: 1rem;"><span class="text-accent">ROADMAP Q2 2027</span></div>
         </div>
       </div>
       <div style="margin-top: 2rem; background: rgba(56,189,248,0.08); border-radius: 1rem; padding: 1.5rem; border-left: 3px solid var(--accent-blue);" data-animate>
-        <p style="font-weight: 500;">⚡ Validated pilot milestone — EmissionsCore™ achieved CO₂e accuracy within ±2.3% of independent audit benchmarks across chemical, steel, and food manufacturing (US and Nigeria simulated environments).</p>
+        <p>⚡ Validated pilot milestone — EmissionsCore™ achieved CO₂e accuracy within ±2.3% of independent audit benchmarks.</p>
       </div>
     </div>
   </section>
 
-  <!-- Section 3: Market Opportunity - Light -->
   <section class="section-light" style="background: var(--bg-primary);">
     <div class="container">
       <div class="eyebrow" data-animate>MARKET OPPORTUNITY</div>
-      <h2 style="font-size: clamp(1.8rem, 4vw, 2.6rem); max-width: 750px;" data-animate>A $4.2B underserved market for industrial carbon management (US + Nigeria)</h2>
+      <h2 style="font-size: clamp(1.6rem, 4vw, 2.6rem); max-width: 750px;" data-animate>A $4.2B underserved market for industrial carbon management (US + Nigeria)</h2>
       <div class="grid-3" style="margin-top: 2rem;">
         <div class="card-premium" data-animate><div class="stat-number" style="font-size: 2rem;">$18.5<span class="text-accent">B</span></div><div style="font-weight: 500;">Total addressable market 2030</div><p class="text-muted">Global carbon accounting, trading, and ESG disclosure automation.</p></div>
-        <div class="card-premium" style="border-color: var(--accent-blue);" data-animate><div class="stat-number" style="font-size: 2rem;">$4.2<span class="text-accent">B</span></div><div style="font-weight: 500;">Serviceable addressable market 2030</div><p class="text-muted">U.S. + Nigerian industrial manufacturers subject to mandatory GHG reporting and emerging carbon pricing.</p></div>
-        <div class="card-premium" data-animate><div class="stat-number" style="font-size: 2rem;">130<span class="text-accent">+</span></div><div style="font-weight: 500;">Target clients by 2036</div><p class="text-muted">Average contract value $280K–$500K + transaction fees. Nigeria pilot with 5 major industrial groups.</p></div>
+        <div class="card-premium" style="border-color: var(--accent-blue);" data-animate><div class="stat-number" style="font-size: 2rem;">$4.2<span class="text-accent">B</span></div><div style="font-weight: 500;">Serviceable addressable market 2030</div><p class="text-muted">U.S. + Nigerian industrial manufacturers subject to mandatory GHG reporting.</p></div>
+        <div class="card-premium" data-animate><div class="stat-number" style="font-size: 2rem;">130<span class="text-accent">+</span></div><div style="font-weight: 500;">Target clients by 2036</div><p class="text-muted">Average contract value $280K–$500K + transaction fees.</p></div>
       </div>
       <div class="grid-2" style="margin-top: 2.5rem;">
-        <div class="card-premium" data-animate><h3>Regulatory tailwinds (US & Nigeria)</h3><ul style="margin-top: 1rem; list-style: none;"><li style="margin-bottom: 0.75rem;">→ EPA 40 CFR Part 98: ~8,000 reporting facilities</li><li style="margin-bottom: 0.75rem;">→ SEC Climate Disclosure Rules: 6,000+ registrants</li><li style="margin-bottom: 0.75rem;">→ Nigeria: NESREA GHG reporting guidelines, upcoming carbon tax framework (Climate Change Act 2021)</li><li style="margin-bottom: 0.75rem;">→ IRA Sections 45Q, 48C: direct financial incentives</li></ul></div>
-        <div class="card-premium" data-animate><h3>Ideal customer profile</h3><ul style="margin-top: 1rem; list-style: none;"><li style="margin-bottom: 0.75rem;">◉ U.S. or Nigerian manufacturer with GHG >25,000 MT CO₂e per year</li><li style="margin-bottom: 0.75rem;">◉ Revenue >$250M (US) or >₦5B (Nigeria), SAP/Oracle ERP</li><li style="margin-bottom: 0.75rem;">◉ Chemicals, primary metals, cement, automotive, food & beverage</li><li style="margin-bottom: 0.75rem;">◉ Multi-national supply chains requiring Scope 3 data</li></ul></div>
+        <div class="card-premium" data-animate><h3>Regulatory tailwinds (US & Nigeria)</h3><ul><li>→ EPA 40 CFR Part 98: ~8,000 reporting facilities</li><li>→ SEC Climate Disclosure Rules: 6,000+ registrants</li><li>→ Nigeria: NESREA GHG reporting guidelines, upcoming carbon tax</li><li>→ IRA Sections 45Q, 48C: direct financial incentives</li></ul></div>
+        <div class="card-premium" data-animate><h3>Ideal customer profile</h3><ul><li>◉ GHG >25,000 MT CO₂e per year</li><li>◉ Revenue >$250M (US) or >₦5B (Nigeria)</li><li>◉ Chemicals, metals, cement, automotive, food</li><li>◉ Multi-national supply chains</li></ul></div>
       </div>
     </div>
   </section>
 
-  <!-- Section 4: Strategic Roadmap - Dark -->
   <section class="section-dark" style="background: #11161E;">
     <div class="container">
       <div class="eyebrow" data-animate>STRATEGIC ROADMAP</div>
-      <h2 style="font-size: clamp(1.8rem, 4vw, 2.6rem); max-width: 700px;" data-animate>From pilot to market standard: 2026–2036</h2>
+      <h2 style="font-size: clamp(1.6rem, 4vw, 2.6rem); max-width: 700px;" data-animate>From pilot to market standard: 2026–2036</h2>
       <div class="grid-4" style="margin-top: 2rem;">
-        <div class="card-premium" data-animate><div style="font-weight: 800; font-size: 2rem;">I</div><div class="stat-number" style="font-size: 1.2rem;">2026–2027</div><p><strong>Prove It</strong><br>Anchor clients in US (3) + Nigeria (2). Seed funding closed. EmissionsCore™ deployed. Nigerian compliance pilot with NESREA.</p></div>
-        <div class="card-premium" data-animate><div style="font-weight: 800; font-size: 2rem;">II</div><div class="stat-number" style="font-size: 1.2rem;">2028–2029</div><p><strong>Sell It</strong><br>25 clients, EBITDA-positive. Series B, TradeDesk™ launch. Nigeria office expansion.</p></div>
-        <div class="card-premium" data-animate><div style="font-weight: 800; font-size: 2rem;">III</div><div class="stat-number" style="font-size: 1.2rem;">2030–2032</div><p><strong>Scale It</strong><br>75+ clients (US + West Africa). CBOT carbon futures integration. Transaction fee revenue scales.</p></div>
-        <div class="card-premium" data-animate><div style="font-weight: 800; font-size: 2rem;">IV</div><div class="stat-number" style="font-size: 1.2rem;">2033–2036</div><p><strong>Define It</strong><br>130+ clients, $60M+ ARR, recognized U.S.-Africa industrial carbon accounting standard.</p></div>
+        <div class="card-premium" data-animate><div style="font-weight: 800; font-size: 2rem;">I</div><div class="stat-number" style="font-size: 1.2rem;">2026–2027</div><p><strong>Prove It</strong><br>Anchor clients in US (3) + Nigeria (2). Seed funding closed.</p></div>
+        <div class="card-premium" data-animate><div style="font-weight: 800; font-size: 2rem;">II</div><div class="stat-number" style="font-size: 1.2rem;">2028–2029</div><p><strong>Sell It</strong><br>25 clients, EBITDA-positive. Series B, TradeDesk™ launch.</p></div>
+        <div class="card-premium" data-animate><div style="font-weight: 800; font-size: 2rem;">III</div><div class="stat-number" style="font-size: 1.2rem;">2030–2032</div><p><strong>Scale It</strong><br>75+ clients, CBOT carbon futures integration.</p></div>
+        <div class="card-premium" data-animate><div style="font-weight: 800; font-size: 2rem;">IV</div><div class="stat-number" style="font-size: 1.2rem;">2033–2036</div><p><strong>Define It</strong><br>130+ clients, $60M+ ARR, industry standard.</p></div>
       </div>
     </div>
   </section>
 
-  <!-- Section 5: ESG Impact - Light -->
   <section class="section-light" style="background: var(--bg-primary);">
     <div class="container">
       <div class="eyebrow" data-animate>ESG & ECONOMIC IMPACT</div>
       <h2 style="font-size: clamp(1.6rem, 3vw, 2.3rem); max-width: 800px;" data-animate>Built for people, planet, and profit — accelerating the climate economy</h2>
       <div class="grid-3" style="margin-top: 2rem;">
-        <div class="card-premium" data-animate><img class="showcase-img" src="https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=600&q=80&auto=format" alt="Renewable energy"><h3 style="margin: 1rem 0 0.5rem;">Environmental</h3><p>Projected 50–100 million metric tons CO₂e cumulative reductions by 2036 across US and Nigerian industrial clients.</p></div>
-        <div class="card-premium" data-animate><img class="showcase-img" src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&q=80&auto=format" alt="Manufacturing jobs"><h3 style="margin: 1rem 0 0.5rem;">Economic</h3><p>142 direct FTEs (US + Nigeria), $170M cumulative payroll, $65M+ tax contributions. Nigerian hiring target: 30% of workforce.</p></div>
-        <div class="card-premium" data-animate><img class="showcase-img" src="https://images.unsplash.com/photo-1531482615713-2afd69097998?w=600&q=80&auto=format" alt="Diverse leadership"><h3 style="margin: 1rem 0 0.5rem;">Social & Governance</h3><p>Minority-founded, dual HQ: Largo, Maryland & Abuja, Nigeria. HBCU & Nigerian university hiring pipeline. IRA Justice40-aligned.</p></div>
+        <div class="card-premium" data-animate><img class="showcase-img" src="https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=600&q=80&auto=format" alt="Environmental"><h3>Environmental</h3><p>Projected 50–100 million metric tons CO₂e cumulative reductions by 2036.</p></div>
+        <div class="card-premium" data-animate><img class="showcase-img" src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&q=80&auto=format" alt="Economic"><h3>Economic</h3><p>142 direct FTEs, $170M cumulative payroll, $65M+ tax contributions.</p></div>
+        <div class="card-premium" data-animate><img class="showcase-img" src="https://images.unsplash.com/photo-1531482615713-2afd69097998?w=600&q=80&auto=format" alt="Social"><h3>Social & Governance</h3><p>Minority-founded, dual HQ, HBCU & Nigerian university hiring pipeline.</p></div>
       </div>
     </div>
   </section>
 
-  <!-- Section 6: Leadership - Dark -->
   <section class="section-dark" style="background: #11161E;">
     <div class="container">
       <div class="eyebrow" data-animate>LEADERSHIP</div>
       <h2 data-animate>Founding team & mission-driven execution</h2>
       <div class="card-premium" style="margin-top: 2rem; display: flex; gap: 2rem; flex-wrap: wrap; align-items: center;" data-animate>
         <div style="width: 100px; height: 100px; background: linear-gradient(135deg, #38BDF8, #0284C7); border-radius: 50%; background-size: cover; background-image: url('/assets/images/henrietta.jpg'); background-position: center;"></div>
-        <div style="flex:1;"><h3>Henrietta Happy Ighomrore</h3><div style="color: var(--accent-blue); margin-bottom: 1rem;">Founder & Chief Executive Officer</div><p>Principal architect of CarbonScope360, bringing strategic vision across regulatory infrastructure, carbon markets, and enterprise SaaS. Leads dual-market expansion in US and Nigeria.</p></div>
+        <div style="flex:1;"><h3>Henrietta Happy Ighomrore</h3><div style="color: var(--accent-blue); margin-bottom: 1rem;">Founder & Chief Executive Officer</div><p>Principal architect of CarbonScope360, bringing strategic vision across regulatory infrastructure, carbon markets, and enterprise SaaS.</p></div>
       </div>
-      <div style="margin-top: 2rem; background: #171E28; border-radius: 1rem; padding: 1.5rem; border: 1px solid rgba(255,255,255,0.08);" data-animate>
-        <p style="font-weight: 600;">🔹 2026 seed-stage hiring: CTO (cloud-native SaaS), Lead Data Engineer (EPA 40 CFR Part 98 / NESREA specialist), Regulatory Manager (ex-EPA or ex-NESREA), Head of Sales (enterprise SaaS). Nigerian country director to be appointed Q3 2026.</p>
+      <div style="margin-top: 2rem; background: #171E28; border-radius: 1rem; padding: 1.5rem;" data-animate>
+        <p>🔹 2026 seed-stage hiring: CTO, Lead Data Engineer, Regulatory Manager, Head of Sales. Nigerian country director to be appointed Q3 2026.</p>
       </div>
     </div>
   </section>
 
-  <!-- CTA Investor - Light -->
   <section class="section-light" style="border-bottom: none;">
     <div class="container" style="text-align: center; max-width: 800px;">
       <div class="eyebrow" data-animate>INVESTOR RELATIONS</div>
       <h2 style="margin-bottom: 1.5rem;" data-animate>Join the infrastructure for the global carbon transition</h2>
-      <p style="color: var(--text-secondary); margin-bottom: 2rem;" data-animate>Seeking $750K Seed + Grants in 2026. First mover in a $4.2B SAM with no dominant competitor. IRA grant-eligible and Nigerian climate finance ready. Pilot-stage product with operational emissions engine. Minority-founded, dual-continent footprint. EBITDA-positive by 2029.</p>
-      <div style="display: flex; gap: 1rem; justify-content: center;" data-animate>
+      <p style="color: var(--text-secondary); margin-bottom: 2rem;" data-animate>Seeking $750K Seed + Grants in 2026. First mover in a $4.2B SAM. IRA grant-eligible and Nigerian climate finance ready. Pilot-stage product. EBITDA-positive by 2029.</p>
+      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;" data-animate>
         <a href="#" class="btn-primary">Request investor deck →</a>
         <a href="#" class="btn-outline">Explore CarbonScope360</a>
       </div>
@@ -547,16 +615,15 @@
 <footer class="section-dark" style="border-top: 1px solid rgba(255,255,255,0.08); padding: 2rem 0; background: #0A0E14;">
   <div class="container" style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
     <div style="font-size: 0.7rem; color: #9CA3AF;">© 2026 Avalanche Consulting — US & Nigeria. All rights reserved.</div>
-    <div style="display: flex; gap: 2rem;"><a href="#" style="color: #9CA3AF; text-decoration: none;">Privacy</a><a href="#" style="color: #9CA3AF; text-decoration: none;">Compliance</a><a href="#" style="color: #9CA3AF; text-decoration: none;">Investor portal</a></div>
+    <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
+      <a href="#" style="color: #9CA3AF; text-decoration: none;">Privacy</a>
+      <a href="#" style="color: #9CA3AF; text-decoration: none;">Compliance</a>
+      <a href="#" style="color: #9CA3AF; text-decoration: none;">Investor portal</a>
+    </div>
   </div>
 </footer>
 
 <script>
-  // Smooth scroll with Lenis
-  const lenis = new Lenis({ duration: 1.2, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true });
-  function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
-  requestAnimationFrame(raf);
-
   // GSAP ScrollTrigger animations
   gsap.registerPlugin(ScrollTrigger);
   document.querySelectorAll('[data-animate]').forEach(el => {
@@ -566,12 +633,11 @@
     });
   });
 
-  // Hero canvas particles (blue glowing dots)
+  // Hero canvas particles
   const canvas = document.getElementById('heroParticles');
   if (canvas) {
     let ctx = canvas.getContext('2d');
-    let width = window.innerWidth;
-    let height = window.innerHeight;
+    let width = window.innerWidth, height = window.innerHeight;
     let particles = [];
     function resizeCanvas() {
       width = window.innerWidth;
@@ -585,8 +651,7 @@
       let count = Math.min(120, Math.floor(width * height / 10000));
       for (let i = 0; i < count; i++) {
         particles.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
+          x: Math.random() * width, y: Math.random() * height,
           radius: Math.random() * 2 + 1,
           speedX: (Math.random() - 0.5) * 0.25,
           speedY: (Math.random() - 0.5) * 0.2,
@@ -616,7 +681,7 @@
     draw();
   }
 
-  // Navbar style based on scroll (dark when hero visible)
+  // Navbar scroll style
   const navbar = document.getElementById('navbar');
   const heroSection = document.querySelector('.hero-dark');
   window.addEventListener('scroll', () => {
@@ -631,6 +696,27 @@
     }
   });
   window.dispatchEvent(new Event('scroll'));
+
+  // Mobile menu
+  const mobileBtn = document.getElementById('mobileMenuBtn');
+  const mobileOverlay = document.getElementById('mobileMenuOverlay');
+  const mobileClose = document.getElementById('mobileMenuClose');
+  if (mobileBtn && mobileOverlay && mobileClose) {
+    const openMenu = () => {
+      mobileOverlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    };
+    const closeMenu = () => {
+      mobileOverlay.classList.remove('open');
+      document.body.style.overflow = '';
+    };
+    mobileBtn.addEventListener('click', openMenu);
+    mobileClose.addEventListener('click', closeMenu);
+    mobileOverlay.addEventListener('click', (e) => {
+      if (e.target === mobileOverlay) closeMenu();
+    });
+    document.querySelectorAll('.mobile-nav-links a').forEach(link => link.addEventListener('click', closeMenu));
+  }
 </script>
 </body>
 </html>
