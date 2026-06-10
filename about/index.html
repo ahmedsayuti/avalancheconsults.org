@@ -7,7 +7,6 @@
   <title>About Avalanche Consulting — Industrial Decarbonization & Carbon Markets</title>
   <meta name="description" content="Avalanche Consulting builds infrastructure for the industrial carbon economy. Learn about our mission, leadership, and dual-continent presence in the US and Nigeria.">
   
-  <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.avalancheconsults.org/about">
   <meta property="og:title" content="About Avalanche Consulting — Industrial Carbon Economy">
@@ -16,25 +15,22 @@
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   
-  <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:title" content="Avalanche Consulting — About Us">
   <meta property="twitter:description" content="Our mission is to accelerate the climate economy by providing technology and expertise manufacturers need to decarbonize profitably.">
   <meta property="twitter:image" content="https://www.avalancheconsults.org/assets/images/linkimage.png">
   
-  <!-- Favicon -->
   <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
   <link rel="manifest" href="../site.webmanifest">
   
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   
@@ -45,7 +41,6 @@
       box-sizing: border-box;
     }
 
-    /* Light theme (default) */
     :root {
       --bg-light: #FFFFFF;
       --bg-light-secondary: #F8FAFE;
@@ -54,10 +49,8 @@
       --text-light-muted: #6B7280;
       --border-light: #E5E7EB;
       --accent-blue: #2563EB;
-      --accent-blue-light: #3B82F6;
     }
 
-    /* Dark theme overrides - all text explicitly light */
     .section-dark {
       --bg-primary: #0A0E14;
       --bg-secondary: #11161E;
@@ -67,15 +60,11 @@
       --border-color: rgba(255,255,255,0.08);
       --card-bg: #171E28;
       --card-border: rgba(255,255,255,0.06);
-      --card-shadow: 0 20px 35px -12px rgba(0,0,0,0.4);
-      --card-hover-shadow: 0 30px 40px -18px rgba(0,0,0,0.5);
       --accent-blue: #38BDF8;
       --accent-blue-rgb: 56, 189, 248;
-      
-      /* Force all text in dark sections to be light */
-      color: var(--text-primary);
+      background: #0A0E14;
     }
-    
+
     .section-light {
       --bg-primary: #FFFFFF;
       --bg-secondary: #F8FAFE;
@@ -85,11 +74,9 @@
       --border-color: #E5E7EB;
       --card-bg: #FFFFFF;
       --card-border: #E5E7EB;
-      --card-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.05);
-      --card-hover-shadow: 0 30px 40px -18px rgba(0, 0, 0, 0.1);
       --accent-blue: #2563EB;
       --accent-blue-rgb: 37, 99, 235;
-      color: var(--text-primary);
+      background: #FFFFFF;
     }
 
     body {
@@ -107,7 +94,7 @@
     }
 
     .text-accent { color: var(--accent-blue); }
-    
+
     .eyebrow {
       font-size: 0.7rem;
       font-weight: 600;
@@ -122,29 +109,17 @@
       color: var(--accent-blue);
     }
 
-    .container { max-width: 1280px; margin: 0 auto; padding: 0 2rem; }
-    section { padding: 7rem 0; position: relative; transition: background-color 0.3s ease; }
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
 
-    /* Ensure all text inside .section-dark has proper contrast */
-    .section-dark, 
-    .section-dark p, 
-    .section-dark h1, 
-    .section-dark h2, 
-    .section-dark h3, 
-    .section-dark li, 
-    .section-dark .stat-number,
-    .section-dark .card-premium,
-    .section-dark .card-premium p,
-    .section-dark .card-premium h3 {
-      color: var(--text-primary);
+    section {
+      padding: 7rem 0;
+      position: relative;
     }
-    .section-dark .text-secondary {
-      color: var(--text-secondary);
-    }
-    .section-dark .text-muted {
-      color: var(--text-muted);
-    }
-    
+
     /* Navbar */
     .navbar {
       position: fixed;
@@ -155,8 +130,14 @@
       transition: all 0.3s ease;
       border-bottom: 1px solid transparent;
     }
-    .navbar-light { background: rgba(255, 255, 255, 0.85); border-bottom-color: var(--border-light); }
-    .navbar-dark { background: rgba(10, 14, 20, 0.85); border-bottom-color: rgba(255,255,255,0.08); }
+    .navbar-light {
+      background: rgba(255, 255, 255, 0.85);
+      border-bottom-color: var(--border-light);
+    }
+    .navbar-dark {
+      background: rgba(10, 14, 20, 0.85);
+      border-bottom-color: rgba(255,255,255,0.08);
+    }
     .nav-container {
       max-width: 1280px;
       margin: 0 auto;
@@ -165,14 +146,133 @@
       justify-content: space-between;
       align-items: center;
     }
-    .logo img { height: 80px; width: auto; display: block; transition: filter 0.3s ease; }
-    .navbar-dark .logo img { filter: brightness(0) invert(1); }
-    .nav-links { display: flex; gap: 2.5rem; align-items: center; }
-    .nav-links a { text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: 0.2s; }
+    .logo img {
+      height: 80px;
+      width: auto;
+      display: block;
+    }
+    .navbar-dark .logo img {
+      filter: brightness(0) invert(1);
+    }
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      align-items: center;
+    }
+    .nav-links a {
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: 0.2s;
+    }
     .navbar-light .nav-links a { color: #111827; }
     .navbar-dark .nav-links a { color: #FFFFFF; }
     .nav-links a:hover { color: var(--accent-blue); }
-    .btn-outline-nav { border: 1px solid currentColor; padding: 0.5rem 1.2rem; border-radius: 2rem; background: transparent; }
+    .btn-outline-nav {
+      border: 1px solid currentColor;
+      padding: 0.5rem 1.2rem;
+      border-radius: 2rem;
+      background: transparent;
+    }
+
+    /* Mobile menu button */
+    .mobile-menu-btn {
+      display: none;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0.5rem;
+      z-index: 1001;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .hamburger-line {
+      width: 25px;
+      height: 2px;
+      background-color: currentColor;
+      transition: 0.3s;
+      display: block;
+    }
+    .navbar-light .mobile-menu-btn { color: #111827; }
+    .navbar-dark .mobile-menu-btn { color: #FFFFFF; }
+
+    /* Mobile glass overlay */
+    .mobile-menu-overlay {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 75%;
+      max-width: 350px;
+      height: 100vh;
+      background: rgba(10, 14, 20, 0.94);
+      backdrop-filter: blur(16px);
+      z-index: 1050;
+      transition: right 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      overflow-y: auto;
+      box-shadow: -5px 0 30px rgba(0, 0, 0, 0.3);
+      border-left: 1px solid rgba(255,255,255,0.1);
+    }
+    .navbar-light .mobile-menu-overlay {
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(16px);
+      border-left-color: rgba(0,0,0,0.05);
+    }
+    .mobile-menu-overlay.open { right: 0; }
+    .mobile-menu-container {
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+      padding: 2rem 1.5rem;
+      justify-content: flex-start;
+    }
+    .mobile-menu-header {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 2.5rem;
+    }
+    .mobile-menu-close {
+      background: transparent;
+      border: none;
+      font-size: 2rem;
+      cursor: pointer;
+      line-height: 1;
+      color: currentColor;
+      padding: 0.5rem;
+    }
+    .mobile-nav-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1.8rem;
+    }
+    .mobile-nav-links a {
+      text-decoration: none;
+      font-size: 1.2rem;
+      font-weight: 500;
+      display: block;
+      padding: 0.5rem 0;
+      transition: 0.2s;
+    }
+    .navbar-light .mobile-nav-links a { color: #111827; }
+    .navbar-dark .mobile-nav-links a { color: #FFFFFF; }
+    .mobile-nav-links a:hover {
+      color: var(--accent-blue);
+      transform: translateX(5px);
+    }
+    .mobile-nav-links .btn-outline-nav {
+      display: inline-block;
+      text-align: center;
+      margin-top: 0.5rem;
+      padding: 0.6rem 1.2rem;
+      border: 1px solid currentColor;
+      border-radius: 2rem;
+      background: transparent;
+    }
+    @media (max-height: 600px) {
+      .mobile-nav-links { gap: 1rem; }
+      .mobile-nav-links a { font-size: 1rem; padding: 0.3rem 0; }
+      .mobile-menu-container { padding: 1.5rem; }
+    }
 
     /* Buttons */
     .btn-primary {
@@ -199,6 +299,9 @@
       font-weight: 500;
       text-decoration: none;
       transition: 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
     }
     .btn-outline:hover { border-color: var(--accent-blue); background: rgba(var(--accent-blue-rgb), 0.08); }
 
@@ -209,9 +312,13 @@
       border-radius: 1.5rem;
       padding: 2rem;
       transition: all 0.4s ease;
-      box-shadow: var(--card-shadow);
+      box-shadow: 0 20px 35px -12px rgba(0,0,0,0.05);
+      height: 100%;
     }
-    .card-premium:hover { transform: translateY(-6px); box-shadow: var(--card-hover-shadow); border-color: var(--accent-blue); }
+    .card-premium:hover {
+      transform: translateY(-6px);
+      border-color: var(--accent-blue);
+    }
 
     /* Hero */
     .hero-about {
@@ -221,6 +328,7 @@
       min-height: 60vh;
       display: flex;
       align-items: center;
+      padding-top: 100px;
     }
     .hero-canvas { position: absolute; inset: 0; z-index: 0; }
     .hero-canvas canvas { width: 100%; height: 100%; display: block; }
@@ -234,12 +342,37 @@
     .grid-2 { grid-template-columns: repeat(2, 1fr); }
     .grid-3 { grid-template-columns: repeat(3, 1fr); }
 
+    /* Ensure dark text contrast */
+    .section-dark,
+    .section-dark .card-premium,
+    .section-dark p,
+    .section-dark h1,
+    .section-dark h2,
+    .section-dark h3,
+    .section-dark li {
+      color: var(--text-primary);
+    }
+    .section-dark .text-secondary { color: var(--text-secondary); }
+    .section-dark .text-muted { color: var(--text-muted); }
+
+    /* Responsive */
     @media (max-width: 900px) {
-      .values-grid, .grid-2, .grid-3 { grid-template-columns: 1fr; }
-      .nav-links { display: none; }
+      .values-grid, .grid-2, .grid-3 {
+        grid-template-columns: 1fr !important;
+      }
+      .nav-links { display: none !important; }
+      .mobile-menu-btn { display: flex; }
       section { padding: 4rem 0; }
       .container { padding: 0 1.5rem; }
+      .logo img { height: 60px; }
+      .hero-about { padding-top: 80px; min-height: auto; }
+      .card-premium { margin-bottom: 0; }
+    }
+    @media (max-width: 480px) {
       .logo img { height: 50px; }
+      h1 { font-size: 2rem !important; }
+      .btn-primary, .btn-outline { padding: 0.6rem 1.2rem; font-size: 0.8rem; }
+      .card-premium { padding: 1.5rem; }
     }
   </style>
 </head>
@@ -257,19 +390,38 @@
       <a href="/about/" style="color: var(--accent-blue);">About</a>
       <a href="/blog/">Blog</a>
       <a href="/contact/">Contact</a>
-      <a href="#" class="btn-outline-nav">Investor access</a>
+      <a href="#" class="btn-outline-nav">Request a demo</a>
+    </div>
+    <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+    </button>
+  </div>
+  <div class="mobile-menu-overlay" id="mobileMenuOverlay">
+    <div class="mobile-menu-container">
+      <div class="mobile-menu-header">
+        <button class="mobile-menu-close" id="mobileMenuClose">&times;</button>
+      </div>
+      <ul class="mobile-nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../about.html">About</a></li>
+        <li><a href="../blog.html">Blog</a></li>
+        <li><a href="../contact.html">Contact</a></li>
+        <li><a href="#" class="btn-outline-nav">Request a demo</a></li>
+      </ul>
     </div>
   </div>
 </nav>
 
 <main>
-  <!-- Hero Section - Dark (text explicitly white) -->
-  <div class="hero-about section-dark" style="padding-top: 100px;">
+  <!-- Hero Section -->
+  <div class="hero-about section-dark">
     <div class="hero-canvas"><canvas id="aboutParticles"></canvas></div>
-    <div class="container" style="position: relative; z-index: 2;">
+    <div class="container">
       <div class="hero-content" data-aos="fade-up">
         <div class="eyebrow">OUR STORY</div>
-        <h1 style="font-size: clamp(2.5rem, 6vw, 4rem); line-height: 1.2; margin-bottom: 1.5rem; color: white;">
+        <h1 style="font-size: clamp(2rem, 6vw, 4rem); line-height: 1.2; margin-bottom: 1.5rem;">
           Building the <span class="text-accent">infrastructure</span><br>for industrial decarbonization
         </h1>
         <p style="font-size: 1.1rem; max-width: 620px; color: #D1D5DB;">
@@ -280,7 +432,7 @@
   </div>
 
   <!-- Mission & Vision (Light) -->
-  <section class="section-light" style="background: var(--bg-primary);">
+  <section class="section-light">
     <div class="container">
       <div class="grid-2" style="gap: 3rem;">
         <div data-aos="fade-right">
@@ -297,11 +449,11 @@
     </div>
   </section>
 
-  <!-- Core Values (Dark) - all text now visible -->
-  <section class="section-dark" style="background: #11161E;">
+  <!-- Core Values (Dark) -->
+  <section class="section-dark">
     <div class="container">
       <div class="eyebrow" data-aos="fade-up">WHAT WE STAND FOR</div>
-      <h2 data-aos="fade-up" style="color: white;">Core values that guide every decision</h2>
+      <h2 data-aos="fade-up">Core values that guide every decision</h2>
       <div class="values-grid">
         <div class="card-premium" data-aos="zoom-in"><div class="value-icon"><i class="fas fa-chart-line"></i></div><h3>Radical integrity</h3><p>Our data, methodologies, and advice are built on unassailable scientific and regulatory foundations. Every calculation is audit-ready.</p></div>
         <div class="card-premium" data-aos="zoom-in" data-aos-delay="100"><div class="value-icon"><i class="fas fa-globe"></i></div><h3>Dual-continent bridge</h3><p>We combine US regulatory expertise with deep on-the-ground presence in Nigeria, serving as the strategic link between two of the world's most dynamic manufacturing regions.</p></div>
@@ -314,7 +466,7 @@
   </section>
 
   <!-- Our Presence (Light) -->
-  <section class="section-light" style="background: var(--bg-primary);">
+  <section class="section-light">
     <div class="container">
       <div class="eyebrow" data-aos="fade-up">GLOBAL FOOTPRINT</div>
       <h2 data-aos="fade-up">Headquarters in the United States & Nigeria</h2>
@@ -335,21 +487,22 @@
     </div>
   </section>
 
-  <!-- Leadership Team (Dark) - text visible -->
-  <section class="section-dark" style="background: #11161E;">
+  <!-- Leadership Team (Dark) -->
+  <section class="section-dark">
     <div class="container">
       <div class="eyebrow" data-aos="fade-up">LEADERSHIP</div>
-      <h2 data-aos="fade-up" style="color: white;">Driven by experience, united by purpose</h2>
+      <h2 data-aos="fade-up">Driven by experience, united by purpose</h2>
       <div class="swiper team-swiper" data-aos="fade-up" style="margin-top: 2rem; overflow: hidden; padding: 1rem 0;">
         <div class="swiper-wrapper">
           <div class="swiper-slide"><div class="card-premium" style="text-align: center;"><div style="width: 120px; height: 120px; background: linear-gradient(135deg, #38BDF8, #0284C7); border-radius: 50%; margin: 0 auto 1rem; background-size: cover; background-image: url('/assets/images/henrietta.jpg'); background-position: center;"></div><h3>Henrietta Happy Ighomrore</h3><div style="color: var(--accent-blue);">Founder & CEO</div><p>Former management consultant and regulatory strategist. Architect of CarbonScope360 and the dual-market expansion strategy.</p></div></div>
+        </div>
         <div class="swiper-pagination" style="position: relative; margin-top: 1.5rem;"></div>
       </div>
     </div>
   </section>
 
   <!-- History (Light) -->
-  <section class="section-light" style="background: var(--bg-primary);">
+  <section class="section-light">
     <div class="container">
       <div class="eyebrow" data-aos="fade-up">OUR JOURNEY</div>
       <h2 data-aos="fade-up">From vision to pilot to market standard</h2>
@@ -364,10 +517,10 @@
   </section>
 
   <!-- ESG & Impact (Dark) -->
-  <section class="section-dark" style="background: #11161E;">
+  <section class="section-dark">
     <div class="container">
       <div class="eyebrow" data-aos="fade-up">ESG COMMITMENT</div>
-      <h2 data-aos="fade-up" style="color: white;">Built for people, planet, and profit</h2>
+      <h2 data-aos="fade-up">Built for people, planet, and profit</h2>
       <div class="grid-3" style="margin-top: 2rem;">
         <div class="card-premium" data-aos="zoom-in"><i class="fas fa-tree fa-2x text-accent" style="margin-bottom: 1rem;"></i><h3>Environmental</h3><p>Our platform is projected to enable 50–100 million metric tons of CO₂e reductions cumulatively by 2036.</p></div>
         <div class="card-premium" data-aos="zoom-in" data-aos-delay="100"><i class="fas fa-chart-simple fa-2x text-accent" style="margin-bottom: 1rem;"></i><h3>Economic</h3><p>142 direct jobs by 2036, $170M cumulative payroll, $65M+ tax contributions across US and Nigeria.</p></div>
@@ -382,7 +535,7 @@
       <div class="eyebrow" data-aos="fade-up">CAREERS & PARTNERSHIPS</div>
       <h2 data-aos="fade-up">Help us build the carbon economy</h2>
       <p style="color: var(--text-secondary); margin-bottom: 2rem;" data-aos="fade-up">We're always looking for passionate engineers, regulatory experts, and strategic partners. Join a mission-driven team working at the intersection of climate, technology, and manufacturing.</p>
-      <div style="display: flex; gap: 1rem; justify-content: center;" data-aos="fade-up">
+      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;" data-aos="fade-up">
         <a href="#" class="btn-primary">View open roles →</a>
         <a href="#" class="btn-outline">Partner with us</a>
       </div>
@@ -390,29 +543,57 @@
   </section>
 </main>
 
-<footer class="section-dark" style="border-top: 1px solid rgba(255,255,255,0.08); padding: 2rem 0; background: #0A0E14;">
+<footer class="section-dark" style="border-top: 1px solid rgba(255,255,255,0.08); padding: 2rem 0;">
   <div class="container" style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
     <div style="font-size: 0.7rem; color: #9CA3AF;">© 2026 Avalanche Consulting — US & Nigeria. All rights reserved.</div>
-    <div style="display: flex; gap: 2rem;"><a href="#" style="color: #9CA3AF; text-decoration: none;">Privacy</a><a href="#" style="color: #9CA3AF; text-decoration: none;">Compliance</a><a href="#" style="color: #9CA3AF; text-decoration: none;">Investor portal</a></div>
+    <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
+      <a href="../privacy-policy/" style="color: #9CA3AF; text-decoration: none;">Privacy</a>
+      <a href="../compliance/" style="color: #9CA3AF; text-decoration: none;">Compliance</a>
+      <a href="../investor-portal/" style="color: #9CA3AF; text-decoration: none;">Investor portal</a>
+    </div>
   </div>
 </footer>
 
 <script>
-  const lenis = new Lenis({ duration: 1.2, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true });
-  function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
-  requestAnimationFrame(raf);
+  // Remove Lenis – using native smooth scroll (GSAP ScrollTrigger works fine)
   AOS.init({ duration: 800, once: true, offset: 100 });
 
-  // Hero canvas
+  // Hero canvas particles
   const canvas = document.getElementById('aboutParticles');
   if (canvas) {
     let ctx = canvas.getContext('2d');
-    let width = window.innerWidth, height = window.innerHeight;
-    let particles = [];
-    function resizeCanvas() { width = window.innerWidth; height = window.innerHeight; canvas.width = width; canvas.height = height; initParticles(); }
-    function initParticles() { particles = []; let count = Math.min(100, Math.floor(width * height / 12000)); for (let i = 0; i < count; i++) { particles.push({ x: Math.random() * width, y: Math.random() * height, radius: Math.random() * 2 + 1, speedX: (Math.random() - 0.5) * 0.25, speedY: (Math.random() - 0.5) * 0.2, alpha: Math.random() * 0.4 + 0.1 }); } }
-    function draw() { if (!ctx) return; ctx.clearRect(0, 0, width, height); for (let p of particles) { ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2); ctx.fillStyle = `rgba(56, 189, 248, ${p.alpha})`; ctx.fill(); p.x += p.speedX; p.y += p.speedY; if (p.x < 0) p.x = width; if (p.x > width) p.x = 0; if (p.y < 0) p.y = height; if (p.y > height) p.y = 0; } requestAnimationFrame(draw); }
-    window.addEventListener('resize', resizeCanvas); resizeCanvas(); draw();
+    let width, height, particles = [];
+    const resizeCanvas = () => {
+      width = window.innerWidth; height = window.innerHeight;
+      canvas.width = width; canvas.height = height;
+      particles = [];
+      let count = Math.min(100, Math.floor(width * height / 12000));
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x: Math.random() * width, y: Math.random() * height,
+          radius: Math.random() * 2 + 1,
+          speedX: (Math.random() - 0.5) * 0.25,
+          speedY: (Math.random() - 0.5) * 0.2,
+          alpha: Math.random() * 0.4 + 0.1,
+        });
+      }
+    };
+    const draw = () => {
+      if (!ctx) return;
+      ctx.clearRect(0, 0, width, height);
+      for (let p of particles) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(56, 189, 248, ${p.alpha})`;
+        ctx.fill();
+        p.x += p.speedX; p.y += p.speedY;
+        if (p.x < 0) p.x = width; if (p.x > width) p.x = 0;
+        if (p.y < 0) p.y = height; if (p.y > height) p.y = 0;
+      }
+      requestAnimationFrame(draw);
+    };
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas(); draw();
   }
 
   // Navbar scroll
@@ -421,12 +602,45 @@
   window.addEventListener('scroll', () => {
     if (!heroSection) return;
     const heroBottom = heroSection.offsetTop + heroSection.offsetHeight;
-    if (window.scrollY + 100 < heroBottom) { navbar.classList.remove('navbar-light'); navbar.classList.add('navbar-dark'); } 
-    else { navbar.classList.remove('navbar-dark'); navbar.classList.add('navbar-light'); }
+    if (window.scrollY + 100 < heroBottom) {
+      navbar.classList.remove('navbar-light');
+      navbar.classList.add('navbar-dark');
+    } else {
+      navbar.classList.remove('navbar-dark');
+      navbar.classList.add('navbar-light');
+    }
   });
   window.dispatchEvent(new Event('scroll'));
 
-  new Swiper('.team-swiper', { loop: true, autoplay: { delay: 5000 }, pagination: { el: '.swiper-pagination', clickable: true }, slidesPerView: 1, breakpoints: { 768: { slidesPerView: 2 }, 1024: { slidesPerView: 3 } } });
+  // Swiper
+  new Swiper('.team-swiper', {
+    loop: true,
+    autoplay: { delay: 5000 },
+    pagination: { el: '.swiper-pagination', clickable: true },
+    slidesPerView: 1,
+    breakpoints: { 768: { slidesPerView: 2 }, 1024: { slidesPerView: 3 } }
+  });
+
+  // Mobile menu toggle
+  const mobileBtn = document.getElementById('mobileMenuBtn');
+  const mobileOverlay = document.getElementById('mobileMenuOverlay');
+  const mobileClose = document.getElementById('mobileMenuClose');
+  if (mobileBtn && mobileOverlay && mobileClose) {
+    const openMenu = () => {
+      mobileOverlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    };
+    const closeMenu = () => {
+      mobileOverlay.classList.remove('open');
+      document.body.style.overflow = '';
+    };
+    mobileBtn.addEventListener('click', openMenu);
+    mobileClose.addEventListener('click', closeMenu);
+    mobileOverlay.addEventListener('click', (e) => {
+      if (e.target === mobileOverlay) closeMenu();
+    });
+    document.querySelectorAll('.mobile-nav-links a').forEach(link => link.addEventListener('click', closeMenu));
+  }
 </script>
 </body>
 </html>

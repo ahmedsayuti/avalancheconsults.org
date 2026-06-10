@@ -26,13 +26,12 @@
   <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
   <link rel="manifest" href="../site.webmanifest">
   
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   
   <style>
@@ -42,7 +41,6 @@
       box-sizing: border-box;
     }
 
-    /* Light theme (default) */
     :root {
       --bg-light: #FFFFFF;
       --bg-light-secondary: #F8FAFE;
@@ -51,10 +49,8 @@
       --text-light-muted: #6B7280;
       --border-light: #E5E7EB;
       --accent-blue: #2563EB;
-      --accent-blue-light: #3B82F6;
     }
 
-    /* Dark theme overrides */
     .section-dark {
       --bg-primary: #0A0E14;
       --bg-secondary: #11161E;
@@ -66,7 +62,7 @@
       --card-border: rgba(255,255,255,0.06);
       --accent-blue: #38BDF8;
       --accent-blue-rgb: 56, 189, 248;
-      background: #11161E; /* Ensure consistent dark background */
+      background: #0A0E14;
     }
     
     .section-light {
@@ -80,7 +76,7 @@
       --card-border: #E5E7EB;
       --accent-blue: #2563EB;
       --accent-blue-rgb: 37, 99, 235;
-      background: var(--bg-primary);
+      background: #FFFFFF;
     }
 
     body {
@@ -122,10 +118,9 @@
     section {
       padding: 7rem 0;
       position: relative;
-      transition: background-color 0.3s ease;
     }
 
-    /* Navbar - exactly matching homepage */
+    /* Navbar */
     .navbar {
       position: fixed;
       top: 0;
@@ -145,7 +140,7 @@
       justify-content: space-between;
       align-items: center;
     }
-    .logo img { height: 67px; width: auto; display: block; transition: filter 0.3s ease; }
+    .logo img { height: 80px; width: auto; display: block; transition: filter 0.3s ease; }
     .navbar-dark .logo img { filter: brightness(0) invert(1); }
     .nav-links { display: flex; gap: 2.5rem; align-items: center; }
     .nav-links a { text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: 0.2s; }
@@ -153,6 +148,105 @@
     .navbar-dark .nav-links a { color: #FFFFFF; }
     .nav-links a:hover { color: var(--accent-blue); }
     .btn-outline-nav { border: 1px solid currentColor; padding: 0.5rem 1.2rem; border-radius: 2rem; background: transparent; }
+
+    /* Mobile menu button */
+    .mobile-menu-btn {
+      display: none;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0.5rem;
+      z-index: 1001;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .hamburger-line {
+      width: 25px;
+      height: 2px;
+      background-color: currentColor;
+      transition: 0.3s;
+      display: block;
+    }
+    .navbar-light .mobile-menu-btn { color: #111827; }
+    .navbar-dark .mobile-menu-btn { color: #FFFFFF; }
+
+    /* Mobile glass overlay */
+    .mobile-menu-overlay {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 75%;
+      max-width: 350px;
+      height: 100vh;
+      background: rgba(10, 14, 20, 0.94);
+      backdrop-filter: blur(16px);
+      z-index: 1050;
+      transition: right 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      overflow-y: auto;
+      box-shadow: -5px 0 30px rgba(0, 0, 0, 0.3);
+      border-left: 1px solid rgba(255,255,255,0.1);
+    }
+    .navbar-light .mobile-menu-overlay {
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(16px);
+      border-left-color: rgba(0,0,0,0.05);
+    }
+    .mobile-menu-overlay.open { right: 0; }
+    .mobile-menu-container {
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+      padding: 2rem 1.5rem;
+      justify-content: flex-start;
+    }
+    .mobile-menu-header {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 2.5rem;
+    }
+    .mobile-menu-close {
+      background: transparent;
+      border: none;
+      font-size: 2rem;
+      cursor: pointer;
+      line-height: 1;
+      color: currentColor;
+      padding: 0.5rem;
+    }
+    .mobile-nav-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1.8rem;
+    }
+    .mobile-nav-links a {
+      text-decoration: none;
+      font-size: 1.2rem;
+      font-weight: 500;
+      display: block;
+      padding: 0.5rem 0;
+      transition: 0.2s;
+    }
+    .navbar-light .mobile-nav-links a { color: #111827; }
+    .navbar-dark .mobile-nav-links a { color: #FFFFFF; }
+    .mobile-nav-links a:hover {
+      color: var(--accent-blue);
+      transform: translateX(5px);
+    }
+    .mobile-nav-links .btn-outline-nav {
+      display: inline-block;
+      text-align: center;
+      margin-top: 0.5rem;
+      padding: 0.6rem 1.2rem;
+      border: 1px solid currentColor;
+      border-radius: 2rem;
+      background: transparent;
+    }
+    @media (max-height: 600px) {
+      .mobile-nav-links { gap: 1rem; }
+      .mobile-nav-links a { font-size: 1rem; padding: 0.3rem 0; }
+      .mobile-menu-container { padding: 1.5rem; }
+    }
 
     /* Buttons */
     .btn-primary {
@@ -179,6 +273,9 @@
       font-weight: 500;
       text-decoration: none;
       transition: 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
     }
     .btn-outline:hover { border-color: var(--accent-blue); background: rgba(var(--accent-blue-rgb), 0.08); }
 
@@ -190,6 +287,7 @@
       padding: 2rem;
       transition: all 0.4s ease;
       box-shadow: 0 20px 35px -12px rgba(0,0,0,0.05);
+      height: 100%;
     }
     .card-premium:hover { transform: translateY(-6px); border-color: var(--accent-blue); }
 
@@ -219,7 +317,7 @@
     }
     .section-dark input::placeholder { color: #6C7A91; }
 
-    /* Hero contact - fixed overlap with navbar */
+    /* Hero */
     .hero-contact {
       background: linear-gradient(135deg, #05080F 0%, #0A0E14 100%);
       position: relative;
@@ -227,7 +325,7 @@
       min-height: 50vh;
       display: flex;
       align-items: center;
-      padding-top: 100px; /* Prevents navbar overlap */
+      padding-top: 100px;
     }
     .hero-canvas { position: absolute; inset: 0; z-index: 0; }
     .hero-canvas canvas { width: 100%; height: 100%; display: block; }
@@ -237,7 +335,7 @@
     .contact-info-item { display: flex; gap: 1rem; margin-bottom: 1.5rem; align-items: flex-start; }
     .contact-icon { font-size: 1.2rem; color: var(--accent-blue); min-width: 2rem; }
 
-    /* Ensure all dark section text is visible */
+    /* Dark text contrast */
     .section-dark, 
     .section-dark p, 
     .section-dark h1, 
@@ -247,20 +345,25 @@
     .section-dark .card-premium p {
       color: var(--text-primary);
     }
-    .section-dark .text-secondary {
-      color: var(--text-secondary);
-    }
-    .section-dark .text-muted {
-      color: var(--text-muted);
-    }
+    .section-dark .text-secondary { color: var(--text-secondary); }
+    .section-dark .text-muted { color: var(--text-muted); }
 
+    /* Responsive */
     @media (max-width: 900px) {
-      .grid-2 { grid-template-columns: 1fr; gap: 2rem; }
-      .nav-links { display: none; }
+      .grid-2 { grid-template-columns: 1fr !important; gap: 2rem; }
+      .nav-links { display: none !important; }
+      .mobile-menu-btn { display: flex; }
       section { padding: 4rem 0; }
       .container { padding: 0 1.5rem; }
+      .logo img { height: 60px; }
+      .hero-contact { padding-top: 80px; min-height: auto; }
+      .card-premium { margin-bottom: 0; }
+    }
+    @media (max-width: 480px) {
       .logo img { height: 50px; }
-      .hero-contact { padding-top: 80px; }
+      h1 { font-size: 2rem !important; }
+      .btn-primary, .btn-outline { padding: 0.6rem 1.2rem; font-size: 0.8rem; }
+      .card-premium { padding: 1.5rem; }
     }
   </style>
 </head>
@@ -278,16 +381,35 @@
       <a href="../about/">About</a>
       <a href="../blog/">Blog</a>
       <a href="../contact/" style="color: var(--accent-blue);">Contact</a>
-      <a href="#" class="btn-outline-nav">Investor access</a>
+      <a href="#" class="btn-outline-nav">Request a demo</a>
+    </div>
+    <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+    </button>
+  </div>
+  <div class="mobile-menu-overlay" id="mobileMenuOverlay">
+    <div class="mobile-menu-container">
+      <div class="mobile-menu-header">
+        <button class="mobile-menu-close" id="mobileMenuClose">&times;</button>
+      </div>
+      <ul class="mobile-nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../about.html">About</a></li>
+        <li><a href="../blog.html">Blog</a></li>
+        <li><a href="../contact.html">Contact</a></li>
+        <li><a href="#" class="btn-outline-nav">Request a demo</a></li>
+      </ul>
     </div>
   </div>
 </nav>
 
 <main>
-  <!-- Hero Section - Dark with padding-top fix -->
+  <!-- Hero Section -->
   <div class="hero-contact section-dark">
     <div class="hero-canvas"><canvas id="contactParticles"></canvas></div>
-    <div class="container" style="position: relative; z-index: 2;">
+    <div class="container">
       <div class="hero-content" data-aos="fade-up">
         <div class="eyebrow">GET IN TOUCH</div>
         <h1 style="font-size: clamp(2rem, 5vw, 3.5rem); margin-bottom: 1rem;">Let's connect</h1>
@@ -299,7 +421,7 @@
   </div>
 
   <!-- Contact Form & Info (Light Section) -->
-  <section class="section-light" style="background: var(--bg-primary);">
+  <section class="section-light">
     <div class="container">
       <div class="grid-2">
         <!-- Contact Form -->
@@ -334,7 +456,7 @@
           </form>
         </div>
         
-        <!-- Contact Info & Offices (single email) -->
+        <!-- Contact Info & Offices -->
         <div data-aos="fade-left">
           <div class="eyebrow">REACH US DIRECTLY</div>
           <h2 style="margin-bottom: 1.5rem;">Two continents, one mission</h2>
@@ -374,15 +496,15 @@
     </div>
   </section>
 
-  <!-- Map / Location Showcase (Dark Section) -->
-  <section class="section-dark" style="background: #11161E;">
+  <!-- Location Showcase (Dark) -->
+  <section class="section-dark">
     <div class="container">
       <div class="eyebrow" data-aos="fade-up">OUR LOCATIONS</div>
-      <h2 data-aos="fade-up" style="color: white;">Serving manufacturers across two continents</h2>
+      <h2 data-aos="fade-up">Serving manufacturers across two continents</h2>
       <div class="grid-2" style="margin-top: 2rem;">
         <div class="card-premium" data-aos="fade-right">
           <div style="border-radius: 1rem; overflow: hidden; margin-bottom: 1rem;">
-            <img src="https://images.unsplash.com/photo-1726347921581-a33aa0f688e6?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Maryland skyline" style="width:100%; height:180px; object-fit:cover;">
+            <img src="https://images.unsplash.com/photo-1726347921581-a33aa0f688e6?q=80&w=1171&auto=format&fit=crop" alt="Maryland skyline" style="width:100%; height:180px; object-fit:cover;">
           </div>
           <h3>Largo, Maryland, USA</h3>
           <p>Our strategic headquarters near Washington, D.C. — where policy meets technology. We're minutes from the EPA and key federal climate agencies.</p>
@@ -390,7 +512,7 @@
         </div>
         <div class="card-premium" data-aos="fade-left">
           <div style="border-radius: 1rem; overflow: hidden; margin-bottom: 1rem;">
-            <img src="https://images.unsplash.com/photo-1741900025311-32bdd63a18a6?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Abuja city" style="width:100%; height:180px; object-fit:cover;">
+            <img src="https://images.unsplash.com/photo-1741900025311-32bdd63a18a6?q=80&w=735&auto=format&fit=crop" alt="Abuja city" style="width:100%; height:180px; object-fit:cover;">
           </div>
           <h3>Abuja, Nigeria</h3>
           <p>Our African hub, positioned to support West Africa's industrial transformation and emerging carbon markets.</p>
@@ -400,8 +522,8 @@
     </div>
   </section>
 
-  <!-- Frequently Asked Questions (Light) -->
-  <section class="section-light" style="background: var(--bg-primary);">
+  <!-- FAQ (Light) -->
+  <section class="section-light">
     <div class="container">
       <div class="eyebrow" data-aos="fade-up">FAQs</div>
       <h2 data-aos="fade-up">Quick answers to common questions</h2>
@@ -414,14 +536,14 @@
     </div>
   </section>
 
-  <!-- CTA (Dark) - Fixed text visibility -->
-  <section class="section-dark" style="border-bottom: none; background: #11161E;">
+  <!-- Newsletter CTA (Dark) -->
+  <section class="section-dark" style="border-bottom: none;">
     <div class="container" style="text-align: center; max-width: 700px;">
       <div class="eyebrow" data-aos="fade-up">STAY UPDATED</div>
-      <h2 data-aos="fade-up" style="color: white;">Subscribe to our newsletter</h2>
+      <h2 data-aos="fade-up">Subscribe to our newsletter</h2>
       <p style="margin-bottom: 2rem; color: var(--text-secondary);" data-aos="fade-up">Get monthly insights on industrial decarbonization, carbon market trends, and regulatory updates.</p>
       <form action="https://formspree.io/f/xqapjqkr" method="POST" style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;" data-aos="fade-up">
-        <input type="email" name="email" placeholder="Your email address" required style="flex: 1; min-width: 200px; background: rgba(255,255,255,0.05); border-color: var(--border-color); color: white;">
+        <input type="email" name="email" placeholder="Your email address" required style="flex: 1; min-width: 200px; background: rgba(255,255,255,0.05); border-color: var(--border-color); color: white; padding: 0.8rem; border-radius: 2rem;">
         <button type="submit" class="btn-primary">Subscribe →</button>
       </form>
       <p style="font-size: 0.7rem; margin-top: 1rem; color: var(--text-muted);">No spam, unsubscribe anytime.</p>
@@ -429,47 +551,95 @@
   </section>
 </main>
 
-<footer class="section-dark" style="border-top: 1px solid rgba(255,255,255,0.08); padding: 2rem 0; background: #0A0E14;">
+<footer class="section-dark" style="border-top: 1px solid rgba(255,255,255,0.08); padding: 2rem 0;">
   <div class="container" style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
     <div style="font-size: 0.7rem; color: #9CA3AF;">© 2026 Avalanche Consulting — US & Nigeria. All rights reserved.</div>
-    <div style="display: flex; gap: 2rem;">
-      <a href="#" style="color: #9CA3AF; text-decoration: none;">Privacy</a>
-      <a href="#" style="color: #9CA3AF; text-decoration: none;">Compliance</a>
-      <a href="#" style="color: #9CA3AF; text-decoration: none;">Investor portal</a>
+    <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
+      <a href="../privacy-policy/" style="color: #9CA3AF; text-decoration: none;">Privacy</a>
+      <a href="../compliance/" style="color: #9CA3AF; text-decoration: none;">Compliance</a>
+      <a href="../investor-portal/" style="color: #9CA3AF; text-decoration: none;">Investor portal</a>
     </div>
   </div>
 </footer>
 
 <script>
-  // Smooth scroll
-  const lenis = new Lenis({ duration: 1.2, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true });
-  function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
-  requestAnimationFrame(raf);
-  
+  // Remove Lenis to prevent scroll conflicts – using native scrolling
   AOS.init({ duration: 800, once: true, offset: 100 });
   
   // Hero canvas particles
   const canvas = document.getElementById('contactParticles');
   if (canvas) {
     let ctx = canvas.getContext('2d');
-    let width = window.innerWidth, height = window.innerHeight;
-    let particles = [];
-    function resizeCanvas() { width = window.innerWidth; height = window.innerHeight; canvas.width = width; canvas.height = height; initParticles(); }
-    function initParticles() { particles = []; let count = Math.min(100, Math.floor(width * height / 12000)); for (let i = 0; i < count; i++) { particles.push({ x: Math.random() * width, y: Math.random() * height, radius: Math.random() * 2 + 1, speedX: (Math.random() - 0.5) * 0.25, speedY: (Math.random() - 0.5) * 0.2, alpha: Math.random() * 0.4 + 0.1 }); } }
-    function draw() { if (!ctx) return; ctx.clearRect(0, 0, width, height); for (let p of particles) { ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2); ctx.fillStyle = `rgba(56, 189, 248, ${p.alpha})`; ctx.fill(); p.x += p.speedX; p.y += p.speedY; if (p.x < 0) p.x = width; if (p.x > width) p.x = 0; if (p.y < 0) p.y = height; if (p.y > height) p.y = 0; } requestAnimationFrame(draw); }
-    window.addEventListener('resize', resizeCanvas); resizeCanvas(); draw();
+    let width, height, particles = [];
+    const resizeCanvas = () => {
+      width = window.innerWidth; height = window.innerHeight;
+      canvas.width = width; canvas.height = height;
+      particles = [];
+      let count = Math.min(100, Math.floor(width * height / 12000));
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x: Math.random() * width, y: Math.random() * height,
+          radius: Math.random() * 2 + 1,
+          speedX: (Math.random() - 0.5) * 0.25,
+          speedY: (Math.random() - 0.5) * 0.2,
+          alpha: Math.random() * 0.4 + 0.1,
+        });
+      }
+    };
+    const draw = () => {
+      if (!ctx) return;
+      ctx.clearRect(0, 0, width, height);
+      for (let p of particles) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(56, 189, 248, ${p.alpha})`;
+        ctx.fill();
+        p.x += p.speedX; p.y += p.speedY;
+        if (p.x < 0) p.x = width; if (p.x > width) p.x = 0;
+        if (p.y < 0) p.y = height; if (p.y > height) p.y = 0;
+      }
+      requestAnimationFrame(draw);
+    };
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas(); draw();
   }
   
-  // Navbar scroll
+  // Navbar scroll (dark/light transition)
   const navbar = document.getElementById('navbar');
   const heroSection = document.querySelector('.hero-contact');
   window.addEventListener('scroll', () => {
     if (!heroSection) return;
     const heroBottom = heroSection.offsetTop + heroSection.offsetHeight;
-    if (window.scrollY + 100 < heroBottom) { navbar.classList.remove('navbar-light'); navbar.classList.add('navbar-dark'); } 
-    else { navbar.classList.remove('navbar-dark'); navbar.classList.add('navbar-light'); }
+    if (window.scrollY + 100 < heroBottom) {
+      navbar.classList.remove('navbar-light');
+      navbar.classList.add('navbar-dark');
+    } else {
+      navbar.classList.remove('navbar-dark');
+      navbar.classList.add('navbar-light');
+    }
   });
   window.dispatchEvent(new Event('scroll'));
+
+  // Mobile menu toggle
+  const mobileBtn = document.getElementById('mobileMenuBtn');
+  const mobileOverlay = document.getElementById('mobileMenuOverlay');
+  const mobileClose = document.getElementById('mobileMenuClose');
+  if (mobileBtn && mobileOverlay && mobileClose) {
+    const openMenu = () => {
+      mobileOverlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    };
+    const closeMenu = () => {
+      mobileOverlay.classList.remove('open');
+      document.body.style.overflow = '';
+    };
+    mobileBtn.addEventListener('click', openMenu);
+    mobileClose.addEventListener('click', closeMenu);
+    mobileOverlay.addEventListener('click', (e) => {
+      if (e.target === mobileOverlay) closeMenu();
+    });
+    document.querySelectorAll('.mobile-nav-links a').forEach(link => link.addEventListener('click', closeMenu));
+  }
 </script>
 </body>
 </html>
