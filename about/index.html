@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  
+  <title>About Avalanche Consulting — Industrial Decarbonization & Carbon Markets</title>
+  <meta name="description" content="Avalanche Consulting builds infrastructure for the industrial carbon economy. Learn about our mission, leadership, and dual-continent presence in the US and Nigeria.">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.avalancheconsults.org/about">
+  <meta property="og:title" content="About Avalanche Consulting — Industrial Carbon Economy">
+  <meta property="og:description" content="Driving measurable decarbonization for manufacturers across the US and Nigeria.">
+  <meta property="og:image" content="https://www.avalancheconsults.org/assets/images/linkimage.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="Avalanche Consulting — About Us">
+  <meta property="twitter:description" content="Our mission is to accelerate the climate economy by providing technology and expertise manufacturers need to decarbonize profitably.">
+  <meta property="twitter:image" content="https://www.avalancheconsults.org/assets/images/linkimage.png">
+  
+  <!-- Favicon -->
+  <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+  <link rel="manifest" href="../site.webmanifest">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Light theme (default) */
+    :root {
+      --bg-light: #FFFFFF;
+      --bg-light-secondary: #F8FAFE;
+      --text-light-primary: #111827;
+      --text-light-secondary: #4B5563;
+      --text-light-muted: #6B7280;
+      --border-light: #E5E7EB;
+      --accent-blue: #2563EB;
+      --accent-blue-light: #3B82F6;
+    }
+
+    /* Dark theme overrides - all text explicitly light */
+    .section-dark {
+      --bg-primary: #0A0E14;
+      --bg-secondary: #11161E;
+      --text-primary: #FFFFFF;
+      --text-secondary: #D1D5DB;
+      --text-muted: #9CA3AF;
+      --border-color: rgba(255,255,255,0.08);
+      --card-bg: #171E28;
+      --card-border: rgba(255,255,255,0.06);
+      --card-shadow: 0 20px 35px -12px rgba(0,0,0,0.4);
+      --card-hover-shadow: 0 30px 40px -18px rgba(0,0,0,0.5);
+      --accent-blue: #38BDF8;
+      --accent-blue-rgb: 56, 189, 248;
+      
+      /* Force all text in dark sections to be light */
+      color: var(--text-primary);
+    }
+    
+    .section-light {
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F8FAFE;
+      --text-primary: #111827;
+      --text-secondary: #4B5563;
+      --text-muted: #6B7280;
+      --border-color: #E5E7EB;
+      --card-bg: #FFFFFF;
+      --card-border: #E5E7EB;
+      --card-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.05);
+      --card-hover-shadow: 0 30px 40px -18px rgba(0, 0, 0, 0.1);
+      --accent-blue: #2563EB;
+      --accent-blue-rgb: 37, 99, 235;
+      color: var(--text-primary);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-light);
+      color: var(--text-light-primary);
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3 {
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .text-accent { color: var(--accent-blue); }
+    
+    .eyebrow {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      background: rgba(var(--accent-blue-rgb), 0.12);
+      display: inline-block;
+      padding: 0.3rem 1rem;
+      border-radius: 2rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid rgba(var(--accent-blue-rgb), 0.25);
+      color: var(--accent-blue);
+    }
+
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 2rem; }
+    section { padding: 7rem 0; position: relative; transition: background-color 0.3s ease; }
+
+    /* Ensure all text inside .section-dark has proper contrast */
+    .section-dark, 
+    .section-dark p, 
+    .section-dark h1, 
+    .section-dark h2, 
+    .section-dark h3, 
+    .section-dark li, 
+    .section-dark .stat-number,
+    .section-dark .card-premium,
+    .section-dark .card-premium p,
+    .section-dark .card-premium h3 {
+      color: var(--text-primary);
+    }
+    .section-dark .text-secondary {
+      color: var(--text-secondary);
+    }
+    .section-dark .text-muted {
+      color: var(--text-muted);
+    }
+    
+    /* Navbar */
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      backdrop-filter: blur(20px);
+      transition: all 0.3s ease;
+      border-bottom: 1px solid transparent;
+    }
+    .navbar-light { background: rgba(255, 255, 255, 0.85); border-bottom-color: var(--border-light); }
+    .navbar-dark { background: rgba(10, 14, 20, 0.85); border-bottom-color: rgba(255,255,255,0.08); }
+    .nav-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0.75rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo img { height: 80px; width: auto; display: block; transition: filter 0.3s ease; }
+    .navbar-dark .logo img { filter: brightness(0) invert(1); }
+    .nav-links { display: flex; gap: 2.5rem; align-items: center; }
+    .nav-links a { text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: 0.2s; }
+    .navbar-light .nav-links a { color: #111827; }
+    .navbar-dark .nav-links a { color: #FFFFFF; }
+    .nav-links a:hover { color: var(--accent-blue); }
+    .btn-outline-nav { border: 1px solid currentColor; padding: 0.5rem 1.2rem; border-radius: 2rem; background: transparent; }
+
+    /* Buttons */
+    .btn-primary {
+      background: var(--accent-blue);
+      color: white;
+      font-weight: 600;
+      padding: 0.8rem 2rem;
+      border-radius: 2rem;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.3s;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-primary:hover { transform: translateY(-2px); filter: brightness(1.05); }
+    .btn-outline {
+      border: 1px solid var(--border-color);
+      background: transparent;
+      color: var(--text-primary);
+      padding: 0.8rem 2rem;
+      border-radius: 2rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+    .btn-outline:hover { border-color: var(--accent-blue); background: rgba(var(--accent-blue-rgb), 0.08); }
+
+    /* Cards */
+    .card-premium {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 1.5rem;
+      padding: 2rem;
+      transition: all 0.4s ease;
+      box-shadow: var(--card-shadow);
+    }
+    .card-premium:hover { transform: translateY(-6px); box-shadow: var(--card-hover-shadow); border-color: var(--accent-blue); }
+
+    /* Hero */
+    .hero-about {
+      background: linear-gradient(135deg, #05080F 0%, #0A0E14 100%);
+      position: relative;
+      overflow: hidden;
+      min-height: 60vh;
+      display: flex;
+      align-items: center;
+    }
+    .hero-canvas { position: absolute; inset: 0; z-index: 0; }
+    .hero-canvas canvas { width: 100%; height: 100%; display: block; }
+    .hero-content { position: relative; z-index: 2; }
+
+    /* Values grid */
+    .values-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 2rem; }
+    .value-icon { font-size: 2rem; color: var(--accent-blue); margin-bottom: 1rem; }
+
+    .grid-2, .grid-3 { display: grid; gap: 2rem; }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+
+    @media (max-width: 900px) {
+      .values-grid, .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      section { padding: 4rem 0; }
+      .container { padding: 0 1.5rem; }
+      .logo img { height: 50px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-light" id="navbar">
+  <div class="nav-container">
+    <a href="../" class="logo-link">
+      <div class="logo">
+        <img src="../assets/images/logo.png" alt="Avalanche Consulting Logo" onerror="this.style.display='none'">
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="../">Home</a>
+      <a href="/about/" style="color: var(--accent-blue);">About</a>
+      <a href="/blog/">Blog</a>
+      <a href="/contact/">Contact</a>
+      <a href="#" class="btn-outline-nav">Investor access</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <!-- Hero Section - Dark (text explicitly white) -->
+  <div class="hero-about section-dark" style="padding-top: 100px;">
+    <div class="hero-canvas"><canvas id="aboutParticles"></canvas></div>
+    <div class="container" style="position: relative; z-index: 2;">
+      <div class="hero-content" data-aos="fade-up">
+        <div class="eyebrow">OUR STORY</div>
+        <h1 style="font-size: clamp(2.5rem, 6vw, 4rem); line-height: 1.2; margin-bottom: 1.5rem; color: white;">
+          Building the <span class="text-accent">infrastructure</span><br>for industrial decarbonization
+        </h1>
+        <p style="font-size: 1.1rem; max-width: 620px; color: #D1D5DB;">
+          Avalanche Consulting and Management Services, LLC was founded to close the critical gap between industrial operations and carbon markets — empowering manufacturers to turn compliance into competitive advantage.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mission & Vision (Light) -->
+  <section class="section-light" style="background: var(--bg-primary);">
+    <div class="container">
+      <div class="grid-2" style="gap: 3rem;">
+        <div data-aos="fade-right">
+          <div class="eyebrow">OUR MISSION</div>
+          <h2 style="font-size: clamp(1.6rem, 3vw, 2.2rem); margin-bottom: 1.5rem;">Accelerate the climate economy by equipping industry with precision tools and market access.</h2>
+          <p style="color: var(--text-secondary);">We believe that sustainability is not an extra-credit activity — it's a data-driven, value-generating aspect of running a successful business. Our mission is to make decarbonization simple, fast, and profitable for manufacturers across the US and Africa.</p>
+        </div>
+        <div data-aos="fade-left">
+          <div class="eyebrow">OUR VISION</div>
+          <h2 style="font-size: clamp(1.6rem, 3vw, 2.2rem); margin-bottom: 1.5rem;">A world where every industrial facility is a node in a transparent, efficient carbon economy.</h2>
+          <p style="color: var(--text-secondary);">By 2036, we envision CarbonScope360 as the recognized standard for industrial carbon accounting — connecting thousands of facilities to global carbon markets and driving 100+ million metric tons of verified reductions.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Values (Dark) - all text now visible -->
+  <section class="section-dark" style="background: #11161E;">
+    <div class="container">
+      <div class="eyebrow" data-aos="fade-up">WHAT WE STAND FOR</div>
+      <h2 data-aos="fade-up" style="color: white;">Core values that guide every decision</h2>
+      <div class="values-grid">
+        <div class="card-premium" data-aos="zoom-in"><div class="value-icon"><i class="fas fa-chart-line"></i></div><h3>Radical integrity</h3><p>Our data, methodologies, and advice are built on unassailable scientific and regulatory foundations. Every calculation is audit-ready.</p></div>
+        <div class="card-premium" data-aos="zoom-in" data-aos-delay="100"><div class="value-icon"><i class="fas fa-globe"></i></div><h3>Dual-continent bridge</h3><p>We combine US regulatory expertise with deep on-the-ground presence in Nigeria, serving as the strategic link between two of the world's most dynamic manufacturing regions.</p></div>
+        <div class="card-premium" data-aos="zoom-in" data-aos-delay="200"><div class="value-icon"><i class="fas fa-hand-holding-usd"></i></div><h3>Financial pragmatism</h3><p>Decarbonization must deliver ROI. Every solution we build is engineered to generate measurable economic value for our clients.</p></div>
+        <div class="card-premium" data-aos="zoom-in" data-aos-delay="300"><div class="value-icon"><i class="fas fa-users"></i></div><h3>Inclusive growth</h3><p>As a minority-founded firm, we are committed to equitable opportunity — investing in HBCU and Nigerian university talent pipelines.</p></div>
+        <div class="card-premium" data-aos="zoom-in" data-aos-delay="400"><div class="value-icon"><i class="fas fa-microchip"></i></div><h3>Relentless innovation</h3><p>From AI agents to immutable ledger infrastructure, we continuously push the frontier of carbon management technology.</p></div>
+        <div class="card-premium" data-aos="zoom-in" data-aos-delay="500"><div class="value-icon"><i class="fas fa-leaf"></i></div><h3>Climate first</h3><p>Our ultimate stakeholder is the planet. Every decision is weighed against its potential to reduce atmospheric carbon at scale.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Our Presence (Light) -->
+  <section class="section-light" style="background: var(--bg-primary);">
+    <div class="container">
+      <div class="eyebrow" data-aos="fade-up">GLOBAL FOOTPRINT</div>
+      <h2 data-aos="fade-up">Headquarters in the United States & Nigeria</h2>
+      <div class="grid-2" style="margin-top: 2rem;">
+        <div class="card-premium" data-aos="fade-right">
+          <div class="value-icon"><i class="fas fa-flag-usa"></i></div>
+          <h3>United States — Largo, Maryland</h3>
+          <p>Our operational and strategic headquarters in Prince George's County — the most populous majority-Black county in the United States. From here, we manage regulatory compliance with EPA, SEC, and IRA programs, as well as enterprise SaaS development.</p>
+          <p style="margin-top: 1rem;"><strong>📍 10025 Campus Way South, Largo, MD 20774</strong></p>
+        </div>
+        <div class="card-premium" data-aos="fade-left">
+          <div class="value-icon"><i class="fas fa-flag-checkered"></i></div>
+          <h3>Nigeria — Abuja, FCT</h3>
+          <p>Our African regional hub, strategically located to serve West Africa's rapidly industrializing economy. We work closely with NESREA, the Climate Change Council, and major manufacturing groups to prepare for Nigeria's upcoming carbon pricing framework.</p>
+          <p style="margin-top: 1rem;"><strong>📍 Plot 1148, Cadastral Zone B06, Abuja, Nigeria</strong></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Leadership Team (Dark) - text visible -->
+  <section class="section-dark" style="background: #11161E;">
+    <div class="container">
+      <div class="eyebrow" data-aos="fade-up">LEADERSHIP</div>
+      <h2 data-aos="fade-up" style="color: white;">Driven by experience, united by purpose</h2>
+      <div class="swiper team-swiper" data-aos="fade-up" style="margin-top: 2rem; overflow: hidden; padding: 1rem 0;">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide"><div class="card-premium" style="text-align: center;"><div style="width: 120px; height: 120px; background: linear-gradient(135deg, #38BDF8, #0284C7); border-radius: 50%; margin: 0 auto 1rem; background-size: cover; background-image: url('/assets/images/henrietta.jpg'); background-position: center;"></div><h3>Henrietta Happy Ighomrore</h3><div style="color: var(--accent-blue);">Founder & CEO</div><p>Former management consultant and regulatory strategist. Architect of CarbonScope360 and the dual-market expansion strategy.</p></div></div>
+        <div class="swiper-pagination" style="position: relative; margin-top: 1.5rem;"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- History (Light) -->
+  <section class="section-light" style="background: var(--bg-primary);">
+    <div class="container">
+      <div class="eyebrow" data-aos="fade-up">OUR JOURNEY</div>
+      <h2 data-aos="fade-up">From vision to pilot to market standard</h2>
+      <div style="display: flex; flex-direction: column; gap: 1.5rem; margin-top: 2rem;">
+        <div class="card-premium" data-aos="fade-right"><strong>February 2, 2025</strong> — Avalanche Consulting & Management Services, LLC is registered in Maryland, USA, with a vision to bridge industrial manufacturing and carbon markets.</div>
+        <div class="card-premium" data-aos="fade-left"><strong>March 2025</strong> — Nigeria subsidiary established; Abuja office opens. Initial partnership discussions with major manufacturing groups begin.</div>
+        <div class="card-premium" data-aos="fade-right"><strong>December 2025</strong> — CarbonScope360 prototype validated; EmissionsCore engine achieves ±2.3% accuracy against third-party audit benchmarks.</div>
+        <div class="card-premium" data-aos="fade-left"><strong>Q1 2026</strong> — Pilot launch with 3 US and 2 Nigerian anchor clients. Seed funding round opens.</div>
+        <div class="card-premium" data-aos="fade-right"><strong>2027 and beyond</strong> — Commercial scaling, TradeDesk launch, and expansion across West Africa and North America.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ESG & Impact (Dark) -->
+  <section class="section-dark" style="background: #11161E;">
+    <div class="container">
+      <div class="eyebrow" data-aos="fade-up">ESG COMMITMENT</div>
+      <h2 data-aos="fade-up" style="color: white;">Built for people, planet, and profit</h2>
+      <div class="grid-3" style="margin-top: 2rem;">
+        <div class="card-premium" data-aos="zoom-in"><i class="fas fa-tree fa-2x text-accent" style="margin-bottom: 1rem;"></i><h3>Environmental</h3><p>Our platform is projected to enable 50–100 million metric tons of CO₂e reductions cumulatively by 2036.</p></div>
+        <div class="card-premium" data-aos="zoom-in" data-aos-delay="100"><i class="fas fa-chart-simple fa-2x text-accent" style="margin-bottom: 1rem;"></i><h3>Economic</h3><p>142 direct jobs by 2036, $170M cumulative payroll, $65M+ tax contributions across US and Nigeria.</p></div>
+        <div class="card-premium" data-aos="zoom-in" data-aos-delay="200"><i class="fas fa-hand-holding-heart fa-2x text-accent" style="margin-bottom: 1rem;"></i><h3>Social</h3><p>Minority-founded with HBCU and Nigerian university hiring pipelines. IRA Justice40-aligned.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA (Light) -->
+  <section class="section-light" style="border-bottom: none;">
+    <div class="container" style="text-align: center; max-width: 700px;">
+      <div class="eyebrow" data-aos="fade-up">CAREERS & PARTNERSHIPS</div>
+      <h2 data-aos="fade-up">Help us build the carbon economy</h2>
+      <p style="color: var(--text-secondary); margin-bottom: 2rem;" data-aos="fade-up">We're always looking for passionate engineers, regulatory experts, and strategic partners. Join a mission-driven team working at the intersection of climate, technology, and manufacturing.</p>
+      <div style="display: flex; gap: 1rem; justify-content: center;" data-aos="fade-up">
+        <a href="#" class="btn-primary">View open roles →</a>
+        <a href="#" class="btn-outline">Partner with us</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="section-dark" style="border-top: 1px solid rgba(255,255,255,0.08); padding: 2rem 0; background: #0A0E14;">
+  <div class="container" style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+    <div style="font-size: 0.7rem; color: #9CA3AF;">© 2026 Avalanche Consulting — US & Nigeria. All rights reserved.</div>
+    <div style="display: flex; gap: 2rem;"><a href="#" style="color: #9CA3AF; text-decoration: none;">Privacy</a><a href="#" style="color: #9CA3AF; text-decoration: none;">Compliance</a><a href="#" style="color: #9CA3AF; text-decoration: none;">Investor portal</a></div>
+  </div>
+</footer>
+
+<script>
+  const lenis = new Lenis({ duration: 1.2, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true });
+  function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+  requestAnimationFrame(raf);
+  AOS.init({ duration: 800, once: true, offset: 100 });
+
+  // Hero canvas
+  const canvas = document.getElementById('aboutParticles');
+  if (canvas) {
+    let ctx = canvas.getContext('2d');
+    let width = window.innerWidth, height = window.innerHeight;
+    let particles = [];
+    function resizeCanvas() { width = window.innerWidth; height = window.innerHeight; canvas.width = width; canvas.height = height; initParticles(); }
+    function initParticles() { particles = []; let count = Math.min(100, Math.floor(width * height / 12000)); for (let i = 0; i < count; i++) { particles.push({ x: Math.random() * width, y: Math.random() * height, radius: Math.random() * 2 + 1, speedX: (Math.random() - 0.5) * 0.25, speedY: (Math.random() - 0.5) * 0.2, alpha: Math.random() * 0.4 + 0.1 }); } }
+    function draw() { if (!ctx) return; ctx.clearRect(0, 0, width, height); for (let p of particles) { ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2); ctx.fillStyle = `rgba(56, 189, 248, ${p.alpha})`; ctx.fill(); p.x += p.speedX; p.y += p.speedY; if (p.x < 0) p.x = width; if (p.x > width) p.x = 0; if (p.y < 0) p.y = height; if (p.y > height) p.y = 0; } requestAnimationFrame(draw); }
+    window.addEventListener('resize', resizeCanvas); resizeCanvas(); draw();
+  }
+
+  // Navbar scroll
+  const navbar = document.getElementById('navbar');
+  const heroSection = document.querySelector('.hero-about');
+  window.addEventListener('scroll', () => {
+    if (!heroSection) return;
+    const heroBottom = heroSection.offsetTop + heroSection.offsetHeight;
+    if (window.scrollY + 100 < heroBottom) { navbar.classList.remove('navbar-light'); navbar.classList.add('navbar-dark'); } 
+    else { navbar.classList.remove('navbar-dark'); navbar.classList.add('navbar-light'); }
+  });
+  window.dispatchEvent(new Event('scroll'));
+
+  new Swiper('.team-swiper', { loop: true, autoplay: { delay: 5000 }, pagination: { el: '.swiper-pagination', clickable: true }, slidesPerView: 1, breakpoints: { 768: { slidesPerView: 2 }, 1024: { slidesPerView: 3 } } });
+</script>
+</body>
+</html>
