@@ -119,7 +119,7 @@
 
   <div class="legal-content section-light">
     <div class="container">
-      <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Home</a>
+      <a href="../" class="back-link"><i class="fas fa-arrow-left"></i> Back to Home</a>
       
       <h2>Investment Summary</h2>
       <p>Avalanche Consulting is seeking <strong>$750,000 in Seed funding + grants in 2026</strong> to accelerate the development of CarbonScope360 and expand our US and Nigerian operations. We are a first-mover in a $4.2B serviceable addressable market with no dominant competitor. Our pilot has proven regulatory-grade accuracy (±2.3%), and we have secured letters of intent from 5 industrial anchor clients.</p>
@@ -217,7 +217,7 @@
   const mobileBtn = document.getElementById('mobileMenuBtn'), mobileOverlay = document.getElementById('mobileMenuOverlay'), mobileClose = document.getElementById('mobileMenuClose');
   if (mobileBtn && mobileOverlay && mobileClose) { const open = () => { mobileOverlay.classList.add('open'); document.body.style.overflow = 'hidden'; }; const close = () => { mobileOverlay.classList.remove('open'); document.body.style.overflow = ''; }; mobileBtn.addEventListener('click', open); mobileClose.addEventListener('click', close); mobileOverlay.addEventListener('click', (e) => { if (e.target === mobileOverlay) close(); }); document.querySelectorAll('.mobile-nav-links a').forEach(link => link.addEventListener('click', close)); }
   // Set active nav link
-  function setActiveNavLink() { const currentPath = window.location.pathname.split('/').pop(); const navLinks = document.querySelectorAll('.nav-links a, .mobile-nav-links a'); navLinks.forEach(link => { const href = link.getAttribute('href'); if (href && href === currentPath) link.classList.add('active'); else if (href === 'privacy.html' && currentPath === 'privacy.html') link.classList.add('active'); else link.classList.remove('active'); }); } setActiveNavLink();
+  function setActiveNavLink() { const currentPath = window.location.pathname.split('/').pop(); const navLinks = document.querySelectorAll('.nav-links a, .mobile-nav-links a'); navLinks.forEach(link => { const href = link.getAttribute('href'); if (href && href === currentPath) link.classList.add('active'); else if (href === '../privacy-policy/' && currentPath === '../privacy-policy/') link.classList.add('active'); else link.classList.remove('active'); }); } setActiveNavLink();
 </script>
 </body>
 </html>

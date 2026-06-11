@@ -208,7 +208,7 @@
   const mobileBtn = document.getElementById('mobileMenuBtn'), mobileOverlay = document.getElementById('mobileMenuOverlay'), mobileClose = document.getElementById('mobileMenuClose');
   if (mobileBtn && mobileOverlay && mobileClose) { const open = () => { mobileOverlay.classList.add('open'); document.body.style.overflow = 'hidden'; }; const close = () => { mobileOverlay.classList.remove('open'); document.body.style.overflow = ''; }; mobileBtn.addEventListener('click', open); mobileClose.addEventListener('click', close); mobileOverlay.addEventListener('click', (e) => { if (e.target === mobileOverlay) close(); }); document.querySelectorAll('.mobile-nav-links a').forEach(link => link.addEventListener('click', close)); }
   // Set active nav link
-  function setActiveNavLink() { const currentPath = window.location.pathname.split('/').pop(); const navLinks = document.querySelectorAll('.nav-links a, .mobile-nav-links a'); navLinks.forEach(link => { const href = link.getAttribute('href'); if (href && href === currentPath) link.classList.add('active'); else if (href === 'privacy.html' && currentPath === 'privacy.html') link.classList.add('active'); else link.classList.remove('active'); }); } setActiveNavLink();
+  function setActiveNavLink() { const currentPath = window.location.pathname.split('/').pop(); const navLinks = document.querySelectorAll('.nav-links a, .mobile-nav-links a'); navLinks.forEach(link => { const href = link.getAttribute('href'); if (href && href === currentPath) link.classList.add('active'); else if (href === '../privacy-policy/' && currentPath === '../privacy-policy/') link.classList.add('active'); else link.classList.remove('active'); }); } setActiveNavLink();
 </script>
 </body>
 </html>
