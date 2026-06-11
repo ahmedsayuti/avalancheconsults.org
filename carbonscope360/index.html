@@ -1,339 +1,1284 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>CarbonScope360 | Industrial Carbon Management & Trading Platform</title>
-    <!-- Tailwind CSS + Google Fonts + Chart.js + Font Awesome 6 -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
-    <style>
-        * { font-family: 'Inter', sans-serif; transition: all 0.2s ease; }
-        body { background: #f4f7fc; }
-        .card-glass { background: rgba(255,255,255,0.96); backdrop-filter: blur(0px); border-radius: 28px; box-shadow: 0 20px 35px -12px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.02); border: 1px solid rgba(255,255,255,0.5); }
-        .gradient-text { background: linear-gradient(135deg, #0b3b2f, #1e6f5c); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .tab-active { background: white; color: #1e6f5c; border-bottom: 3px solid #1e6f5c; font-weight: 600; box-shadow: 0 -2px 10px rgba(0,0,0,0.02); }
-        .tab-inactive { color: #5b6e8c; background: transparent; border-bottom: 1px solid #e2e8f0; }
-        .card-hover:hover { transform: translateY(-3px); box-shadow: 0 25px 35px -12px rgba(0,0,0,0.15); }
-        input, select { border: 1px solid #e2e8f0; border-radius: 16px; padding: 10px 14px; background: white; font-size: 0.9rem; width: 100%; transition: 0.15s; }
-        input:focus, select:focus { outline: none; border-color: #1e6f5c; box-shadow: 0 0 0 3px rgba(30,111,92,0.1); }
-        .stat-card { background: white; border-radius: 24px; padding: 1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.03); border: 1px solid #eef2f6; }
-        .badge { border-radius: 100px; padding: 4px 12px; font-size: 0.7rem; font-weight: 600; }
-        @media (max-width: 640px) {
-            .container-padding { padding-left: 1rem; padding-right: 1rem; }
-            .stat-card { padding: 0.75rem; }
-        }
-    </style>
-</head>
-<body class="antialiased">
-    <div id="root" class="min-h-screen"></div>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CarbonScope360 | Enterprise Carbon Intelligence</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%231e6f5c'/%3E%3Ctext x='50' y='68' font-size='48' text-anchor='middle' fill='white'%3E🌿%3C/text%3E%3C/svg%3E">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+  
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Inter',system-ui,sans-serif;min-height:100vh;background:#020f0a;color:#e2e8f0;overflow-x:hidden;}
 
-    <script>
-        // --------------------------------------------------------------
-        // CARBONSCOPE360 - ENTERPRISE CARBON MANAGEMENT PLATFORM
-        // Full EmissionsCore™ Engine | Scope 1,2,3 | Credit Management | Scenario Simulator
-        // EPA 40 CFR Part 98, GHG Protocol, eGRID, IRA aligned
-        // Responsive & fully functional with live charts & state
-        // --------------------------------------------------------------
-        
-        // ----- Emission Factors (based on EPA, eGRID, IPCC AR6) -----
-        const EF = {
-            naturalGas_kgCO2_per_MMBtu: 53.06,
-            diesel_kgCO2_per_gallon: 10.21,
-            electricity_MTCO2_per_MWh: 0.403,       // eGRID US average
-            combustionUplift: 1.02,                 // CH4+N2O factor
-            // Scope 3 proxy factors (MT CO2e per $1M revenue)
-            s3_purchasedGoods: 18.5,
-            s3_upstreamFreight: 4.2,
-            s3_useOfSold: 12.3,
-            s3_wasteOther: 2.8
-        };
-        
-        // Helper: compute Scope 1+2 (EmissionsCore™ core)
-        function computeScope12(plant) {
-            let ng = plant.naturalGasMMBtu || 0;
-            let diesel = plant.dieselGallons || 0;
-            let elec = plant.electricityMWh || 0;
-            let process = plant.processEmissionsMT || 0;
-            let scope1 = (ng * EF.naturalGas_kgCO2_per_MMBtu / 1000) * EF.combustionUplift;
-            scope1 += (diesel * EF.diesel_kgCO2_per_gallon / 1000) * EF.combustionUplift;
-            scope1 += process;
-            let scope2 = elec * EF.electricity_MTCO2_per_MWh;
-            return { scope1: Math.round(scope1 * 10) / 10, scope2: Math.round(scope2 * 10) / 10, total12: Math.round((scope1+scope2)*10)/10 };
+  /* ===== ANIMATED BACKGROUND ===== */
+  #bg-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;}
+  .bg-overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;
+    background:radial-gradient(ellipse at 20% 20%,rgba(16,80,50,0.35) 0%,transparent 55%),
+               radial-gradient(ellipse at 80% 80%,rgba(10,50,80,0.3) 0%,transparent 55%),
+               radial-gradient(ellipse at 50% 50%,rgba(2,15,10,0.6) 0%,transparent 80%);
+    pointer-events:none;}
+  .grid-lines{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none;
+    background-image:linear-gradient(rgba(30,111,92,0.06) 1px,transparent 1px),linear-gradient(90deg,rgba(30,111,92,0.06) 1px,transparent 1px);
+    background-size:60px 60px;animation:gridPulse 8s ease-in-out infinite;}
+  @keyframes gridPulse{0%,100%{opacity:0.5;}50%{opacity:1;}}
+
+  /* ===== LAYOUT ===== */
+  #app{position:relative;z-index:2;min-height:100vh;}
+  .main-wrapper{max-width:1400px;margin:0 auto;padding:0 1rem 3rem;}
+
+  /* ===== HEADER ===== */
+  .header{background:rgba(2,15,10,0.85);border-bottom:1px solid rgba(30,111,92,0.3);backdrop-filter:blur(20px);position:sticky;top:0;z-index:50;padding:0.75rem 1.5rem;}
+  .logo-text{background:linear-gradient(135deg,#4ade80,#22d3ee,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-size:1.6rem;font-weight:900;letter-spacing:-0.5px;}
+  .live-dot{width:8px;height:8px;background:#4ade80;border-radius:50%;animation:pulse-dot 1.5s ease-in-out infinite;display:inline-block;margin-right:6px;}
+  @keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.5;transform:scale(1.4);}}
+  .price-badge{background:rgba(30,111,92,0.25);border:1px solid rgba(74,222,128,0.3);padding:0.3rem 0.8rem;border-radius:9999px;font-size:0.75rem;color:#4ade80;font-weight:600;}
+  .btn-primary{background:linear-gradient(135deg,#1e6f5c,#16a085);color:white;border:none;padding:0.4rem 1rem;border-radius:9999px;font-size:0.8rem;font-weight:600;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:6px;}
+  .btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 15px rgba(30,111,92,0.4);}
+  .btn-ghost{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#94a3b8;padding:0.4rem 0.85rem;border-radius:9999px;font-size:0.8rem;cursor:pointer;transition:all 0.2s;}
+  .btn-ghost:hover{background:rgba(255,255,255,0.1);color:#e2e8f0;}
+
+  /* ===== TABS ===== */
+  .tabs-bar{display:flex;gap:2px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:4px;overflow-x:auto;scrollbar-width:none;}
+  .tabs-bar::-webkit-scrollbar{display:none;}
+  .tab-btn{display:flex;align-items:center;gap:7px;padding:0.55rem 1.1rem;border-radius:10px;font-size:0.8rem;font-weight:500;cursor:pointer;border:none;background:transparent;color:#64748b;transition:all 0.2s;white-space:nowrap;}
+  .tab-btn:hover{color:#94a3b8;background:rgba(255,255,255,0.05);}
+  .tab-btn.active{background:linear-gradient(135deg,rgba(30,111,92,0.5),rgba(22,160,133,0.3));color:#4ade80;font-weight:700;box-shadow:0 0 20px rgba(30,111,92,0.2);}
+
+  /* ===== CARDS ===== */
+  .card{background:rgba(10,25,18,0.75);border:1px solid rgba(30,111,92,0.2);border-radius:18px;backdrop-filter:blur(12px);transition:all 0.25s;}
+  .card:hover{border-color:rgba(74,222,128,0.25);box-shadow:0 0 30px rgba(30,111,92,0.15);}
+  .card-title{font-size:0.9rem;font-weight:700;color:#e2e8f0;display:flex;align-items:center;gap:8px;margin-bottom:1rem;}
+  .card-title i{color:#4ade80;width:16px;}
+
+  /* ===== METRIC CARDS ===== */
+  .metric-card{background:rgba(10,25,18,0.8);border:1px solid rgba(30,111,92,0.2);border-radius:16px;padding:1.1rem 1.2rem;position:relative;overflow:hidden;transition:all 0.25s;}
+  .metric-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:3px 3px 0 0;}
+  .metric-card.green::before{background:linear-gradient(90deg,#4ade80,#22d3ee);}
+  .metric-card.blue::before{background:linear-gradient(90deg,#60a5fa,#818cf8);}
+  .metric-card.amber::before{background:linear-gradient(90deg,#fbbf24,#f97316);}
+  .metric-card.rose::before{background:linear-gradient(90deg,#f43f5e,#ec4899);}
+  .metric-card:hover{transform:translateY(-3px);box-shadow:0 10px 40px rgba(0,0,0,0.3);}
+  .metric-label{font-size:0.72rem;font-weight:500;color:#64748b;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;}
+  .metric-value{font-size:1.6rem;font-weight:800;line-height:1;}
+  .metric-sub{font-size:0.72rem;color:#64748b;margin-top:6px;}
+  .metric-icon{position:absolute;right:1rem;top:1.1rem;font-size:1.5rem;opacity:0.15;}
+
+  /* ===== ALERTS ===== */
+  .alert-item{padding:0.7rem 1rem;border-radius:10px;display:flex;gap:10px;align-items:flex-start;animation:slideRight 0.3s ease;}
+  @keyframes slideRight{from{opacity:0;transform:translateX(20px);}to{opacity:1;transform:translateX(0);}}
+  .alert-high{background:rgba(239,68,68,0.1);border-left:3px solid #ef4444;}
+  .alert-medium{background:rgba(245,158,11,0.1);border-left:3px solid #f59e0b;}
+  .alert-info{background:rgba(59,130,246,0.1);border-left:3px solid #3b82f6;}
+
+  /* ===== PROGRESS BARS ===== */
+  .progress-track{width:100%;height:6px;background:rgba(255,255,255,0.08);border-radius:9999px;overflow:hidden;}
+  .progress-fill{height:100%;border-radius:9999px;transition:width 0.8s ease;}
+  .fill-green{background:linear-gradient(90deg,#4ade80,#22d3ee);}
+  .fill-blue{background:linear-gradient(90deg,#60a5fa,#818cf8);}
+  .fill-amber{background:linear-gradient(90deg,#fbbf24,#f97316);}
+  .fill-rose{background:linear-gradient(90deg,#f43f5e,#ec4899);}
+
+  /* ===== TABLE ===== */
+  .data-table{width:100%;border-collapse:collapse;font-size:0.8rem;}
+  .data-table th{padding:0.7rem 0.9rem;text-align:left;font-size:0.72rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:0.05em;border-bottom:1px solid rgba(255,255,255,0.07);}
+  .data-table td{padding:0.75rem 0.9rem;border-bottom:1px solid rgba(255,255,255,0.04);color:#cbd5e1;}
+  .data-table tr:hover td{background:rgba(30,111,92,0.06);}
+
+  /* ===== BADGES ===== */
+  .badge{padding:0.15rem 0.6rem;border-radius:9999px;font-size:0.7rem;font-weight:600;display:inline-flex;align-items:center;gap:4px;}
+  .badge-green{background:rgba(74,222,128,0.1);color:#4ade80;border:1px solid rgba(74,222,128,0.2);}
+  .badge-amber{background:rgba(251,191,36,0.1);color:#fbbf24;border:1px solid rgba(251,191,36,0.2);}
+  .badge-red{background:rgba(239,68,68,0.1);color:#f87171;border:1px solid rgba(239,68,68,0.2);}
+  .badge-blue{background:rgba(96,165,250,0.1);color:#93c5fd;border:1px solid rgba(96,165,250,0.2);}
+  .badge-purple{background:rgba(167,139,250,0.1);color:#c4b5fd;border:1px solid rgba(167,139,250,0.2);}
+
+  /* ===== FORM CONTROLS ===== */
+  .form-input{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:0.5rem 0.75rem;color:#e2e8f0;font-size:0.82rem;width:100%;transition:border-color 0.2s;outline:none;}
+  .form-input:focus{border-color:rgba(74,222,128,0.4);background:rgba(30,111,92,0.1);}
+  .range-input{width:100%;accent-color:#4ade80;cursor:pointer;}
+
+  /* ===== MODAL ===== */
+  .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);z-index:200;display:flex;align-items:center;justify-content:center;}
+  .modal-box{background:rgba(10,25,18,0.97);border:1px solid rgba(30,111,92,0.35);border-radius:22px;max-width:560px;width:92%;max-height:86vh;overflow-y:auto;padding:1.75rem;box-shadow:0 30px 60px rgba(0,0,0,0.5);}
+
+  /* ===== TOOLTIP ===== */
+  [data-tip]{position:relative;cursor:help;}
+  [data-tip]:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:rgba(2,15,10,0.95);border:1px solid rgba(30,111,92,0.4);color:#e2e8f0;font-size:0.72rem;padding:0.4rem 0.7rem;border-radius:8px;white-space:nowrap;z-index:100;pointer-events:none;}
+
+  /* ===== ANIMATIONS ===== */
+  .fade-in{animation:fadeIn 0.4s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+  .glow-green{box-shadow:0 0 20px rgba(74,222,128,0.15);}
+  .pulse-ring{animation:pulseRing 2s ease infinite;}
+  @keyframes pulseRing{0%,100%{box-shadow:0 0 0 0 rgba(74,222,128,0.25);}50%{box-shadow:0 0 0 8px rgba(74,222,128,0);}}
+
+  /* ===== SCROLLBAR ===== */
+  ::-webkit-scrollbar{width:6px;height:6px;}
+  ::-webkit-scrollbar-track{background:rgba(255,255,255,0.03);}
+  ::-webkit-scrollbar-thumb{background:rgba(30,111,92,0.4);border-radius:9999px;}
+
+  /* ===== CANVAS FIX ===== */
+  canvas{max-width:100%!important;}
+
+  /* ===== SECTION DIVIDER ===== */
+  .section-glow{height:1px;background:linear-gradient(90deg,transparent,rgba(30,111,92,0.5),transparent);margin:1.5rem 0;}
+
+  /* ===== FOOTER ===== */
+  .footer-bar{border-top:1px solid rgba(30,111,92,0.15);padding:1rem 0;text-align:center;color:#1e4a38;font-size:0.72rem;}
+</style>
+</head>
+<body>
+
+<!-- Animated Canvas Background -->
+<canvas id="bg-canvas"></canvas>
+<div class="bg-overlay"></div>
+<div class="grid-lines"></div>
+
+<div id="app">
+  <!-- HEADER -->
+  <header class="header">
+    <div style="max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.75rem;">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="logo-text">CarbonScope360</span>
+            <span class="badge badge-green" style="font-size:0.65rem;">LIVE</span>
+          </div>
+          <div style="font-size:0.68rem;color:#1e6f5c;margin-top:1px;">by Avalanche Consulting &amp; Management Services, LLC</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:6px;" class="price-badge">
+          <span class="live-dot"></span>
+          Carbon Price: <span id="hdr-price" style="font-weight:800;">$42</span>/MT
+        </div>
+        <button class="btn-primary" onclick="generatePDFReport()"><i class="fas fa-file-pdf"></i> PDF Report</button>
+        <button class="btn-ghost" onclick="showSettingsModal()"><i class="fas fa-sliders-h"></i></button>
+        <button class="btn-ghost" onclick="showHelpModal()"><i class="fas fa-circle-question"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <div class="main-wrapper" style="padding-top:1.25rem;">
+    <!-- TABS -->
+    <div class="tabs-bar" style="margin-bottom:1.5rem;" id="tabs-bar">
+      <button class="tab-btn active" data-tab="dashboard"><i class="fas fa-chart-line"></i> Dashboard</button>
+      <button class="tab-btn" data-tab="emissions"><i class="fas fa-microchip"></i> EmissionsCore™</button>
+      <button class="tab-btn" data-tab="creditsim"><i class="fas fa-dice"></i> CreditSimulator™</button>
+      <button class="tab-btn" data-tab="regwatch"><i class="fas fa-shield-halved"></i> RegWatch™</button>
+      <button class="tab-btn" data-tab="scopelink"><i class="fas fa-link"></i> ScopeLink™</button>
+      <button class="tab-btn" data-tab="tradedesk"><i class="fas fa-arrow-right-arrow-left"></i> TradeDesk™</button>
+      <button class="tab-btn" data-tab="predictiq"><i class="fas fa-brain"></i> PredictIQ™</button>
+      <button class="tab-btn" data-tab="esgpulse"><i class="fas fa-leaf"></i> ESGPulse™</button>
+    </div>
+
+    <!-- TAB CONTENT -->
+    <div id="tab-content" class="fade-in"></div>
+
+    <div class="footer-bar">© 2026 Avalanche Consulting and Management Services, LLC · EPA 40 CFR Part 98 · SEC Climate Disclosure · GHG Protocol · ISO 14064</div>
+  </div>
+</div>
+
+<script>
+// =====================================================
+// CARBONSCOPE360 v8.0 — Full Platform
+// =====================================================
+
+// ---- DATA ----
+const EF = {
+  ng_kgCO2_per_MMBtu: 53.06, diesel_kgCO2_per_gal: 10.21,
+  elec_MT_per_MWh: 0.403, combustionUplift: 1.02,
+  s3_purchased: 18.5, s3_freight: 4.2, s3_use: 12.3, s3_other: 2.8
+};
+
+let companiesData = [
+  { id:"C1", name:"Gulf Coast Chemicals", industry:"Chemicals", ng:42500, diesel:8200, elec:18700, process:1250, revenueMil:210, allowance:9800, prodUnits:34000, s3p:null, s3f:null, s3u:null, s3o:320 },
+  { id:"C2", name:"Keystone Steel", industry:"Primary Metals", ng:112000, diesel:24500, elec:48900, process:8700, revenueMil:520, allowance:27800, prodUnits:128000, s3p:null, s3f:null, s3u:null, s3o:980 },
+  { id:"C3", name:"Midwest Foods", industry:"Food & Bev", ng:15400, diesel:3100, elec:7200, process:210, revenueMil:88, allowance:3850, prodUnits:22500, s3p:null, s3f:null, s3u:null, s3o:110 },
+  { id:"C4", name:"Blue Ridge Cement", industry:"Cement", ng:67500, diesel:9800, elec:22400, process:5400, revenueMil:310, allowance:15200, prodUnits:88000, s3p:null, s3f:null, s3u:null, s3o:460 },
+  { id:"C5", name:"AutoDynamic Assembly", industry:"Automotive", ng:32100, diesel:5600, elec:15800, process:890, revenueMil:670, allowance:11200, prodUnits:95000, s3p:null, s3f:null, s3u:null, s3o:580 },
+  { id:"C6", name:"PharmaCore Labs", industry:"Pharma", ng:8900, diesel:1200, elec:5100, process:180, revenueMil:245, allowance:3100, prodUnits:18700, s3p:null, s3f:null, s3u:null, s3o:140 },
+  { id:"C7", name:"Pacific Pulp & Paper", industry:"Pulp/Paper", ng:28700, diesel:4300, elec:21300, process:1100, revenueMil:290, allowance:9500, prodUnits:53000, s3p:null, s3f:null, s3u:null, s3o:340 },
+  { id:"C8", name:"Silicon Valley Semicon", industry:"Electronics", ng:12300, diesel:950, elec:28400, process:420, revenueMil:830, allowance:8900, prodUnits:47000, s3p:null, s3f:null, s3u:null, s3o:290 }
+];
+
+let supplierMaster = {
+  "C1":{purchased:{name:"ChemCorp Raw Materials",defaultMT:3885,primaryMT:null,responseStatus:"pending",lastUpdated:null},freight:{name:"Gulf Logistics",defaultMT:882,primaryMT:null,responseStatus:"pending",lastUpdated:null},useSold:{name:"Industrial Distributors Inc",defaultMT:2583,primaryMT:null,responseStatus:"pending",lastUpdated:null}},
+  "C2":{purchased:{name:"Iron Ore Supply Co",defaultMT:9620,primaryMT:null,responseStatus:"pending",lastUpdated:null},freight:{name:"RailLink Freight",defaultMT:2184,primaryMT:null,responseStatus:"pending",lastUpdated:null},useSold:{name:"Steel Fabricators Alliance",defaultMT:6396,primaryMT:null,responseStatus:"pending",lastUpdated:null}},
+  "C3":{purchased:{name:"AgriPack Solutions",defaultMT:1628,primaryMT:1450,responseStatus:"responded",lastUpdated:"2026-02-10"},freight:{name:"Cold Chain Express",defaultMT:370,primaryMT:null,responseStatus:"pending",lastUpdated:null},useSold:{name:"Retail Food Group",defaultMT:1082,primaryMT:null,responseStatus:"pending",lastUpdated:null}},
+  "C4":{purchased:{name:"Limestone Quarry Co",defaultMT:5735,primaryMT:null,responseStatus:"pending",lastUpdated:null},freight:{name:"Heavy Haul Trucking",defaultMT:1302,primaryMT:null,responseStatus:"pending",lastUpdated:null},useSold:{name:"Construction Materials Group",defaultMT:3813,primaryMT:null,responseStatus:"pending",lastUpdated:null}},
+  "C5":{purchased:{name:"Auto Parts Global",defaultMT:12395,primaryMT:null,responseStatus:"pending",lastUpdated:null},freight:{name:"Just-In-Time Logistics",defaultMT:2814,primaryMT:null,responseStatus:"pending",lastUpdated:null},useSold:{name:"Dealership Network",defaultMT:8241,primaryMT:null,responseStatus:"pending",lastUpdated:null}},
+  "C6":{purchased:{name:"ChemPurity Inc",defaultMT:4533,primaryMT:3900,responseStatus:"responded",lastUpdated:"2026-02-15"},freight:{name:"MedTrans Logistics",defaultMT:1029,primaryMT:null,responseStatus:"pending",lastUpdated:null},useSold:{name:"Hospital Supply Chain",defaultMT:3014,primaryMT:null,responseStatus:"pending",lastUpdated:null}},
+  "C7":{purchased:{name:"Forest Products Ltd",defaultMT:5365,primaryMT:null,responseStatus:"pending",lastUpdated:null},freight:{name:"Pacific Shipping",defaultMT:1218,primaryMT:null,responseStatus:"pending",lastUpdated:null},useSold:{name:"Printing & Publishing Co",defaultMT:3567,primaryMT:null,responseStatus:"pending",lastUpdated:null}},
+  "C8":{purchased:{name:"WaferTech Supplies",defaultMT:15355,primaryMT:null,responseStatus:"pending",lastUpdated:null},freight:{name:"AirCargo Specialists",defaultMT:3486,primaryMT:null,responseStatus:"pending",lastUpdated:null},useSold:{name:"Electronics OEMs",defaultMT:10209,primaryMT:null,responseStatus:"pending",lastUpdated:null}}
+};
+
+// Carbon market trades
+let tradeBook = [
+  {id:"T001",date:"2026-01-15",plant:"Midwest Foods",type:"Sell",registry:"Verra VCS",credits:380,price:43.5,value:16530,status:"Settled",project:"Amazon REDD+"},
+  {id:"T002",date:"2026-01-28",plant:"PharmaCore Labs",type:"Sell",registry:"Gold Standard",credits:210,price:44.0,value:9240,status:"Settled",project:"Rwanda Clean Cookstoves"},
+  {id:"T003",date:"2026-02-10",plant:"Keystone Steel",type:"Buy",registry:"ACR",credits:1200,price:41.8,value:50160,status:"Settled",project:"US Forestry Offset"},
+  {id:"T004",date:"2026-02-22",plant:"Blue Ridge Cement",type:"Buy",registry:"CAR",credits:850,price:42.2,value:35870,status:"Settled",project:"CA Landfill Methane"},
+  {id:"T005",date:"2026-03-05",plant:"Gulf Coast Chemicals",type:"Sell",registry:"Verra VCS",credits:450,price:45.1,value:20295,status:"Pending",project:"Chile Wind Farm"},
+  {id:"T006",date:"2026-03-18",plant:"Silicon Valley Semicon",type:"Sell",registry:"Gold Standard",credits:290,price:46.0,value:13340,status:"Pending",project:"Solar Bangladesh"},
+];
+
+let globalCarbonPrice = 42;
+let activeTab = 'dashboard';
+let settings = { monteCarloSamples: 500, autoRefreshAlerts: true };
+let dynamicAlerts = [];
+let chartInstances = {};
+let alertInterval = null;
+let currentPlants = [];
+
+// ---- COMPUTATIONS ----
+function computeScope12(c) {
+  let s1 = (c.ng * EF.ng_kgCO2_per_MMBtu / 1000 + c.diesel * EF.diesel_kgCO2_per_gal / 1000) * EF.combustionUplift + c.process;
+  let s2 = c.elec * EF.elec_MT_per_MWh;
+  return { scope1: Math.round(s1*10)/10, scope2: Math.round(s2*10)/10, total12: Math.round((s1+s2)*10)/10 };
+}
+function computeScope3(c) {
+  const sup = supplierMaster[c.id] || {};
+  let purchased = c.s3p !== null ? c.s3p : (sup.purchased?.primaryMT !== null && sup.purchased?.primaryMT != null ? sup.purchased.primaryMT : c.revenueMil * EF.s3_purchased);
+  let freight = c.s3f !== null ? c.s3f : (sup.freight?.primaryMT != null ? sup.freight.primaryMT : c.revenueMil * EF.s3_freight);
+  let useSold = c.s3u !== null ? c.s3u : (sup.useSold?.primaryMT != null ? sup.useSold.primaryMT : c.revenueMil * EF.s3_use);
+  let other = c.s3o || c.revenueMil * EF.s3_other;
+  return { purchased:Math.round(purchased), freight:Math.round(freight), useOfSold:Math.round(useSold), other:Math.round(other), total:Math.round(purchased+freight+useSold+other) };
+}
+function getCredit(plant, totalEm, price) {
+  let bal = plant.allowance - totalEm;
+  return { surplusMT:Math.round(bal*10)/10, financialValue:Math.round(bal*price), status:bal>=0?'Surplus':'Deficit' };
+}
+function enrichAll() {
+  const benchmarks = { Chemicals:72, "Primary Metals":185, "Food & Bev":42, Cement:210, Automotive:68, Pharma:28, "Pulp/Paper":95, Electronics:22 };
+  return companiesData.map(c => {
+    const { scope1, scope2, total12 } = computeScope12(c);
+    const s3 = computeScope3(c);
+    const total = total12 + s3.total;
+    const credit = getCredit(c, total, globalCarbonPrice);
+    const intensity = (total / c.prodUnits) * 1000;
+    const bench = benchmarks[c.industry] || 65;
+    const efficiency = intensity <= bench*0.9 ? "Efficient" : (intensity >= bench*1.1 ? "Inefficient" : "Average");
+    return { ...c, scope1, scope2, total12, s3, total, credit, intensity: Math.round(intensity*10)/10, benchmark: bench, efficiency };
+  });
+}
+
+// ---- ALERTS ----
+const alertMessages = [
+  {msg:"EPA proposed rule: stricter emission factors for refineries",sev:"high"},
+  {msg:"SEC climate disclosure: Scope 3 materiality deadline approaching",sev:"high"},
+  {msg:"California AB 1305 carbon market disclosure – Q2 filing due",sev:"medium"},
+  {msg:"EU CBAM update: embedded emissions verification for steel exports",sev:"medium"},
+  {msg:"ISO 14064-1 methodology audit scheduled Q3 2026",sev:"info"},
+  {msg:"CDP questionnaire response window opens June 15",sev:"info"},
+  {msg:"IRA Section 45Q guidance released – new qualification criteria",sev:"medium"},
+  {msg:"Keystone Steel Scope 1 intensity 7% above EPA threshold",sev:"high"},
+  {msg:"Carbon price up 4.2% this week – review sell orders",sev:"info"},
+  {msg:"UK SECR report due – PharmaCore Labs data complete",sev:"info"},
+];
+function generateAlert() {
+  const a = alertMessages[Math.floor(Math.random()*alertMessages.length)];
+  return { id: Date.now()+Math.random(), msg:a.msg, severity:a.sev, timestamp:new Date().toLocaleTimeString() };
+}
+
+// ---- MONTE CARLO ----
+function runMonteCarlo(prodChange, regTightening, priceVol, supplierQuality, offsetCost, samples=500) {
+  const totalAllowanceBase = currentPlants.reduce((s,p)=>s+p.allowance,0);
+  const totalEmissionsBase = currentPlants.reduce((s,p)=>s+p.total,0);
+  const scope3Portion = currentPlants.reduce((s,p)=>s+p.s3.total,0);
+  const scope12Portion = totalEmissionsBase - scope3Portion;
+  let results = [];
+  for(let i=0;i<samples;i++){
+    let prodN = 1+(prodChange/100)+(Math.random()-0.5)*0.05;
+    let regN  = 1-(regTightening/100)+(Math.random()-0.5)*0.02;
+    let priceN = globalCarbonPrice*(1+priceVol/100)*(0.9+Math.random()*0.2);
+    let supN  = 1-(supplierQuality/100)*0.15+(Math.random()-0.5)*0.03;
+    let em = (scope12Portion*prodN)+(scope3Portion*prodN*supN);
+    let all = totalAllowanceBase*regN;
+    let net = all-em;
+    let fin = net*priceN-(net<0?Math.abs(net)*offsetCost:0);
+    results.push({netCredit:net,financial:fin,emissions:em});
+  }
+  results.sort((a,b)=>a.netCredit-b.netCredit);
+  return {
+    p10:results[Math.floor(samples*0.1)], p50:results[Math.floor(samples*0.5)],
+    p90:results[Math.floor(samples*0.9)],
+    meanCredit:results.reduce((s,r)=>s+r.netCredit,0)/samples,
+    deficitProbability:results.filter(r=>r.netCredit<0).length/samples,
+    samples:results
+  };
+}
+
+// ---- CHART HELPERS ----
+const chartDefaults = {
+  color:'rgba(100,116,139,1)',
+  plugins:{legend:{labels:{color:'#94a3b8',font:{size:11}}}},
+  scales:{
+    x:{grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'#64748b',font:{size:10}}},
+    y:{grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'#64748b',font:{size:10}}}
+  }
+};
+function destroyCharts(ids){ids.forEach(id=>{if(chartInstances[id]){chartInstances[id].destroy();delete chartInstances[id];}});}
+function mkChart(id,config){
+  const ctx=document.getElementById(id)?.getContext('2d');
+  if(!ctx)return null;
+  destroyCharts([id]);
+  config.options=config.options||{};
+  config.options.responsive=true;
+  config.options.maintainAspectRatio=config.options.maintainAspectRatio??true;
+  config.options.plugins=Object.assign({legend:{labels:{color:'#94a3b8',font:{size:11}}}},config.options.plugins||{});
+  if(config.type!=='doughnut'&&config.type!=='pie'){
+    config.options.scales=config.options.scales||{
+      x:{grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'#64748b',font:{size:10}}},
+      y:{grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'#64748b',font:{size:10}}}
+    };
+  }
+  const ch=new Chart(ctx,config);
+  chartInstances[id]=ch;
+  return ch;
+}
+
+// ====================================================
+// TAB: DASHBOARD
+// ====================================================
+function renderDashboard() {
+  currentPlants = enrichAll();
+  const totalPortfolio = currentPlants.reduce((s,p)=>s+p.total,0);
+  const totalCredit = currentPlants.reduce((s,p)=>s+p.credit.surplusMT,0);
+  const totalFinancial = currentPlants.reduce((s,p)=>s+p.credit.financialValue,0);
+  const avgIntensity = currentPlants.reduce((s,p)=>s+p.intensity,0)/currentPlants.length;
+  const s1Total = currentPlants.reduce((s,p)=>s+p.scope1,0);
+  const s2Total = currentPlants.reduce((s,p)=>s+p.scope2,0);
+  const s3Total = currentPlants.reduce((s,p)=>s+p.s3.total,0);
+
+  return `
+  <div class="fade-in">
+    <!-- KPI ROW -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1rem;margin-bottom:1.5rem;">
+      <div class="metric-card green">
+        <i class="fas fa-industry metric-icon"></i>
+        <div class="metric-label">Portfolio CO₂e</div>
+        <div class="metric-value" style="color:#4ade80;">${Math.round(totalPortfolio).toLocaleString()}</div>
+        <div class="metric-sub">Metric Tons · All Facilities</div>
+      </div>
+      <div class="metric-card amber">
+        <i class="fas fa-coins metric-icon"></i>
+        <div class="metric-label">Net Credit Position</div>
+        <div class="metric-value" style="color:${totalCredit>=0?'#4ade80':'#f87171'};">${totalCredit>=0?'+':''}${Math.round(totalCredit).toLocaleString()}</div>
+        <div class="metric-sub">MT ${totalCredit>=0?'Surplus':'Deficit'}</div>
+      </div>
+      <div class="metric-card blue">
+        <i class="fas fa-dollar-sign metric-icon"></i>
+        <div class="metric-label">Carbon Asset Value</div>
+        <div class="metric-value" style="color:#60a5fa;">$${Math.abs(totalFinancial).toLocaleString()}</div>
+        <div class="metric-sub">At $${globalCarbonPrice}/MT</div>
+      </div>
+      <div class="metric-card rose">
+        <i class="fas fa-gauge-high metric-icon"></i>
+        <div class="metric-label">Avg Emission Intensity</div>
+        <div class="metric-value" style="color:#f87171;">${avgIntensity.toFixed(1)}</div>
+        <div class="metric-sub">kg CO₂e / unit produced</div>
+      </div>
+      <div class="metric-card green" style="--accent:#22d3ee;">
+        <i class="fas fa-building metric-icon"></i>
+        <div class="metric-label">Facilities Tracked</div>
+        <div class="metric-value" style="color:#22d3ee;">${currentPlants.length}</div>
+        <div class="metric-sub">${currentPlants.filter(p=>p.efficiency==='Efficient').length} Efficient · ${currentPlants.filter(p=>p.efficiency==='Inefficient').length} Need Action</div>
+      </div>
+    </div>
+
+    <!-- CHARTS ROW 1 -->
+    <div style="display:grid;grid-template-columns:2fr 1fr;gap:1.25rem;margin-bottom:1.25rem;">
+      <div class="card" style="padding:1.25rem;">
+        <div class="card-title"><i class="fas fa-chart-line"></i> Monthly Emissions Trend (2026)</div>
+        <canvas id="trendChart" height="110"></canvas>
+      </div>
+      <div class="card" style="padding:1.25rem;">
+        <div class="card-title"><i class="fas fa-chart-pie"></i> Scope Breakdown</div>
+        <canvas id="scopeDonut" height="150"></canvas>
+        <div style="display:flex;gap:10px;margin-top:10px;font-size:0.72rem;justify-content:center;flex-wrap:wrap;">
+          <span style="color:#60a5fa;">■ Scope 1: ${Math.round(s1Total/totalPortfolio*100)}%</span>
+          <span style="color:#22d3ee;">■ Scope 2: ${Math.round(s2Total/totalPortfolio*100)}%</span>
+          <span style="color:#4ade80;">■ Scope 3: ${Math.round(s3Total/totalPortfolio*100)}%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHARTS ROW 2 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem;">
+      <div class="card" style="padding:1.25rem;">
+        <div class="card-title"><i class="fas fa-chart-bar"></i> Facility Emissions Breakdown</div>
+        <canvas id="plantBarChart" height="130"></canvas>
+      </div>
+      <div class="card" style="padding:1.25rem;">
+        <div class="card-title"><i class="fas fa-chart-area"></i> Credit Position Trend</div>
+        <canvas id="creditTimeline" height="130"></canvas>
+      </div>
+    </div>
+
+    <!-- INTENSITY GAUGE + ALERTS -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem;">
+      <div class="card" style="padding:1.25rem;">
+        <div class="card-title"><i class="fas fa-gauge"></i> Intensity vs. Industry Benchmarks</div>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px;">
+          ${currentPlants.map(p=>{
+            const pct = Math.min(100, (p.intensity/p.benchmark)*100);
+            const color = pct<=90?'fill-green':pct<=110?'fill-amber':'fill-rose';
+            return `<div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:3px;font-size:0.75rem;">
+                <span style="color:#94a3b8;">${p.name.split(' ')[0]}</span>
+                <span style="color:${pct<=90?'#4ade80':pct<=110?'#fbbf24':'#f87171'};">${p.intensity} vs ${p.benchmark} kg/unit</span>
+              </div>
+              <div class="progress-track"><div class="progress-fill ${color}" style="width:${pct}%"></div></div>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>
+      <div class="card" style="padding:1.25rem;">
+        <div class="card-title"><i class="fas fa-bell"></i> RegWatch™ Live Alerts <span class="badge badge-green" style="margin-left:auto;font-size:0.65rem;">Auto-refresh</span></div>
+        <div id="alertContainer" style="display:flex;flex-direction:column;gap:8px;margin-top:4px;max-height:280px;overflow-y:auto;"></div>
+      </div>
+    </div>
+
+    <!-- FACILITY TABLE -->
+    <div class="card" style="padding:1.25rem;">
+      <div class="card-title"><i class="fas fa-table"></i> Facility Intelligence Matrix</div>
+      <div style="overflow-x:auto;">
+        <table class="data-table">
+          <thead><tr>
+            <th>Facility</th><th>Industry</th><th>Scope 1</th><th>Scope 2</th><th>Scope 3</th>
+            <th>Total CO₂e</th><th>Allowance</th><th>Net Position</th><th>Financial</th><th>Efficiency</th>
+          </tr></thead>
+          <tbody>
+            ${currentPlants.map(p=>`<tr>
+              <td style="font-weight:600;color:#e2e8f0;">${p.name}</td>
+              <td><span class="badge badge-blue">${p.industry}</span></td>
+              <td>${p.scope1.toLocaleString()}</td>
+              <td>${p.scope2.toLocaleString()}</td>
+              <td>${p.s3.total.toLocaleString()}</td>
+              <td style="font-weight:700;color:#94a3b8;">${p.total.toLocaleString()}</td>
+              <td>${p.allowance.toLocaleString()}</td>
+              <td style="font-weight:700;color:${p.credit.surplusMT>=0?'#4ade80':'#f87171'};">${p.credit.surplusMT>=0?'+':''}${p.credit.surplusMT.toLocaleString()}</td>
+              <td style="color:${p.credit.financialValue>=0?'#4ade80':'#f87171'};">$${p.credit.financialValue.toLocaleString()}</td>
+              <td><span class="badge ${p.efficiency==='Efficient'?'badge-green':p.efficiency==='Inefficient'?'badge-red':'badge-amber'}">${p.efficiency}</span></td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderDashboardCharts() {
+  if(activeTab!=='dashboard') return;
+  const months = ['Jan','Feb','Mar','Apr','May','Jun'];
+  mkChart('trendChart',{type:'line',data:{labels:months,datasets:[
+    {label:'Scope 1+2',data:[14200,13800,13100,12900,12600,Math.round(currentPlants.reduce((s,p)=>s+p.total12,0))],borderColor:'#60a5fa',backgroundColor:'rgba(96,165,250,0.1)',tension:0.4,fill:true,pointRadius:4,pointBackgroundColor:'#60a5fa'},
+    {label:'Scope 3',data:[9800,9600,9900,9700,9500,Math.round(currentPlants.reduce((s,p)=>s+p.s3.total,0))],borderColor:'#4ade80',backgroundColor:'rgba(74,222,128,0.07)',tension:0.4,fill:true,pointRadius:4,pointBackgroundColor:'#4ade80'}
+  ]},options:{maintainAspectRatio:true}});
+  const s1=currentPlants.reduce((s,p)=>s+p.scope1,0);
+  const s2=currentPlants.reduce((s,p)=>s+p.scope2,0);
+  const s3=currentPlants.reduce((s,p)=>s+p.s3.total,0);
+  mkChart('scopeDonut',{type:'doughnut',data:{labels:['Scope 1','Scope 2','Scope 3'],datasets:[{data:[Math.round(s1),Math.round(s2),Math.round(s3)],backgroundColor:['rgba(96,165,250,0.8)','rgba(34,211,238,0.8)','rgba(74,222,128,0.8)'],borderColor:['#60a5fa','#22d3ee','#4ade80'],borderWidth:2}]},options:{cutout:'62%',plugins:{legend:{display:false}}}});
+  mkChart('plantBarChart',{type:'bar',data:{labels:currentPlants.map(p=>p.name.split(' ')[0]),datasets:[
+    {label:'Scope 1+2',data:currentPlants.map(p=>p.total12),backgroundColor:'rgba(96,165,250,0.75)',borderRadius:4},
+    {label:'Scope 3',data:currentPlants.map(p=>p.s3.total),backgroundColor:'rgba(74,222,128,0.75)',borderRadius:4}
+  ]},options:{scales:{x:{stacked:true,grid:{display:false},ticks:{color:'#64748b',font:{size:9}}},y:{stacked:true,grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'#64748b',font:{size:9}}}}}});
+  mkChart('creditTimeline',{type:'line',data:{labels:['2022','2023','2024','2025','2026','2027 ▶'],datasets:[
+    {label:'Net Credit (MT)',data:[1800,2500,3100,3750,Math.round(currentPlants.reduce((s,p)=>s+p.credit.surplusMT,0)),4850],borderColor:'#4ade80',backgroundColor:'rgba(74,222,128,0.08)',tension:0.4,fill:true,pointRadius:5,pointBackgroundColor:'#4ade80'},
+    {label:'Target',data:[1500,2000,2500,3000,3500,4000],borderColor:'rgba(96,165,250,0.5)',borderDash:[5,5],tension:0.3,pointRadius:0}
+  ]},options:{maintainAspectRatio:true}});
+}
+
+// ====================================================
+// TAB: EMISSIONS CORE
+// ====================================================
+function renderEmissions() {
+  currentPlants = enrichAll();
+  return `<div class="fade-in">
+    <div style="margin-bottom:1rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <div class="card-title" style="margin:0;"><i class="fas fa-microchip"></i> EmissionsCore™ Calculation Engine</div>
+      <span class="badge badge-green">EPA 40 CFR Part 98</span>
+      <span class="badge badge-blue">IPCC AR6 GWPs</span>
+      <span class="badge badge-purple">Real-time</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:1rem;">
+    ${currentPlants.map(p=>`
+    <div class="card" style="padding:1.25rem;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:0.5rem;margin-bottom:1rem;">
+        <div>
+          <div style="font-weight:700;font-size:1rem;color:#e2e8f0;">${p.name}</div>
+          <div style="display:flex;gap:6px;margin-top:4px;flex-wrap:wrap;">
+            <span class="badge badge-blue">${p.industry}</span>
+            <span class="badge ${p.efficiency==='Efficient'?'badge-green':p.efficiency==='Inefficient'?'badge-red':'badge-amber'}">${p.efficiency}</span>
+            <span class="badge badge-purple" data-tip="Total incl. Scope 3">${p.total.toLocaleString()} MT CO₂e</span>
+          </div>
+        </div>
+        <div style="text-align:right;font-size:0.78rem;color:#64748b;">Intensity: <strong style="color:${p.intensity<=p.benchmark*0.9?'#4ade80':p.intensity>=p.benchmark*1.1?'#f87171':'#fbbf24'};">${p.intensity} kg/unit</strong> vs ${p.benchmark} benchmark</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:0.75rem;margin-bottom:1rem;">
+        <label style="font-size:0.78rem;color:#94a3b8;">Natural Gas (MMBtu)
+          <input type="number" value="${p.ng}" onchange="updatePlantField('${p.id}','ng',parseFloat(this.value)||0)" class="form-input" style="margin-top:4px;">
+        </label>
+        <label style="font-size:0.78rem;color:#94a3b8;">Electricity (MWh)
+          <input type="number" value="${p.elec}" onchange="updatePlantField('${p.id}','elec',parseFloat(this.value)||0)" class="form-input" style="margin-top:4px;">
+        </label>
+        <label style="font-size:0.78rem;color:#94a3b8;">Diesel (gal)
+          <input type="number" value="${p.diesel}" onchange="updatePlantField('${p.id}','diesel',parseFloat(this.value)||0)" class="form-input" style="margin-top:4px;">
+        </label>
+        <label style="font-size:0.78rem;color:#94a3b8;">Process Emissions (MT)
+          <input type="number" value="${p.process}" onchange="updatePlantField('${p.id}','process',parseFloat(this.value)||0)" class="form-input" style="margin-top:4px;">
+        </label>
+        <label style="font-size:0.78rem;color:#94a3b8;">Production Units
+          <input type="number" value="${p.prodUnits}" onchange="updatePlantField('${p.id}','prodUnits',parseFloat(this.value)||1)" class="form-input" style="margin-top:4px;">
+        </label>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:0.5rem;background:rgba(0,0,0,0.2);border-radius:10px;padding:0.75rem;font-size:0.78rem;">
+        <div style="text-align:center;"><div style="color:#64748b;">Scope 1</div><div style="font-weight:700;color:#60a5fa;">${p.scope1.toLocaleString()} MT</div></div>
+        <div style="text-align:center;"><div style="color:#64748b;">Scope 2</div><div style="font-weight:700;color:#22d3ee;">${p.scope2.toLocaleString()} MT</div></div>
+        <div style="text-align:center;"><div style="color:#64748b;">Scope 3</div><div style="font-weight:700;color:#4ade80;">${p.s3.total.toLocaleString()} MT</div></div>
+        <div style="text-align:center;"><div style="color:#64748b;">Allowance</div><div style="font-weight:700;color:#fbbf24;">${p.allowance.toLocaleString()} MT</div></div>
+        <div style="text-align:center;"><div style="color:#64748b;">Net Position</div><div style="font-weight:700;color:${p.credit.surplusMT>=0?'#4ade80':'#f87171'};">${p.credit.surplusMT>=0?'+':''}${p.credit.surplusMT.toLocaleString()} MT</div></div>
+        <div style="text-align:center;"><div style="color:#64748b;">Credit Value</div><div style="font-weight:700;color:${p.credit.financialValue>=0?'#4ade80':'#f87171'};">$${p.credit.financialValue.toLocaleString()}</div></div>
+      </div>
+    </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+// ====================================================
+// TAB: CREDIT SIMULATOR
+// ====================================================
+function renderCreditSim() {
+  const totalAllowance = currentPlants.reduce((s,p)=>s+p.allowance,0);
+  const totalEmissions = currentPlants.reduce((s,p)=>s+p.total,0);
+  const currentNetCredit = totalAllowance - totalEmissions;
+  const currentFinancial = currentNetCredit * globalCarbonPrice;
+
+  setTimeout(()=>{
+    const sliders = ['simProd','simReg','simVol','simSup','simOffset'];
+    sliders.forEach(id=>document.getElementById(id)?.addEventListener('input',runSimFn));
+    document.getElementById('runSimBtn')?.addEventListener('click',runSimFn);
+    runSimFn();
+  },120);
+
+  function runSimFn(){
+    const prod=+document.getElementById('simProd')?.value||0;
+    const reg=+document.getElementById('simReg')?.value||0;
+    const vol=+document.getElementById('simVol')?.value||0;
+    const sup=+document.getElementById('simSup')?.value||50;
+    const off=+document.getElementById('simOffset')?.value||25;
+    ['Prod','Reg','Vol','Sup','Offset'].forEach((n,i)=>{
+      const el=document.getElementById('simVal'+n);
+      if(el) el.innerText=[prod,reg,vol,sup,off][i];
+    });
+    const mc = runMonteCarlo(prod,reg,vol,sup,off,settings.monteCarloSamples);
+    const fmt = v=>`${v>=0?'+':''}${Math.round(v).toLocaleString()} MT`;
+    setEl('res-mean',fmt(mc.meanCredit),mc.meanCredit>=0?'#4ade80':'#f87171');
+    setEl('res-p10',fmt(mc.p10.netCredit),mc.p10.netCredit>=0?'#4ade80':'#f87171');
+    setEl('res-p90',fmt(mc.p90.netCredit),mc.p90.netCredit>=0?'#4ade80':'#f87171');
+    setEl('res-deficit',`${(mc.deficitProbability*100).toFixed(1)}%`,mc.deficitProbability>0.3?'#f87171':'#fbbf24');
+    setEl('res-fin',`$${Math.round(mc.p50.financial).toLocaleString()}`,'#4ade80');
+    const credits=mc.samples.map(r=>r.netCredit);
+    const mn=Math.min(...credits),mx=Math.max(...credits),step=(mx-mn)/20;
+    const bins=[];
+    for(let i=0;i<20;i++){const lo=mn+i*step;bins.push({lo,count:credits.filter(c=>c>=lo&&c<lo+step).length});}
+    mkChart('distChart',{type:'bar',data:{
+      labels:bins.map(b=>Math.round(b.lo).toLocaleString()),
+      datasets:[{label:'Scenarios',data:bins.map(b=>b.count),backgroundColor:bins.map(b=>b.lo<0?'rgba(248,113,113,0.7)':'rgba(74,222,128,0.7)'),borderRadius:3}]
+    },options:{scales:{x:{display:false},y:{grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'#64748b',font:{size:9}}}},plugins:{legend:{display:false}}}});
+  }
+  window.runSimFn=runSimFn;
+  function setEl(id,val,color){const el=document.getElementById(id);if(el){el.innerText=val;el.style.color=color||'#e2e8f0';}}
+
+  return `<div class="fade-in">
+    <div style="display:grid;grid-template-columns:320px 1fr;gap:1.25rem;align-items:start;">
+      <div class="card" style="padding:1.25rem;">
+        <div class="card-title"><i class="fas fa-sliders-h"></i> Simulation Controls</div>
+        <div style="display:flex;flex-direction:column;gap:1rem;">
+          ${[
+            {id:'simProd',label:'Production change (%)',min:-30,max:50,val:0,key:'Prod',hint:'↑ production → ↑ emissions'},
+            {id:'simReg',label:'Regulatory tightening (%)',min:0,max:30,val:0,key:'Reg',hint:'Reduces allowance cap'},
+            {id:'simVol',label:'Carbon price volatility (%)',min:-30,max:50,val:0,key:'Vol',hint:'Price swing impact on financials'},
+            {id:'simSup',label:'Supplier data quality (%)',min:0,max:100,val:50,key:'Sup',hint:'Higher = narrower Scope 3 uncertainty'},
+            {id:'simOffset',label:'Offset cost ($/MT)',min:0,max:100,val:25,key:'Offset',hint:'Cost to buy offsets if in deficit'},
+          ].map(s=>`<div>
+            <div style="display:flex;justify-content:space-between;font-size:0.78rem;margin-bottom:4px;">
+              <span style="color:#94a3b8;" data-tip="${s.hint}">${s.label}</span>
+              <span style="color:#4ade80;font-weight:700;" id="simVal${s.key}">${s.val}</span>
+            </div>
+            <input type="range" class="range-input" id="${s.id}" min="${s.min}" max="${s.max}" value="${s.val}">
+          </div>`).join('')}
+          <button id="runSimBtn" class="btn-primary" style="width:100%;justify-content:center;padding:0.6rem;">
+            <i class="fas fa-play"></i> Run Monte Carlo (${settings.monteCarloSamples} paths)
+          </button>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1.25rem;">
+        <div class="card" style="padding:1.25rem;">
+          <div class="card-title"><i class="fas fa-chart-bar"></i> Simulation Results</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem;margin-bottom:1rem;">
+            <div style="background:rgba(0,0,0,0.2);border-radius:12px;padding:0.9rem;text-align:center;">
+              <div style="font-size:0.7rem;color:#64748b;margin-bottom:4px;">Current Net Credit</div>
+              <div style="font-size:1.3rem;font-weight:800;color:${currentNetCredit>=0?'#4ade80':'#f87171'};">${currentNetCredit>=0?'+':''}${Math.round(currentNetCredit).toLocaleString()} MT</div>
+              <div style="font-size:0.7rem;color:#64748b;">$${currentFinancial.toLocaleString()}</div>
+            </div>
+            <div style="background:rgba(0,0,0,0.2);border-radius:12px;padding:0.9rem;text-align:center;">
+              <div style="font-size:0.7rem;color:#64748b;margin-bottom:4px;">Mean Projected</div>
+              <div style="font-size:1.3rem;font-weight:800;" id="res-mean">—</div>
+            </div>
+            <div style="background:rgba(0,0,0,0.2);border-radius:12px;padding:0.9rem;text-align:center;">
+              <div style="font-size:0.7rem;color:#64748b;margin-bottom:4px;">Deficit Probability</div>
+              <div style="font-size:1.3rem;font-weight:800;" id="res-deficit">—</div>
+            </div>
+            <div style="background:rgba(0,0,0,0.2);border-radius:12px;padding:0.9rem;text-align:center;">
+              <div style="font-size:0.7rem;color:#64748b;margin-bottom:4px;">P10 (Pessimistic)</div>
+              <div style="font-size:1.1rem;font-weight:700;" id="res-p10">—</div>
+            </div>
+            <div style="background:rgba(0,0,0,0.2);border-radius:12px;padding:0.9rem;text-align:center;">
+              <div style="font-size:0.7rem;color:#64748b;margin-bottom:4px;">P90 (Optimistic)</div>
+              <div style="font-size:1.1rem;font-weight:700;" id="res-p90">—</div>
+            </div>
+            <div style="background:rgba(0,0,0,0.2);border-radius:12px;padding:0.9rem;text-align:center;">
+              <div style="font-size:0.7rem;color:#64748b;margin-bottom:4px;">Median Financial</div>
+              <div style="font-size:1.1rem;font-weight:700;" id="res-fin">—</div>
+            </div>
+          </div>
+          <div style="font-size:0.8rem;color:#94a3b8;margin-bottom:8px;font-weight:600;">Probability Distribution of Net Credit Position</div>
+          <canvas id="distChart" height="140"></canvas>
+          <div style="font-size:0.7rem;color:#374151;margin-top:8px;background:rgba(0,0,0,0.2);padding:0.6rem;border-radius:8px;">
+            🎲 ${settings.monteCarloSamples} Monte Carlo paths · Green bars = surplus · Red bars = deficit · Based on GHG Protocol &amp; EPA methodologies
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;">
+          <div class="card" style="padding:1.25rem;">
+            <div class="card-title"><i class="fas fa-lightbulb"></i> Key Drivers</div>
+            <div style="font-size:0.78rem;color:#94a3b8;line-height:1.6;">
+              <div>🔺 Production +10% → emissions +10% → deficit risk ↑</div>
+              <div>🔻 Reg tightening 15% → allowance cap shrinks → deficit risk ↑↑</div>
+              <div>📊 Better supplier data → narrower Scope 3 range → less uncertainty</div>
+              <div>💰 Price +20% → surplus value up, deficit cost up proportionally</div>
+            </div>
+          </div>
+          <div class="card" style="padding:1.25rem;">
+            <div class="card-title"><i class="fas fa-history"></i> Historical Context</div>
+            <div style="font-size:0.78rem;line-height:1.7;">
+              <div style="display:flex;justify-content:space-between;"><span style="color:#64748b;">2024 actual</span><span style="color:#4ade80;font-weight:600;">+3,100 MT surplus</span></div>
+              <div style="display:flex;justify-content:space-between;"><span style="color:#64748b;">2025 actual</span><span style="color:#4ade80;font-weight:600;">+3,750 MT surplus</span></div>
+              <div style="display:flex;justify-content:space-between;"><span style="color:#64748b;">2026 current</span><span style="color:${currentNetCredit>=0?'#4ade80':'#f87171'};font-weight:700;">${currentNetCredit>=0?'+':''}${Math.round(currentNetCredit).toLocaleString()} MT</span></div>
+              <div style="display:flex;justify-content:space-between;"><span style="color:#64748b;">2027 base projection</span><span style="color:#fbbf24;font-weight:600;">+4,850 MT</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ====================================================
+// TAB: REGWATCH
+// ====================================================
+function renderRegWatch() {
+  const regs = [
+    {name:"EPA 40 CFR Part 98",prog:94,due:"Aug 31, 2026",status:"On Track",color:"green",icon:"fa-shield-halved",details:"8 facilities reporting · e-GGRT submission ready"},
+    {name:"SEC Climate Disclosure (S-K 1500)",prog:71,due:"Annual 2026",status:"In Progress",color:"amber",icon:"fa-chart-line",details:"Scope 1&2 quantified · Scope 3 materiality review pending"},
+    {name:"UK SECR",prog:100,due:"Filed Mar 2026",status:"Complete",color:"green",icon:"fa-check-circle",details:"Energy & carbon report submitted · LCP threshold met"},
+    {name:"CDP Supply Chain",prog:55,due:"Jul 31, 2026",status:"In Progress",color:"amber",icon:"fa-link",details:"Supplier questionnaires 55% returned"},
+    {name:"California AB 1305",prog:40,due:"Oct 1, 2026",status:"Needs Attention",color:"rose",icon:"fa-exclamation-triangle",details:"Carbon market disclosure — offset claims need verification"},
+    {name:"EU CBAM (Steel/Cement)",prog:62,due:"Dec 31, 2026",status:"In Progress",color:"amber",icon:"fa-ship",details:"Embedded emissions data for Keystone Steel & Blue Ridge Cement"},
+    {name:"ISO 14064-1 Audit",prog:30,due:"Q3 2026",status:"Scheduled",color:"blue",icon:"fa-certificate",details:"Third-party verification engagement in progress"},
+    {name:"GRI Standards 305",prog:78,due:"Annual Report",status:"On Track",color:"green",icon:"fa-file-alt",details:"GHG data prepared · GRI index mapping 78% complete"},
+  ];
+  return `<div class="fade-in">
+    <div style="margin-bottom:1.25rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:0.75rem;">
+      <div class="metric-card green" style="padding:0.9rem;">
+        <div class="metric-label">Frameworks Tracked</div>
+        <div class="metric-value" style="color:#4ade80;font-size:1.4rem;">8</div>
+      </div>
+      <div class="metric-card green" style="padding:0.9rem;">
+        <div class="metric-label">Fully Filed</div>
+        <div class="metric-value" style="color:#4ade80;font-size:1.4rem;">2</div>
+      </div>
+      <div class="metric-card amber" style="padding:0.9rem;">
+        <div class="metric-label">In Progress</div>
+        <div class="metric-value" style="color:#fbbf24;font-size:1.4rem;">4</div>
+      </div>
+      <div class="metric-card rose" style="padding:0.9rem;">
+        <div class="metric-label">Needs Attention</div>
+        <div class="metric-value" style="color:#f87171;font-size:1.4rem;">1</div>
+      </div>
+      <div class="metric-card blue" style="padding:0.9rem;">
+        <div class="metric-label">Avg Completion</div>
+        <div class="metric-value" style="color:#60a5fa;font-size:1.4rem;">${Math.round(regs.reduce((s,r)=>s+r.prog,0)/regs.length)}%</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem;">
+      ${regs.map(r=>`<div class="card" style="padding:1.1rem;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+          <div style="display:flex;align-items:center;gap:9px;">
+            <i class="fas ${r.icon}" style="color:${r.color==='green'?'#4ade80':r.color==='amber'?'#fbbf24':r.color==='rose'?'#f87171':'#60a5fa'};width:16px;text-align:center;"></i>
+            <span style="font-size:0.85rem;font-weight:700;color:#e2e8f0;">${r.name}</span>
+          </div>
+          <span class="badge badge-${r.color==='green'?'green':r.color==='amber'?'amber':r.color==='rose'?'red':'blue'}">${r.status}</span>
+        </div>
+        <div class="progress-track" style="margin-bottom:6px;"><div class="progress-fill fill-${r.color==='green'?'green':r.color==='amber'?'amber':r.color==='rose'?'rose':'blue'}" style="width:${r.prog}%"></div></div>
+        <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:#64748b;">
+          <span>${r.details}</span>
+          <span style="font-weight:700;color:${r.color==='green'?'#4ade80':r.color==='amber'?'#fbbf24':'#f87171'};">${r.prog}%</span>
+        </div>
+        <div style="font-size:0.7rem;color:#374151;margin-top:4px;">Due: ${r.due}</div>
+      </div>`).join('')}
+    </div>
+    <div class="card" style="padding:1.25rem;">
+      <div class="card-title"><i class="fas fa-bell"></i> Active Compliance Alerts</div>
+      <div style="display:flex;flex-direction:column;gap:8px;" id="regAlertList">
+        ${dynamicAlerts.map(a=>`<div class="alert-item alert-${a.severity}">
+          <i class="fas ${a.severity==='high'?'fa-triangle-exclamation':a.severity==='medium'?'fa-bell':'fa-circle-info'}" style="color:${a.severity==='high'?'#f87171':a.severity==='medium'?'#fbbf24':'#60a5fa'};margin-top:2px;"></i>
+          <div>
+            <div style="font-size:0.82rem;font-weight:600;color:#e2e8f0;">${a.msg}</div>
+            <div style="font-size:0.7rem;color:#64748b;">${a.timestamp}</div>
+          </div>
+        </div>`).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+
+// ====================================================
+// TAB: SCOPELINK
+// ====================================================
+function renderScopeLink() {
+  let total=0,responded=0,totalDef=0,totalPri=0;
+  for(let cid in supplierMaster){for(let cat in supplierMaster[cid]){total++;const s=supplierMaster[cid][cat];totalDef+=s.defaultMT;if(s.primaryMT!=null){responded++;totalPri+=s.primaryMT;}}}
+  const rate=Math.round((responded/total)*100);
+  const reduction=totalDef?Math.round(((totalDef-totalPri)/totalDef)*100):0;
+  return `<div class="fade-in">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:0.75rem;margin-bottom:1.25rem;">
+      <div class="metric-card green" style="padding:0.9rem;"><div class="metric-label">Suppliers Engaged</div><div class="metric-value" style="color:#4ade80;font-size:1.4rem;">${total}</div></div>
+      <div class="metric-card amber" style="padding:0.9rem;"><div class="metric-label">Response Rate</div><div class="metric-value" style="color:#fbbf24;font-size:1.4rem;">${rate}%</div></div>
+      <div class="metric-card blue" style="padding:0.9rem;"><div class="metric-label">Responded</div><div class="metric-value" style="color:#60a5fa;font-size:1.4rem;">${responded}</div></div>
+      <div class="metric-card rose" style="padding:0.9rem;"><div class="metric-label">Default EEIO Total</div><div class="metric-value" style="color:#c4b5fd;font-size:1.2rem;">${totalDef.toLocaleString()} MT</div></div>
+    </div>
+    <div class="card" style="padding:1.25rem;">
+      <div class="card-title"><i class="fas fa-link"></i> ScopeLink™ Supplier Data Hub</div>
+      <p style="font-size:0.78rem;color:#64748b;margin-bottom:1rem;">Enter primary supplier emission data below to override EEIO default estimates. Higher primary data coverage narrows Scope 3 uncertainty bands.</p>
+      <div style="overflow-x:auto;">
+        <table class="data-table">
+          <thead><tr><th>Facility</th><th>Category</th><th>Supplier</th><th>Default EEIO (MT)</th><th>Primary Data (MT)</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody>
+            ${Object.entries(supplierMaster).flatMap(([cid,cats])=>{
+              const co=currentPlants.find(p=>p.id===cid);
+              const nm=co?co.name:cid;
+              return Object.entries(cats).map(([cat,supp])=>`<tr>
+                <td style="font-weight:600;color:#e2e8f0;">${nm}</td>
+                <td><span class="badge badge-blue">${cat==='purchased'?'Purchased Goods':cat==='freight'?'Freight':'Use of Sold'}</span></td>
+                <td style="color:#94a3b8;">${supp.name}</td>
+                <td style="color:#fbbf24;">${supp.defaultMT.toLocaleString()}</td>
+                <td><input type="number" value="${supp.primaryMT!=null?supp.primaryMT:''}" placeholder="Enter MT" class="form-input" style="width:110px;" onchange="window.updateSupplierPrimary('${cid}','${cat}',this.value)"></td>
+                <td>${supp.primaryMT!=null?'<span class="badge badge-green">✓ Received</span>':'<span class="badge badge-amber">Pending</span>'}</td>
+                <td><button onclick="alert('Reminder sent to ${supp.name}')" style="color:#4ade80;background:none;border:none;cursor:pointer;font-size:0.78rem;">📧 Request</button></td>
+              </tr>`);
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ====================================================
+// TAB: TRADEDESK
+// ====================================================
+function renderTradeDesk() {
+  const totalBought = tradeBook.filter(t=>t.type==='Buy').reduce((s,t)=>s+t.credits,0);
+  const totalSold = tradeBook.filter(t=>t.type==='Sell').reduce((s,t)=>s+t.credits,0);
+  const totalValue = tradeBook.reduce((s,t)=>s+(t.type==='Sell'?t.value:-t.value),0);
+  return `<div class="fade-in">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.25rem;flex-wrap:wrap;">
+      <div class="card-title" style="margin:0;"><i class="fas fa-arrow-right-arrow-left"></i> TradeDesk™ Carbon Credit Exchange</div>
+      <span class="badge badge-green">Xpansiv CBL</span><span class="badge badge-blue">CME Group</span><span class="badge badge-purple">Verra · Gold Standard · ACR · CAR</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:0.75rem;margin-bottom:1.25rem;">
+      <div class="metric-card green" style="padding:0.9rem;"><div class="metric-label">Carbon Price (live)</div><div class="metric-value" style="color:#4ade80;font-size:1.5rem;">$${globalCarbonPrice}.00</div><div class="metric-sub">+$0.85 today ▲</div></div>
+      <div class="metric-card blue" style="padding:0.9rem;"><div class="metric-label">Credits Sold (YTD)</div><div class="metric-value" style="color:#60a5fa;font-size:1.4rem;">${totalSold.toLocaleString()}</div><div class="metric-sub">MT CO₂e</div></div>
+      <div class="metric-card amber" style="padding:0.9rem;"><div class="metric-label">Credits Bought (YTD)</div><div class="metric-value" style="color:#fbbf24;font-size:1.4rem;">${totalBought.toLocaleString()}</div><div class="metric-sub">MT CO₂e</div></div>
+      <div class="metric-card ${totalValue>=0?'green':'rose'}" style="padding:0.9rem;"><div class="metric-label">Net Trading P&L</div><div class="metric-value" style="color:${totalValue>=0?'#4ade80':'#f87171'};font-size:1.3rem;">$${Math.abs(totalValue).toLocaleString()}</div><div class="metric-sub">${totalValue>=0?'Net receipt':'Net cost'}</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1.5fr;gap:1.25rem;margin-bottom:1.25rem;">
+      <div class="card" style="padding:1.25rem;">
+        <div class="card-title"><i class="fas fa-plus-circle"></i> New Trade Order</div>
+        <div style="display:flex;flex-direction:column;gap:0.75rem;">
+          <label style="font-size:0.78rem;color:#94a3b8;">Facility
+            <select class="form-input" style="margin-top:4px;" id="trade-plant">
+              ${currentPlants.map(p=>`<option value="${p.id}">${p.name}</option>`).join('')}
+            </select>
+          </label>
+          <label style="font-size:0.78rem;color:#94a3b8;">Registry
+            <select class="form-input" style="margin-top:4px;" id="trade-registry">
+              <option>Verra VCS</option><option>Gold Standard</option><option>ACR</option><option>CAR</option>
+            </select>
+          </label>
+          <label style="font-size:0.78rem;color:#94a3b8;">Type
+            <select class="form-input" style="margin-top:4px;" id="trade-type">
+              <option>Sell</option><option>Buy</option>
+            </select>
+          </label>
+          <label style="font-size:0.78rem;color:#94a3b8;">Credits (MT)
+            <input type="number" class="form-input" style="margin-top:4px;" id="trade-credits" value="100" min="1">
+          </label>
+          <label style="font-size:0.78rem;color:#94a3b8;">Project Name
+            <input type="text" class="form-input" style="margin-top:4px;" id="trade-project" placeholder="e.g. Kenya Clean Water">
+          </label>
+          <div style="display:flex;gap:0.5rem;">
+            <button class="btn-primary" style="flex:1;justify-content:center;" onclick="submitTrade()"><i class="fas fa-check"></i> Submit Order</button>
+          </div>
+          <div style="font-size:0.7rem;color:#374151;background:rgba(0,0,0,0.2);padding:0.6rem;border-radius:8px;">
+            🔒 All trades recorded with immutable blockchain audit trail · VCS/GS/ACR/CAR only
+          </div>
+        </div>
+      </div>
+      <div class="card" style="padding:1.25rem;">
+        <div class="card-title"><i class="fas fa-receipt"></i> Trade Ledger</div>
+        <div style="overflow-x:auto;">
+          <table class="data-table" id="trade-table">
+            <thead><tr><th>ID</th><th>Date</th><th>Facility</th><th>Type</th><th>Registry</th><th>Credits</th><th>$/MT</th><th>Value</th><th>Status</th><th>Project</th></tr></thead>
+            <tbody>${renderTradeRows()}</tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="padding:1.25rem;">
+      <div class="card-title"><i class="fas fa-chart-line"></i> Carbon Price Chart (2026)</div>
+      <canvas id="priceChart" height="90"></canvas>
+    </div>
+  </div>`;
+}
+function renderTradeRows(){
+  return tradeBook.map(t=>`<tr>
+    <td style="color:#64748b;font-size:0.7rem;">${t.id}</td>
+    <td style="font-size:0.75rem;">${t.date}</td>
+    <td style="font-size:0.75rem;">${t.plant.split(' ')[0]}</td>
+    <td><span class="badge ${t.type==='Sell'?'badge-green':'badge-amber'}">${t.type}</span></td>
+    <td style="font-size:0.72rem;color:#94a3b8;">${t.registry}</td>
+    <td style="font-weight:600;">${t.credits.toLocaleString()}</td>
+    <td>$${t.price}</td>
+    <td style="font-weight:600;color:${t.type==='Sell'?'#4ade80':'#fbbf24'};">${t.type==='Sell'?'+':'-'}$${t.value.toLocaleString()}</td>
+    <td><span class="badge ${t.status==='Settled'?'badge-green':'badge-blue'}">${t.status}</span></td>
+    <td style="font-size:0.72rem;color:#94a3b8;">${t.project}</td>
+  </tr>`).join('');
+}
+function submitTrade(){
+  const plant=currentPlants.find(p=>p.id===document.getElementById('trade-plant')?.value);
+  const registry=document.getElementById('trade-registry')?.value;
+  const type=document.getElementById('trade-type')?.value;
+  const credits=parseInt(document.getElementById('trade-credits')?.value)||0;
+  const project=document.getElementById('trade-project')?.value||'New Project';
+  if(!plant||credits<=0){alert('Please fill all fields');return;}
+  const id='T00'+(tradeBook.length+1);
+  const today=new Date().toISOString().slice(0,10);
+  tradeBook.unshift({id,date:today,plant:plant.name,type,registry,credits,price:globalCarbonPrice,value:credits*globalCarbonPrice,status:'Pending',project});
+  const tbody=document.querySelector('#trade-table tbody');
+  if(tbody) tbody.innerHTML=renderTradeRows();
+  alert(`✅ Order ${id} submitted: ${type} ${credits.toLocaleString()} MT via ${registry}`);
+}
+window.submitTrade=submitTrade;
+
+function renderTradeDeskCharts(){
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul'];
+  const prices=[38.5,39.2,40.1,41.5,42.8,43.2,42.0];
+  mkChart('priceChart',{type:'line',data:{labels:months,datasets:[
+    {label:'Carbon Price ($/MT)',data:prices,borderColor:'#4ade80',backgroundColor:'rgba(74,222,128,0.08)',tension:0.4,fill:true,pointRadius:4,pointBackgroundColor:'#4ade80'}
+  ]},options:{maintainAspectRatio:true,scales:{x:{grid:{display:false},ticks:{color:'#64748b'}},y:{grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'#64748b',callback:v=>'$'+v}}}}});
+}
+
+// ====================================================
+// TAB: PREDICTIQ
+// ====================================================
+function renderPredictIQ() {
+  const base = currentPlants.reduce((s,p)=>s+p.total,0);
+  const forecasts = [2026,2027,2028,2029,2030,2031,2032].map((yr,i)=>({
+    year:yr,
+    base:Math.round(base*(1-i*0.04)),
+    optimistic:Math.round(base*(1-i*0.07)),
+    pessimistic:Math.round(base*(1-i*0.01)),
+    target:Math.round(base*(1-i*0.055))
+  }));
+  setTimeout(()=>renderPredictIQCharts(forecasts),120);
+  return `<div class="fade-in">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.25rem;flex-wrap:wrap;">
+      <div class="card-title" style="margin:0;"><i class="fas fa-brain"></i> PredictIQ™ AI Forecasting Engine</div>
+      <span class="badge badge-purple">LSTM Neural Network</span><span class="badge badge-blue">Random Forest</span><span class="badge badge-green">12-36 Month Horizon</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem;">
+      <div class="card" style="padding:1.25rem;">
+        <div class="card-title"><i class="fas fa-chart-line"></i> Emission Trajectory Forecast (2026–2032)</div>
+        <canvas id="forecastChart" height="160"></canvas>
+        <div style="display:flex;gap:12px;margin-top:10px;font-size:0.72rem;flex-wrap:wrap;">
+          <span style="color:#4ade80;">— Base Case</span>
+          <span style="color:#60a5fa;">— Optimistic</span>
+          <span style="color:#f87171;">— Pessimistic</span>
+          <span style="color:#fbbf24;border-bottom:2px dashed #fbbf24;">- - Net Zero Target</span>
+        </div>
+      </div>
+      <div class="card" style="padding:1.25rem;">
+        <div class="card-title"><i class="fas fa-bullseye"></i> Decarbonization Score by Facility</div>
+        <canvas id="decarb-radar" height="180"></canvas>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1.2fr;gap:1.25rem;margin-bottom:1.25rem;">
+      <div class="card" style="padding:1.25rem;">
+        <div class="card-title"><i class="fas fa-calendar-check"></i> Forecast Table</div>
+        <table class="data-table">
+          <thead><tr><th>Year</th><th>Base Case</th><th>Optimistic</th><th>Pessimistic</th><th>Net Zero Target</th></tr></thead>
+          <tbody>
+            ${forecasts.map(f=>`<tr>
+              <td style="font-weight:700;color:#e2e8f0;">${f.year}${f.year===2026?' (current)':''}</td>
+              <td style="color:#4ade80;">${f.base.toLocaleString()}</td>
+              <td style="color:#60a5fa;">${f.optimistic.toLocaleString()}</td>
+              <td style="color:#f87171;">${f.pessimistic.toLocaleString()}</td>
+              <td style="color:#fbbf24;">${f.target.toLocaleString()}</td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+        <div style="font-size:0.7rem;color:#374151;margin-top:8px;">All values in MT CO₂e · Model confidence: 87%</div>
+      </div>
+      <div class="card" style="padding:1.25rem;">
+        <div class="card-title"><i class="fas fa-robot"></i> AI Recommendations</div>
+        <div style="display:flex;flex-direction:column;gap:0.75rem;font-size:0.82rem;">
+          ${[
+            {icon:'fa-bolt',color:'#fbbf24',text:'Keystone Steel: electrify arc furnace with renewable PPAs → est. −18,400 MT/yr Scope 2 reduction',priority:'High Impact'},
+            {icon:'fa-solar-panel',color:'#4ade80',text:'Blue Ridge Cement: on-site solar + carbon capture kiln upgrade → est. −12,200 MT/yr Scope 1',priority:'High Impact'},
+            {icon:'fa-truck',color:'#60a5fa',text:'AutoDynamic: switch to rail freight for 30% of Scope 4 logistics → −3,100 MT/yr',priority:'Medium'},
+            {icon:'fa-leaf',color:'#34d399',text:'Gulf Coast Chemicals: ScopeLink™ supplier engagement for Cat 1 → reduces uncertainty by 38%',priority:'Quick Win'},
+            {icon:'fa-thermometer-half',color:'#c4b5fd',text:'PharmaCore Labs: HVAC refrigerant replacement → −420 MT/yr fugitive emissions',priority:'Quick Win'},
+          ].map(r=>`<div style="display:flex;gap:10px;align-items:flex-start;background:rgba(0,0,0,0.2);padding:0.75rem;border-radius:10px;">
+            <i class="fas ${r.icon}" style="color:${r.color};margin-top:2px;width:14px;"></i>
+            <div>
+              <div style="color:#e2e8f0;line-height:1.4;">${r.text}</div>
+              <span class="badge badge-${r.priority==='High Impact'?'green':r.priority==='Medium'?'blue':'purple'}" style="margin-top:4px;">${r.priority}</span>
+            </div>
+          </div>`).join('')}
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+function renderPredictIQCharts(forecasts){
+  mkChart('forecastChart',{type:'line',data:{labels:forecasts.map(f=>f.year),datasets:[
+    {label:'Base Case',data:forecasts.map(f=>f.base),borderColor:'#4ade80',backgroundColor:'rgba(74,222,128,0.06)',tension:0.4,fill:true,pointRadius:4},
+    {label:'Optimistic',data:forecasts.map(f=>f.optimistic),borderColor:'#60a5fa',tension:0.4,pointRadius:3,borderDash:[],fill:false},
+    {label:'Pessimistic',data:forecasts.map(f=>f.pessimistic),borderColor:'#f87171',tension:0.4,pointRadius:3,fill:false},
+    {label:'Net Zero Target',data:forecasts.map(f=>f.target),borderColor:'#fbbf24',borderDash:[6,3],tension:0.4,pointRadius:0,fill:false},
+  ]},options:{maintainAspectRatio:true}});
+  const labels=currentPlants.map(p=>p.name.split(' ')[0]);
+  const scores=currentPlants.map(p=>Math.round(Math.max(20,100-((p.intensity/p.benchmark)*100-50))));
+  mkChart('decarb-radar',{type:'radar',data:{labels,datasets:[
+    {label:'Decarbonization Score',data:scores,backgroundColor:'rgba(74,222,128,0.15)',borderColor:'#4ade80',pointBackgroundColor:'#4ade80',pointRadius:4}
+  ]},options:{scales:{r:{grid:{color:'rgba(255,255,255,0.1)'},pointLabels:{color:'#94a3b8',font:{size:10}},ticks:{color:'#64748b',backdropColor:'transparent'},angleLines:{color:'rgba(255,255,255,0.06)'}}},maintainAspectRatio:true}});
+}
+
+// ====================================================
+// TAB: ESGPULSE
+// ====================================================
+function renderESGPulse() {
+  currentPlants = enrichAll();
+  const totalCO2 = currentPlants.reduce((s,p)=>s+p.total,0);
+  const s1=currentPlants.reduce((s,p)=>s+p.scope1,0);
+  const s2=currentPlants.reduce((s,p)=>s+p.scope2,0);
+  const s3=currentPlants.reduce((s,p)=>s+p.s3.total,0);
+  setTimeout(()=>renderESGCharts(),120);
+  return `<div class="fade-in">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.25rem;flex-wrap:wrap;">
+      <div class="card-title" style="margin:0;"><i class="fas fa-leaf"></i> ESGPulse™ Reporting Suite</div>
+      <span class="badge badge-green">GRI 305</span><span class="badge badge-blue">TCFD</span><span class="badge badge-purple">CDP</span><span class="badge badge-amber">SEC S-K 1500</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0.75rem;margin-bottom:1.25rem;">
+      <div class="metric-card green" style="padding:0.9rem;"><div class="metric-label">GRI 305-1 (Scope 1)</div><div class="metric-value" style="color:#4ade80;font-size:1.3rem;">${Math.round(s1).toLocaleString()}</div><div class="metric-sub">MT CO₂e · Direct</div></div>
+      <div class="metric-card blue" style="padding:0.9rem;"><div class="metric-label">GRI 305-2 (Scope 2)</div><div class="metric-value" style="color:#60a5fa;font-size:1.3rem;">${Math.round(s2).toLocaleString()}</div><div class="metric-sub">MT CO₂e · Purchased Energy</div></div>
+      <div class="metric-card amber" style="padding:0.9rem;"><div class="metric-label">GRI 305-3 (Scope 3)</div><div class="metric-value" style="color:#fbbf24;font-size:1.3rem;">${Math.round(s3).toLocaleString()}</div><div class="metric-sub">MT CO₂e · Value Chain</div></div>
+      <div class="metric-card rose" style="padding:0.9rem;"><div class="metric-label">Total (All Scopes)</div><div class="metric-value" style="color:#c4b5fd;font-size:1.3rem;">${Math.round(totalCO2).toLocaleString()}</div><div class="metric-sub">MT CO₂e · Portfolio</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem;">
+      <div class="card" style="padding:1.25rem;">
+        <div class="card-title"><i class="fas fa-chart-bar"></i> Scope 3 Category Breakdown</div>
+        <canvas id="s3CatChart" height="200"></canvas>
+      </div>
+      <div class="card" style="padding:1.25rem;">
+        <div class="card-title"><i class="fas fa-industry"></i> Emissions by Industry Vertical</div>
+        <canvas id="industryChart" height="200"></canvas>
+      </div>
+    </div>
+    <div class="card" style="padding:1.25rem;margin-bottom:1.25rem;">
+      <div class="card-title"><i class="fas fa-file-alt"></i> TCFD Scenario Analysis</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0.75rem;">
+        ${[
+          {name:'1.5°C Pathway',color:'#4ade80',text:'Emissions must fall 45% by 2030. Portfolio on track for 38% reduction. Gap: 7%. Capital expenditure required: ~$12M in efficiency upgrades.',risk:'Low physical risk · Transition risk: Medium'},
+          {name:'2°C Scenario',color:'#fbbf24',text:'Manageable transition costs. Carbon price rises to $85/MT by 2035. Current portfolio would face ~$2.1M additional annual cost at that price.',risk:'Low physical risk · Financial exposure: Moderate'},
+          {name:'3°C Pathway',color:'#f87171',text:'High physical risk for coastal assets. Blue Ridge Cement and Gulf Coast Chemicals face flooding exposure by 2045. Insurance costs +$450K/yr estimated.',risk:'High physical risk · Adaptation costs critical'},
+        ].map(s=>`<div style="background:rgba(0,0,0,0.2);border-left:3px solid ${s.color};padding:0.9rem;border-radius:0 10px 10px 0;">
+          <div style="font-weight:700;color:${s.color};margin-bottom:6px;">${s.name}</div>
+          <div style="font-size:0.78rem;color:#94a3b8;line-height:1.5;margin-bottom:6px;">${s.text}</div>
+          <div style="font-size:0.7rem;color:#64748b;">${s.risk}</div>
+        </div>`).join('')}
+      </div>
+    </div>
+    <div class="card" style="padding:1.25rem;">
+      <div class="card-title"><i class="fas fa-download"></i> Disclosure Exports</div>
+      <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+        ${[
+          {label:'SEC S-K 1500 Draft',icon:'fa-file-contract',color:'#60a5fa'},
+          {label:'CDP Response',icon:'fa-leaf',color:'#4ade80'},
+          {label:'GRI 305 Table',icon:'fa-table',color:'#c4b5fd'},
+          {label:'TCFD Report',icon:'fa-globe',color:'#fbbf24'},
+          {label:'ESG Data Package',icon:'fa-database',color:'#34d399'},
+        ].map(e=>`<button onclick="alert('📄 Generating ${e.label}...')" class="btn-ghost" style="border-color:${e.color}30;color:${e.color};padding:0.5rem 1rem;">
+          <i class="fas ${e.icon}" style="margin-right:6px;"></i>${e.label}
+        </button>`).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+function renderESGCharts(){
+  const s3cats=['Purchased Goods','Capital Goods','Fuel & Energy','Transport Up','Waste Ops','Business Travel','Employee Comm.','Use of Products','End-of-Life','Other'];
+  const s3vals=[28,14,6,8,5,3,4,10,4,2].map(pct=>Math.round(currentPlants.reduce((s,p)=>s+p.s3.total,0)*pct/100/10)*10);
+  mkChart('s3CatChart',{type:'bar',data:{labels:s3cats,datasets:[{label:'MT CO₂e',data:s3vals,backgroundColor:'rgba(74,222,128,0.7)',borderRadius:4}]},options:{indexAxis:'y',scales:{x:{grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'#64748b',font:{size:9}}},y:{grid:{display:false},ticks:{color:'#64748b',font:{size:9}}}},maintainAspectRatio:true}});
+  const industryColors=['rgba(96,165,250,0.75)','rgba(74,222,128,0.75)','rgba(251,191,36,0.75)','rgba(248,113,113,0.75)','rgba(167,139,250,0.75)','rgba(34,211,238,0.75)','rgba(52,211,153,0.75)','rgba(196,181,253,0.75)'];
+  mkChart('industryChart',{type:'doughnut',data:{labels:currentPlants.map(p=>p.name.split(' ')[0]),datasets:[{data:currentPlants.map(p=>p.total),backgroundColor:industryColors}]},options:{cutout:'50%',plugins:{legend:{position:'right',labels:{color:'#94a3b8',font:{size:10},boxWidth:12}}},maintainAspectRatio:true}});
+}
+
+// ====================================================
+// UTILITIES
+// ====================================================
+function updatePlantField(id,field,value){
+  const c=companiesData.find(c=>c.id===id);
+  if(c) c[field]=value;
+  currentPlants=enrichAll();
+  if(activeTab==='dashboard'){renderDashboardCharts();updateDashboardMetrics();}
+  else renderCurrentTab();
+}
+window.updatePlantField=updatePlantField;
+window.updateSupplierPrimary=(cid,cat,val)=>{
+  if(supplierMaster[cid]&&supplierMaster[cid][cat]){
+    supplierMaster[cid][cat].primaryMT=val===''?null:parseFloat(val);
+    supplierMaster[cid][cat].responseStatus=val!==''?'responded':'pending';
+    supplierMaster[cid][cat].lastUpdated=new Date().toISOString().slice(0,10);
+    currentPlants=enrichAll();
+  }
+};
+
+function updateDashboardMetrics(){currentPlants=enrichAll();}
+
+function renderCurrentTab(){
+  const content=document.getElementById('tab-content');
+  if(!content) return;
+  const renders={
+    dashboard:renderDashboard,
+    emissions:renderEmissions,
+    creditsim:renderCreditSim,
+    regwatch:renderRegWatch,
+    scopelink:renderScopeLink,
+    tradedesk:renderTradeDesk,
+    predictiq:renderPredictIQ,
+    esgpulse:renderESGPulse
+  };
+  const fn=renders[activeTab];
+  if(fn){content.innerHTML=fn();content.className='fade-in';}
+  // Post-render charts
+  setTimeout(()=>{
+    if(activeTab==='dashboard') renderDashboardCharts();
+    else if(activeTab==='tradedesk') renderTradeDeskCharts();
+    else if(activeTab==='predictiq') renderPredictIQCharts([2026,2027,2028,2029,2030,2031,2032].map((yr,i)=>{const b=currentPlants.reduce((s,p)=>s+p.total,0);return{year:yr,base:Math.round(b*(1-i*0.04)),optimistic:Math.round(b*(1-i*0.07)),pessimistic:Math.round(b*(1-i*0.01)),target:Math.round(b*(1-i*0.055))};}));
+    else if(activeTab==='esgpulse') renderESGCharts();
+  },80);
+  // Alerts
+  if(alertInterval) clearInterval(alertInterval);
+  if(activeTab==='dashboard'||activeTab==='regwatch'){
+    updateAlerts();
+    alertInterval=setInterval(updateAlerts,10000);
+  }
+}
+
+function updateAlerts(){
+  if(dynamicAlerts.length<8){dynamicAlerts.unshift(generateAlert());} 
+  else {dynamicAlerts=[generateAlert(),...dynamicAlerts.slice(0,7)];}
+  const el=document.getElementById('alertContainer')||document.getElementById('regAlertList');
+  if(!el) return;
+  el.innerHTML=dynamicAlerts.slice(0,6).map(a=>`<div class="alert-item alert-${a.severity}">
+    <i class="fas ${a.severity==='high'?'fa-triangle-exclamation':a.severity==='medium'?'fa-bell':'fa-circle-info'}" style="color:${a.severity==='high'?'#f87171':a.severity==='medium'?'#fbbf24':'#60a5fa'};margin-top:2px;font-size:0.85rem;"></i>
+    <div><div style="font-size:0.8rem;font-weight:600;color:#e2e8f0;">${a.msg}</div><div style="font-size:0.68rem;color:#64748b;">${a.timestamp}</div></div>
+  </div>`).join('');
+}
+
+// ---- PDF ----
+async function generatePDFReport(){
+  const m=document.createElement('div');m.className='modal-backdrop';
+  m.innerHTML=`<div class="modal-box"><h2 style="font-size:1.3rem;font-weight:800;color:#4ade80;margin-bottom:0.5rem;"><i class="fas fa-file-pdf"></i> Generate Compliance Report</h2><p style="font-size:0.82rem;color:#94a3b8;margin-bottom:1rem;">Includes all facilities, emissions data, credit positions and charts.</p><div style="display:flex;gap:0.75rem;"><button id="cpdf" class="btn-primary" style="flex:1;justify-content:center;">Download PDF</button><button id="xpdf" class="btn-ghost" style="flex:1;">Cancel</button></div></div>`;
+  document.body.appendChild(m);
+  m.querySelector('#xpdf').onclick=()=>m.remove();
+  m.querySelector('#cpdf').onclick=async()=>{
+    m.remove();
+    const d=document.createElement('div');
+    d.style.cssText='position:fixed;left:-9999px;padding:24px;background:white;width:900px;font-family:sans-serif;color:#111;';
+    const total=currentPlants.reduce((s,p)=>s+p.total,0);
+    const fin=currentPlants.reduce((s,p)=>s+p.credit.financialValue,0);
+    d.innerHTML=`<div style="border-bottom:3px solid #1e6f5c;padding-bottom:12px;margin-bottom:16px;"><h1 style="color:#1e6f5c;font-size:24px;margin:0;">CarbonScope360</h1><p style="color:#666;font-size:12px;margin:4px 0 0;">Avalanche Consulting & Management Services, LLC · ${new Date().toLocaleString()}</p></div>
+    <h3 style="color:#1e6f5c;">Portfolio Summary</h3>
+    <table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px;">
+      <tr style="background:#f0fdf4;"><th style="padding:6px;text-align:left;border:1px solid #d1fae5;">Facility</th><th style="padding:6px;border:1px solid #d1fae5;">Total CO₂e</th><th style="padding:6px;border:1px solid #d1fae5;">Scope 1</th><th style="padding:6px;border:1px solid #d1fae5;">Scope 2</th><th style="padding:6px;border:1px solid #d1fae5;">Scope 3</th><th style="padding:6px;border:1px solid #d1fae5;">Net Credits</th><th style="padding:6px;border:1px solid #d1fae5;">Value</th></tr>
+      ${currentPlants.map(p=>`<tr><td style="padding:6px;border:1px solid #eee;">${p.name}</td><td style="padding:6px;border:1px solid #eee;text-align:right;">${p.total.toLocaleString()}</td><td style="padding:6px;border:1px solid #eee;text-align:right;">${p.scope1.toLocaleString()}</td><td style="padding:6px;border:1px solid #eee;text-align:right;">${p.scope2.toLocaleString()}</td><td style="padding:6px;border:1px solid #eee;text-align:right;">${p.s3.total.toLocaleString()}</td><td style="padding:6px;border:1px solid #eee;text-align:right;color:${p.credit.surplusMT>=0?'green':'red'};">${p.credit.surplusMT>=0?'+':''}${p.credit.surplusMT.toLocaleString()}</td><td style="padding:6px;border:1px solid #eee;text-align:right;color:${p.credit.financialValue>=0?'green':'red'};">$${p.credit.financialValue.toLocaleString()}</td></tr>`).join('')}
+      <tr style="background:#f0fdf4;font-weight:bold;"><td style="padding:6px;border:1px solid #d1fae5;">TOTAL</td><td style="padding:6px;border:1px solid #d1fae5;text-align:right;">${total.toLocaleString()}</td><td colspan="3" style="padding:6px;border:1px solid #d1fae5;"></td><td style="padding:6px;border:1px solid #d1fae5;text-align:right;color:${fin>=0?'green':'red'};">$${fin.toLocaleString()}</td><td></td></tr>
+    </table>
+    <p style="font-size:10px;color:#999;border-top:1px solid #eee;padding-top:8px;">Carbon Price: $${globalCarbonPrice}/MT · EPA 40 CFR Part 98 · GHG Protocol · IPCC AR6 GWPs · Generated by CarbonScope360</p>`;
+    document.body.appendChild(d);
+    try{
+      const cv=await html2canvas(d,{scale:2});
+      const img=cv.toDataURL('image/png');
+      const {jsPDF}=window.jspdf;
+      const pdf=new jsPDF('p','mm','a4');
+      pdf.addImage(img,'PNG',0,0,210,(cv.height*210)/cv.width);
+      pdf.save(`CarbonScope360_Report_${new Date().toISOString().slice(0,10)}.pdf`);
+    }catch(e){alert('PDF error: '+e);}
+    d.remove();
+  };
+}
+window.generatePDFReport=generatePDFReport;
+
+// ---- SETTINGS ----
+function showSettingsModal(){
+  const m=document.createElement('div');m.className='modal-backdrop';
+  m.innerHTML=`<div class="modal-box"><h2 style="font-size:1.3rem;font-weight:800;color:#4ade80;margin-bottom:1rem;"><i class="fas fa-sliders-h"></i> Platform Settings</h2>
+    <div style="display:flex;flex-direction:column;gap:1rem;">
+      <label style="font-size:0.82rem;color:#94a3b8;">Global Carbon Price ($/MT)<input type="number" id="s-price" value="${globalCarbonPrice}" class="form-input" style="margin-top:4px;"></label>
+      <label style="font-size:0.82rem;color:#94a3b8;">Monte Carlo Simulation Paths<input type="number" id="s-mc" value="${settings.monteCarloSamples}" class="form-input" style="margin-top:4px;"></label>
+      <label style="display:flex;align-items:center;gap:10px;font-size:0.82rem;color:#94a3b8;cursor:pointer;"><input type="checkbox" id="s-alerts" ${settings.autoRefreshAlerts?'checked':''} style="accent-color:#4ade80;"> Auto-refresh RegWatch alerts</label>
+      <div style="display:flex;gap:0.75rem;margin-top:0.5rem;"><button id="s-save" class="btn-primary" style="flex:1;justify-content:center;">Save Changes</button><button id="s-cancel" class="btn-ghost" style="flex:1;">Cancel</button></div>
+    </div></div>`;
+  document.body.appendChild(m);
+  m.querySelector('#s-cancel').onclick=()=>m.remove();
+  m.querySelector('#s-save').onclick=()=>{
+    const np=parseFloat(m.querySelector('#s-price').value);
+    if(!isNaN(np)){globalCarbonPrice=np;document.getElementById('hdr-price').innerText='$'+np;}
+    const ns=parseInt(m.querySelector('#s-mc').value);
+    if(!isNaN(ns)) settings.monteCarloSamples=ns;
+    settings.autoRefreshAlerts=m.querySelector('#s-alerts').checked;
+    currentPlants=enrichAll();
+    m.remove();
+    renderCurrentTab();
+  };
+}
+window.showSettingsModal=showSettingsModal;
+
+// ---- HELP ----
+function showHelpModal(){
+  const m=document.createElement('div');m.className='modal-backdrop';
+  m.innerHTML=`<div class="modal-box"><h2 style="font-size:1.3rem;font-weight:800;color:#4ade80;margin-bottom:0.5rem;"><i class="fas fa-circle-question"></i> CarbonScope360 Help</h2>
+    <p style="font-size:0.78rem;color:#64748b;margin-bottom:1rem;">Avalanche Consulting & Management Services, LLC · EPA 40 CFR Part 98 · GHG Protocol</p>
+    <div style="display:flex;flex-direction:column;gap:0.6rem;font-size:0.82rem;">
+      ${[
+        ['fa-chart-line','Dashboard','Live KPIs, interactive charts, facility matrix, emission intensity benchmarks, live alerts.'],
+        ['fa-microchip','EmissionsCore™','Edit plant-level data (fuel, electricity, process) for real-time Scope 1+2 recalculation. EPA-aligned.'],
+        ['fa-dice','CreditSimulator™','Monte Carlo simulation: production, regulatory, price volatility, supplier data quality, offset costs.'],
+        ['fa-shield-halved','RegWatch™','Compliance progress: EPA, SEC, UK SECR, CDP, AB 1305, CBAM, ISO 14064, GRI 305.'],
+        ['fa-link','ScopeLink™','Enter primary supplier emission data to override EEIO defaults and improve Scope 3 accuracy.'],
+        ['fa-arrow-right-arrow-left','TradeDesk™','Submit and track carbon credit buy/sell orders. Linked to Xpansiv CBL & CME. Audit trail.'],
+        ['fa-brain','PredictIQ™','AI-powered emission forecasts 2026–2032 using LSTM + Random Forest. Decarbonization recommendations.'],
+        ['fa-leaf','ESGPulse™','GRI 305, TCFD scenario analysis, CDP/SEC exports, industry breakdowns, Scope 3 categories.'],
+      ].map(([icon,name,desc])=>`<div style="display:flex;gap:10px;background:rgba(0,0,0,0.2);padding:0.65rem;border-radius:10px;">
+        <i class="fas ${icon}" style="color:#4ade80;margin-top:2px;width:14px;"></i>
+        <div><strong style="color:#e2e8f0;">${name}</strong> — <span style="color:#94a3b8;">${desc}</span></div>
+      </div>`).join('')}
+    </div>
+    <button onclick="this.closest('.modal-backdrop').remove()" class="btn-ghost" style="width:100%;margin-top:1rem;text-align:center;">Close</button>
+  </div>`;
+  document.body.appendChild(m);
+}
+window.showHelpModal=showHelpModal;
+
+// ====================================================
+// ANIMATED BACKGROUND
+// ====================================================
+(function(){
+  const canvas=document.getElementById('bg-canvas');
+  const ctx=canvas.getContext('2d');
+  let W,H,particles=[];
+  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+  resize();window.addEventListener('resize',resize);
+  class Particle{
+    constructor(){this.reset();}
+    reset(){
+      this.x=Math.random()*W;this.y=Math.random()*H;
+      this.r=Math.random()*1.5+0.3;
+      this.vx=(Math.random()-0.5)*0.3;this.vy=(Math.random()-0.5)*0.3;
+      this.alpha=Math.random()*0.5+0.1;
+      this.color=Math.random()>0.6?'rgba(74,222,128,':'rgba(34,211,238,';
+    }
+    update(){
+      this.x+=this.vx;this.y+=this.vy;
+      if(this.x<0||this.x>W||this.y<0||this.y>H) this.reset();
+    }
+    draw(){
+      ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+      ctx.fillStyle=this.color+this.alpha+')';ctx.fill();
+    }
+  }
+  for(let i=0;i<180;i++) particles.push(new Particle());
+  // Floating orbs
+  const orbs=[
+    {x:W*0.15,y:H*0.2,r:150,vx:0.08,vy:0.04,color:'rgba(30,111,92,0.06)'},
+    {x:W*0.8,y:H*0.7,r:200,vx:-0.06,vy:0.05,color:'rgba(10,50,80,0.05)'},
+    {x:W*0.5,y:H*0.5,r:120,vx:0.04,vy:-0.06,color:'rgba(74,222,128,0.03)'},
+  ];
+  function drawConnections(){
+    for(let i=0;i<particles.length;i++){
+      for(let j=i+1;j<particles.length;j++){
+        const dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y;
+        const dist=Math.sqrt(dx*dx+dy*dy);
+        if(dist<100){
+          ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);
+          ctx.strokeStyle=`rgba(30,111,92,${0.08*(1-dist/100)})`;ctx.lineWidth=0.5;ctx.stroke();
         }
-        
-        // Scope 3 calculations (detailed categories)
-        function computeScope3(plant) {
-            let revMil = plant.annualRevenueMillions || 50;
-            let purchased = plant.scope3_purchasedGoods !== null ? plant.scope3_purchasedGoods : (revMil * EF.s3_purchasedGoods);
-            let freight = plant.scope3_upstreamFreight !== null ? plant.scope3_upstreamFreight : (revMil * EF.s3_upstreamFreight);
-            let useSold = plant.scope3_useOfSold !== null ? plant.scope3_useOfSold : (revMil * EF.s3_useOfSold);
-            let other = plant.scope3_other !== null ? plant.scope3_other : (revMil * EF.s3_wasteOther);
-            let total = purchased + freight + useSold + other;
-            return { purchasedGoods: Math.round(purchased), upstreamTransport: Math.round(freight), useOfSold: Math.round(useSold), other: Math.round(other), total: Math.round(total) };
-        }
-        
-        // Credit surplus/deficit position
-        function getCreditPosition(plant, totalEmissions, carbonPrice) {
-            let balance = plant.allowance - totalEmissions;
-            let financial = balance * carbonPrice;
-            return { surplusMT: Math.round(balance * 10)/10, financialValue: Math.round(financial), status: balance >= 0 ? 'Surplus 🔋' : 'Deficit ⚠️' };
-        }
-        
-        // ----- Initial Plant Portfolio (based on business plan pilot assets) -----
-        let plantsData = [
-            { id: "P1", name: "Chemical Processing - Houston", naturalGasMMBtu: 42500, dieselGallons: 8200, electricityMWh: 18700, processEmissionsMT: 1250, annualRevenueMillions: 210, scope3_purchasedGoods: null, scope3_upstreamFreight: null, scope3_useOfSold: null, scope3_other: 320, allowance: 9800, productionUnits: 34000 },
-            { id: "P2", name: "Steel Mill - Pennsylvania", naturalGasMMBtu: 112000, dieselGallons: 24500, electricityMWh: 48900, processEmissionsMT: 8700, annualRevenueMillions: 520, scope3_purchasedGoods: null, scope3_upstreamFreight: null, scope3_useOfSold: null, scope3_other: 980, allowance: 27800, productionUnits: 128000 },
-            { id: "P3", name: "Food Manufacturing - Illinois", naturalGasMMBtu: 15400, dieselGallons: 3100, electricityMWh: 7200, processEmissionsMT: 210, annualRevenueMillions: 88, scope3_purchasedGoods: null, scope3_upstreamFreight: null, scope3_useOfSold: null, scope3_other: 110, allowance: 3850, productionUnits: 22500 }
-        ];
-        
-        let globalCarbonPrice = 42;     // $/MT CO2e
-        let activeTab = "dashboard";
-        let scenarioState = { plantId: "P1", productionMult: 1.0, allowanceAdj: 0, carbonPriceAdj: 0 };
-        
-        // Enrich plants with real-time calculations
-        function enrichPlants(plants, price) {
-            return plants.map(p => {
-                const { scope1, scope2, total12 } = computeScope12(p);
-                const scope3Data = computeScope3(p);
-                const totalEmissions = total12 + scope3Data.total;
-                const credit = getCreditPosition(p, totalEmissions, price);
-                const intensity = (totalEmissions / p.productionUnits) * 1000;
-                let benchmark = p.name.includes("Chemical") ? 72 : (p.name.includes("Steel") ? 185 : 42);
-                let efficiency = intensity <= benchmark * 0.9 ? "Efficient" : (intensity >= benchmark * 1.1 ? "Inefficient" : "Average");
-                let deltaIntensity = Math.round(intensity - benchmark);
-                return { ...p, scope1, scope2, total12, scope3Data, totalEmissions, credit, intensity: Math.round(intensity * 10)/10, benchmark, efficiency, deltaIntensity };
-            });
-        }
-        
-        let currentPlants = enrichPlants(plantsData, globalCarbonPrice);
-        
-        // ----- Helper functions to update & re-render -----
-        function updatePlantField(plantId, field, value) {
-            const idx = plantsData.findIndex(p => p.id === plantId);
-            if (idx !== -1) {
-                plantsData[idx][field] = value;
-                if (field === "scope3_purchasedGoods" && value === "") plantsData[idx][field] = null;
-                if (field === "scope3_upstreamFreight" && value === "") plantsData[idx][field] = null;
-                if (field === "scope3_useOfSold" && value === "") plantsData[idx][field] = null;
-                if (field === "scope3_other" && value === "") plantsData[idx][field] = null;
-                currentPlants = enrichPlants(plantsData, globalCarbonPrice);
-                renderApp();
-            }
-        }
-        
-        function applyScenario() {
-            const target = plantsData.find(p => p.id === scenarioState.plantId);
-            if (target) {
-                let mult = scenarioState.productionMult;
-                target.naturalGasMMBtu = Math.max(100, Math.round(target.naturalGasMMBtu * mult));
-                target.electricityMWh = Math.max(50, Math.round(target.electricityMWh * mult));
-                target.dieselGallons = Math.max(100, Math.round(target.dieselGallons * mult));
-                target.processEmissionsMT = Math.max(0, Math.round(target.processEmissionsMT * mult));
-                target.allowance = Math.max(0, target.allowance + scenarioState.allowanceAdj);
-                globalCarbonPrice = Math.max(5, globalCarbonPrice + scenarioState.carbonPriceAdj);
-                currentPlants = enrichPlants(plantsData, globalCarbonPrice);
-                renderApp();
-            }
-        }
-        
-        function resetToOriginal() {
-            plantsData = [
-                { id: "P1", name: "Chemical Processing - Houston", naturalGasMMBtu: 42500, dieselGallons: 8200, electricityMWh: 18700, processEmissionsMT: 1250, annualRevenueMillions: 210, scope3_purchasedGoods: null, scope3_upstreamFreight: null, scope3_useOfSold: null, scope3_other: 320, allowance: 9800, productionUnits: 34000 },
-                { id: "P2", name: "Steel Mill - Pennsylvania", naturalGasMMBtu: 112000, dieselGallons: 24500, electricityMWh: 48900, processEmissionsMT: 8700, annualRevenueMillions: 520, scope3_purchasedGoods: null, scope3_upstreamFreight: null, scope3_useOfSold: null, scope3_other: 980, allowance: 27800, productionUnits: 128000 },
-                { id: "P3", name: "Food Manufacturing - Illinois", naturalGasMMBtu: 15400, dieselGallons: 3100, electricityMWh: 7200, processEmissionsMT: 210, annualRevenueMillions: 88, scope3_purchasedGoods: null, scope3_upstreamFreight: null, scope3_useOfSold: null, scope3_other: 110, allowance: 3850, productionUnits: 22500 }
-            ];
-            globalCarbonPrice = 42;
-            scenarioState = { plantId: "P1", productionMult: 1.0, allowanceAdj: 0, carbonPriceAdj: 0 };
-            currentPlants = enrichPlants(plantsData, globalCarbonPrice);
-            renderApp();
-        }
-        
-        // Compliance report generator
-        function generateComplianceReport() {
-            let report = `📄 CARBONSCOPE360 OFFICIAL COMPLIANCE REPORT\nDate: ${new Date().toUTCString()}\nCarbon Price: $${globalCarbonPrice}/MT CO2e\nStandards: EPA 40 CFR Part 98 | SEC Rule | UK SECR | GHG Protocol\n\n`;
-            currentPlants.forEach(p => {
-                report += `\n🏭 ${p.name}\n   Scope 1+2: ${p.total12} MT   |   Scope 3: ${p.scope3Data.total} MT\n   Total Emissions: ${p.totalEmissions} MT\n   Allowance: ${p.allowance} MT → ${p.credit.status} ${Math.abs(p.credit.surplusMT)} MT\n   Financial Impact: $${p.credit.financialValue.toLocaleString()}\n   Intensity: ${p.intensity} kg/unit (benchmark ${p.benchmark}) → ${p.efficiency}\n   Scope 3 breakdown: Purch.Goods ${p.scope3Data.purchasedGoods} | Freight ${p.scope3Data.upstreamTransport} | Use of Sold ${p.scope3Data.useOfSold} MT\n`;
-            });
-            report += `\n📊 Portfolio total emissions: ${currentPlants.reduce((a,b)=>a+b.totalEmissions,0)} MT CO2e\n💰 Net carbon financial position: $${currentPlants.reduce((a,b)=>a+b.credit.financialValue,0).toLocaleString()}\n✅ Verified with EmissionsCore™ v2.0, auditable factor provenance.`;
-            alert(report);
-        }
-        
-        // Global chart reference
-        let emissionsChart = null;
-        function renderChart() {
-            const canvas = document.getElementById("portfolioChart");
-            if (!canvas) return;
-            if (emissionsChart) emissionsChart.destroy();
-            const ctx = canvas.getContext("2d");
-            const labels = currentPlants.map(p => p.name.split(" -")[0]);
-            const scope12Data = currentPlants.map(p => p.total12);
-            const scope3Data = currentPlants.map(p => p.scope3Data.total);
-            emissionsChart = new Chart(ctx, {
-                type: "bar",
-                data: { labels, datasets: [{ label: "Scope 1+2 (MT CO₂e)", data: scope12Data, backgroundColor: "#1e6f5c", borderRadius: 12 }, { label: "Scope 3 (MT CO₂e)", data: scope3Data, backgroundColor: "#74c69d", borderRadius: 12 }] },
-                options: { responsive: true, maintainAspectRatio: true, plugins: { tooltip: { callbacks: { label: (ctx) => `${ctx.dataset.label}: ${ctx.raw.toLocaleString()} MT` } }, legend: { position: "top" } } }
-            });
-        }
-        
-        // ----- Dynamic Render (complete UI with responsive design) -----
-        function renderApp() {
-            const root = document.getElementById("root");
-            if (!root) return;
-            const totalPortfolioEmissions = currentPlants.reduce((s,p)=>s+p.totalEmissions,0);
-            const totalFinancial = currentPlants.reduce((s,p)=>s+p.credit.financialValue,0);
-            const avgIntensity = currentPlants.reduce((s,p)=>s+p.intensity,0)/currentPlants.length;
-            
-            const tabs = [
-                { id: "dashboard", label: "📊 Executive Dashboard", icon: "fa-chart-line" },
-                { id: "emissions", label: "⚡ EmissionsCore™", icon: "fa-microchip" },
-                { id: "credit", label: "💳 Credit Management", icon: "fa-coins" },
-                { id: "scenario", label: "🔄 Scenario Lab", icon: "fa-flask" },
-                { id: "scope3", label: "🔗 Value Chain (Scope 3)", icon: "fa-link" }
-            ];
-            
-            let contentHtml = "";
-            
-            // ----- DASHBOARD -----
-            if (activeTab === "dashboard") {
-                contentHtml = `
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
-                        <div class="stat-card flex items-center gap-4"><div class="bg-emerald-100 p-3 rounded-2xl"><i class="fas fa-industry text-2xl text-emerald-700"></i></div><div><p class="text-slate-500 text-sm">Total Portfolio Emissions</p><p class="text-2xl font-bold text-slate-800">${totalPortfolioEmissions.toLocaleString()} MT</p></div></div>
-                        <div class="stat-card flex items-center gap-4"><div class="bg-blue-100 p-3 rounded-2xl"><i class="fas fa-chart-simple text-2xl text-blue-700"></i></div><div><p class="text-slate-500 text-sm">Avg. Intensity (kg/unit)</p><p class="text-2xl font-bold text-slate-800">${Math.round(avgIntensity)} kg</p></div></div>
-                        <div class="stat-card flex items-center gap-4"><div class="bg-amber-100 p-3 rounded-2xl"><i class="fas fa-dollar-sign text-2xl text-amber-700"></i></div><div><p class="text-slate-500 text-sm">Net Carbon Asset Value</p><p class="text-2xl font-bold ${totalFinancial>=0?'text-emerald-600':'text-rose-600'}">$${totalFinancial.toLocaleString()}</p></div></div>
-                    </div>
-                    <div class="card-glass p-5 mb-6"><h3 class="font-bold text-lg mb-3"><i class="fas fa-chart-column mr-2 text-emerald-600"></i> Facility Benchmark & Efficiency</h3><canvas id="portfolioChart" style="height:320px; width:100%"></canvas></div>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-                        ${currentPlants.map(p => `
-                            <div class="card-glass p-5 card-hover">
-                                <div class="flex justify-between items-start"><h2 class="font-bold text-lg">${p.name}</h2><span class="badge ${p.efficiency==='Efficient'?'bg-green-100 text-green-700':p.efficiency==='Inefficient'?'bg-red-100 text-red-700':'bg-gray-100'}">${p.efficiency}</span></div>
-                                <div class="mt-3 space-y-2 text-sm"><div class="flex justify-between"><span>Total CO₂e:</span><span class="font-mono font-bold">${p.totalEmissions} MT</span></div><div class="flex justify-between"><span>Intensity:</span><span>${p.intensity} kg/unit <span class="text-xs text-slate-400">(benchmark ${p.benchmark})</span></span></div><div class="flex justify-between"><span>Credit position:</span><span class="${p.credit.surplusMT>=0?'text-emerald-600':'text-rose-600'} font-semibold">${p.credit.status} ${Math.abs(p.credit.surplusMT)} MT</span></div><div class="flex justify-between border-t pt-1 mt-1"><span>Financial:</span><span>$${p.credit.financialValue.toLocaleString()}</span></div></div>
-                                ${p.deltaIntensity > 10 ? `<div class="mt-2 text-xs bg-amber-50 p-2 rounded"><i class="fas fa-exclamation-triangle"></i> ${p.deltaIntensity} kg/unit above benchmark – reduction opportunity</div>` : p.deltaIntensity < -5 ? `<div class="mt-2 text-xs bg-green-50 p-2 rounded"><i class="fas fa-leaf"></i> Below benchmark – efficient operations</div>` : ""}
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            }
-            
-            // ----- EMISSIONSCORE™ ENGINE (Scope 1+2 live inputs) -----
-            if (activeTab === "emissions") {
-                contentHtml = `
-                    <div class="bg-gradient-to-r from-emerald-50 to-teal-50 p-5 rounded-2xl mb-6 flex items-center gap-3 flex-wrap"><i class="fas fa-microchip text-3xl text-emerald-700"></i><div><h2 class="font-bold text-xl">EmissionsCore™ Engine Active</h2><p class="text-sm">Real-time CO₂e calculation using EPA 40 CFR Part 98 & eGRID. Modify parameters → instantaneous updates.</p></div></div>
-                    ${currentPlants.map(p => `
-                        <div class="card-glass p-5 mb-6">
-                            <div class="flex flex-wrap justify-between items-center mb-2"><h3 class="font-bold text-xl">${p.name}</h3><span class="bg-white px-3 py-1 rounded-full text-sm shadow-sm">Total: ${p.total12 + p.scope3Data.total} MT CO₂e</span></div>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                                <div><label class="text-sm text-slate-500">Natural Gas (MMBtu)</label><input type="number" value="${p.naturalGasMMBtu}" onchange="updatePlantField('${p.id}','naturalGasMMBtu',parseFloat(this.value)||0)"></div>
-                                <div><label class="text-sm text-slate-500">Electricity (MWh)</label><input type="number" value="${p.electricityMWh}" onchange="updatePlantField('${p.id}','electricityMWh',parseFloat(this.value)||0)"></div>
-                                <div><label class="text-sm text-slate-500">Diesel (gallons)</label><input type="number" value="${p.dieselGallons}" onchange="updatePlantField('${p.id}','dieselGallons',parseFloat(this.value)||0)"></div>
-                                <div><label class="text-sm text-slate-500">Process Emissions (MT)</label><input type="number" value="${p.processEmissionsMT}" onchange="updatePlantField('${p.id}','processEmissionsMT',parseFloat(this.value)||0)"></div>
-                            </div>
-                            <div class="mt-4 bg-slate-50 p-3 rounded-xl flex flex-wrap justify-between text-sm"><span>Scope 1 (Direct): <strong>${p.scope1} MT</strong></span><span>Scope 2 (Electricity): <strong>${p.scope2} MT</strong></span><span>Total 1+2: <strong>${p.total12} MT</strong></span><span class="text-emerald-600">Allowance used: ${Math.round((p.total12/p.allowance)*100)}%</span></div>
-                        </div>
-                    `).join('')}
-                `;
-            }
-            
-            // ----- CREDIT MANAGEMENT -----
-            if (activeTab === "credit") {
-                contentHtml = `
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        ${currentPlants.map(p => `
-                            <div class="card-glass p-5 border-l-8 border-l-emerald-500">
-                                <h3 class="font-bold text-xl">${p.name}</h3>
-                                <div class="mt-3 space-y-2"><div class="flex justify-between"><span>Total Emissions (1+2+3):</span><span>${p.totalEmissions} MT</span></div><div class="flex justify-between"><span>Regulatory Cap / Allowance:</span><span>${p.allowance} MT</span></div><div class="flex justify-between text-lg font-bold"><span>Carbon Credit Position:</span><span class="${p.credit.surplusMT>=0?'text-emerald-600':'text-rose-600'}">${p.credit.surplusMT>=0?'+':''}${p.credit.surplusMT} MT (${p.credit.status})</span></div><div class="flex justify-between bg-gray-50 p-3 rounded-lg"><span>💰 Financial Value @ $${globalCarbonPrice}/MT:</span><span class="font-bold">$${p.credit.financialValue.toLocaleString()}</span></div></div>
-                                <button onclick="updatePlantField('${p.id}','allowance', Math.max(0, ${p.allowance} + (${p.credit.surplusMT>0? -150 : 150})))" class="mt-4 text-sm bg-slate-100 hover:bg-slate-200 px-4 py-2 rounded-full w-full"><i class="fas fa-sliders-h"></i> Adjust allowance (±150 MT)</button>
-                            </div>
-                        `).join('')}
-                    </div>
-                    <div class="mt-6 card-glass p-5 bg-emerald-50 text-center"><i class="fas fa-chart-line mr-2"></i> Portfolio carbon asset value: <span class="font-bold text-xl">$${totalFinancial.toLocaleString()}</span> — Real-time exposure & trading readiness (TradeDesk™ integration)</div>
-                `;
-            }
-            
-            // ----- SCENARIO SIMULATOR -----
-            if (activeTab === "scenario") {
-                contentHtml = `
-                    <div class="card-glass p-6">
-                        <h2 class="text-2xl font-bold mb-2"><i class="fas fa-flask text-emerald-600"></i> Strategic Scenario Simulator</h2>
-                        <p class="text-slate-500 mb-5">Model production changes, regulatory cap adjustments, carbon price volatility — see real-time financial & emissions impact.</p>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                            <div><label class="font-medium">Target Facility</label><select id="scenarioPlant" class="mt-1">${currentPlants.map(p=>`<option value="${p.id}" ${scenarioState.plantId===p.id?'selected':''}>${p.name}</option>`).join('')}</select></div>
-                            <div><label>Production Multiplier <span id="multValue" class="text-emerald-600 font-bold">${scenarioState.productionMult}x</span></label><input type="range" id="prodRange" min="0.5" max="2.0" step="0.05" value="${scenarioState.productionMult}" class="w-full mt-1"></div>
-                            <div><label>Allowance Change (MT)</label><input type="number" id="allowAdj" value="${scenarioState.allowanceAdj}" class="mt-1"></div>
-                            <div><label>Carbon Price Adjustment ($/MT)</label><input type="number" id="priceAdj" value="${scenarioState.carbonPriceAdj}" class="mt-1"></div>
-                        </div>
-                        <div class="flex gap-3 mt-6 flex-wrap"><button id="applyScenarioBtn" class="bg-emerald-700 text-white px-6 py-2 rounded-full shadow-md hover:bg-emerald-800"><i class="fas fa-play"></i> Run Simulation</button><button id="resetScenarioBtn" class="border border-slate-300 px-6 py-2 rounded-full">Reset to Baseline</button></div>
-                        <div class="mt-6 bg-slate-50 p-4 rounded-xl text-sm"><i class="fas fa-lightbulb"></i> Tip: Increasing production proportionally scales energy & process emissions. Use allowance adjustment to simulate EPA "Clean Power Plan 2.0" tightening. Updated carbon price instantly revalues credits.</div>
-                    </div>
-                `;
-            }
-            
-            // ----- SCOPE 3 DEEP TRACKING (value chain) -----
-            if (activeTab === "scope3") {
-                contentHtml = `
-                    <div class="card-glass p-5 mb-6"><h2 class="font-bold text-xl"><i class="fas fa-globe-americas"></i> Scope 3 Value Chain Intelligence</h2><p class="text-slate-500">GHG Protocol Categories 1,4,11,12 — hybrid supplier-specific + EEIO methodology. Override any category to reflect primary data.</p></div>
-                    ${currentPlants.map(p => `
-                        <div class="card-glass p-5 mb-5">
-                            <div class="flex flex-wrap justify-between"><h3 class="font-bold text-lg">${p.name}</h3><span class="bg-emerald-100 px-3 py-1 rounded-full text-sm">Total Scope 3: ${p.scope3Data.total} MT CO₂e</span></div>
-                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-                                <div><label class="text-xs text-slate-500">Purchased Goods (MT)</label><input type="number" value="${p.scope3Data.purchasedGoods}" onchange="updatePlantField('${p.id}','scope3_purchasedGoods', parseFloat(this.value)||0)"></div>
-                                <div><label class="text-xs text-slate-500">Upstream Freight (MT)</label><input type="number" value="${p.scope3Data.upstreamTransport}" onchange="updatePlantField('${p.id}','scope3_upstreamFreight', parseFloat(this.value)||0)"></div>
-                                <div><label class="text-xs text-slate-500">Use of Sold Products (MT)</label><input type="number" value="${p.scope3Data.useOfSold}" onchange="updatePlantField('${p.id}','scope3_useOfSold', parseFloat(this.value)||0)"></div>
-                                <div><label class="text-xs text-slate-500">Other (Waste/Lease)</label><input type="number" value="${p.scope3Data.other}" onchange="updatePlantField('${p.id}','scope3_other', parseFloat(this.value)||0)"></div>
-                            </div>
-                            <div class="mt-3 text-xs text-slate-400 border-t pt-2">ScopeLink™ ready: Supplier portal integration for primary data, otherwise EEIO factors (USEEIO v2.0).</div>
-                        </div>
-                    `).join('')}
-                `;
-            }
-            
-            const tabsHtml = `
-                <div class="flex flex-wrap gap-1 md:gap-2 border-b border-slate-200 pb-1 mb-6 overflow-x-auto">
-                    ${tabs.map(tab => `<button data-tab="${tab.id}" class="flex items-center gap-2 px-4 py-2 rounded-t-xl text-sm md:text-base transition ${activeTab===tab.id ? 'tab-active' : 'tab-inactive'}"><i class="fas ${tab.icon}"></i><span>${tab.label}</span></button>`).join('')}
-                </div>
-            `;
-            
-            const fullHtml = `
-                <div class="max-w-7xl mx-auto px-3 sm:px-5 py-5 md:py-7">
-                    <div class="flex flex-wrap justify-between items-center mb-6">
-                        <div><h1 class="text-3xl md:text-4xl font-extrabold gradient-text">CarbonScope360</h1><p class="text-slate-500 text-sm">Carbon Trading Framework | EmissionsCore™ SaaS</p></div>
-                        <div class="flex gap-2 mt-2"><div class="bg-white px-4 py-2 rounded-full shadow-sm text-sm"><i class="fas fa-dollar-sign text-emerald-600"></i> $${globalCarbonPrice} / MT CO₂e</div><button id="complianceBtnGlobal" class="bg-emerald-700 text-white px-4 py-2 rounded-full text-sm shadow-md hover:bg-emerald-800"><i class="fas fa-file-pdf"></i> Compliance Report</button></div>
-                    </div>
-                    ${tabsHtml}
-                    <div id="mainContent">${contentHtml}</div>
-                    <div class="mt-12 text-center text-xs text-slate-400 border-t pt-6 flex justify-between"><span>© 2026 CarbonScope360 — Avalanche Consulting, LLC</span><span>EPA 40 CFR Part 98 | SEC | UK SECR | GHG Protocol</span></div>
-                </div>
-            `;
-            
-            root.innerHTML = fullHtml;
-            
-            // attach event handlers
-            document.querySelectorAll("[data-tab]").forEach(btn => {
-                btn.addEventListener("click", (e) => { activeTab = btn.getAttribute("data-tab"); renderApp(); });
-            });
-            document.getElementById("complianceBtnGlobal")?.addEventListener("click", generateComplianceReport);
-            if (activeTab === "dashboard") renderChart();
-            if (activeTab === "scenario") {
-                const plantSel = document.getElementById("scenarioPlant");
-                const range = document.getElementById("prodRange");
-                const multSpan = document.getElementById("multValue");
-                const allowAdj = document.getElementById("allowAdj");
-                const priceAdj = document.getElementById("priceAdj");
-                if (range) range.addEventListener("input", () => { if(multSpan) multSpan.innerText = range.value + "x"; });
-                document.getElementById("applyScenarioBtn")?.addEventListener("click", () => {
-                    scenarioState = { plantId: plantSel?.value || "P1", productionMult: parseFloat(range?.value||1), allowanceAdj: parseInt(allowAdj?.value||0), carbonPriceAdj: parseInt(priceAdj?.value||0) };
-                    applyScenario();
-                });
-                document.getElementById("resetScenarioBtn")?.addEventListener("click", resetToOriginal);
-            }
-        }
-        
-        // expose functions globally for inline onchange
-        window.updatePlantField = updatePlantField;
-        window.renderApp = renderApp;
-        renderApp();
-    </script>
+      }
+    }
+  }
+  function animate(){
+    ctx.clearRect(0,0,W,H);
+    orbs.forEach(o=>{
+      o.x+=o.vx;o.y+=o.vy;
+      if(o.x<-o.r||o.x>W+o.r) o.vx*=-1;
+      if(o.y<-o.r||o.y>H+o.r) o.vy*=-1;
+      const g=ctx.createRadialGradient(o.x,o.y,0,o.x,o.y,o.r);
+      g.addColorStop(0,o.color);g.addColorStop(1,'transparent');
+      ctx.beginPath();ctx.arc(o.x,o.y,o.r,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
+    });
+    drawConnections();
+    particles.forEach(p=>{p.update();p.draw();});
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
+// ====================================================
+// INIT
+// ====================================================
+currentPlants = enrichAll();
+for(let i=0;i<5;i++) dynamicAlerts.push(generateAlert());
+
+document.getElementById('tabs-bar').addEventListener('click',e=>{
+  const btn=e.target.closest('[data-tab]');
+  if(!btn) return;
+  activeTab=btn.getAttribute('data-tab');
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b===btn));
+  renderCurrentTab();
+});
+
+renderCurrentTab();
+window.addEventListener('resize',()=>{if(activeTab==='dashboard') renderDashboardCharts();});
+</script>
 </body>
 </html>
