@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>CarbonScope360 | Industrial Carbon Management & Trading Platform</title>
+    <!-- Tailwind CSS + Google Fonts + Chart.js + Font Awesome 6 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', sans-serif; transition: all 0.2s ease; }
+        body { background: #f4f7fc; }
+        .card-glass { background: rgba(255,255,255,0.96); backdrop-filter: blur(0px); border-radius: 28px; box-shadow: 0 20px 35px -12px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.02); border: 1px solid rgba(255,255,255,0.5); }
+        .gradient-text { background: linear-gradient(135deg, #0b3b2f, #1e6f5c); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .tab-active { background: white; color: #1e6f5c; border-bottom: 3px solid #1e6f5c; font-weight: 600; box-shadow: 0 -2px 10px rgba(0,0,0,0.02); }
+        .tab-inactive { color: #5b6e8c; background: transparent; border-bottom: 1px solid #e2e8f0; }
+        .card-hover:hover { transform: translateY(-3px); box-shadow: 0 25px 35px -12px rgba(0,0,0,0.15); }
+        input, select { border: 1px solid #e2e8f0; border-radius: 16px; padding: 10px 14px; background: white; font-size: 0.9rem; width: 100%; transition: 0.15s; }
+        input:focus, select:focus { outline: none; border-color: #1e6f5c; box-shadow: 0 0 0 3px rgba(30,111,92,0.1); }
+        .stat-card { background: white; border-radius: 24px; padding: 1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.03); border: 1px solid #eef2f6; }
+        .badge { border-radius: 100px; padding: 4px 12px; font-size: 0.7rem; font-weight: 600; }
+        @media (max-width: 640px) {
+            .container-padding { padding-left: 1rem; padding-right: 1rem; }
+            .stat-card { padding: 0.75rem; }
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div id="root" class="min-h-screen"></div>
+
+    <script>
+        // --------------------------------------------------------------
+        // CARBONSCOPE360 - ENTERPRISE CARBON MANAGEMENT PLATFORM
+        // Full EmissionsCore™ Engine | Scope 1,2,3 | Credit Management | Scenario Simulator
+        // EPA 40 CFR Part 98, GHG Protocol, eGRID, IRA aligned
+        // Responsive & fully functional with live charts & state
+        // --------------------------------------------------------------
+        
+        // ----- Emission Factors (based on EPA, eGRID, IPCC AR6) -----
+        const EF = {
+            naturalGas_kgCO2_per_MMBtu: 53.06,
+            diesel_kgCO2_per_gallon: 10.21,
+            electricity_MTCO2_per_MWh: 0.403,       // eGRID US average
+            combustionUplift: 1.02,                 // CH4+N2O factor
+            // Scope 3 proxy factors (MT CO2e per $1M revenue)
+            s3_purchasedGoods: 18.5,
+            s3_upstreamFreight: 4.2,
+            s3_useOfSold: 12.3,
+            s3_wasteOther: 2.8
+        };
+        
+        // Helper: compute Scope 1+2 (EmissionsCore™ core)
+        function computeScope12(plant) {
+            let ng = plant.naturalGasMMBtu || 0;
+            let diesel = plant.dieselGallons || 0;
+            let elec = plant.electricityMWh || 0;
+            let process = plant.processEmissionsMT || 0;
+            let scope1 = (ng * EF.naturalGas_kgCO2_per_MMBtu / 1000) * EF.combustionUplift;
+            scope1 += (diesel * EF.diesel_kgCO2_per_gallon / 1000) * EF.combustionUplift;
+            scope1 += process;
+            let scope2 = elec * EF.electricity_MTCO2_per_MWh;
+            return { scope1: Math.round(scope1 * 10) / 10, scope2: Math.round(scope2 * 10) / 10, total12: Math.round((scope1+scope2)*10)/10 };
+        }
+        
+        // Scope 3 calculations (detailed categories)
+        function computeScope3(plant) {
+            let revMil = plant.annualRevenueMillions || 50;
+            let purchased = plant.scope3_purchasedGoods !== null ? plant.scope3_purchasedGoods : (revMil * EF.s3_purchasedGoods);
+            let freight = plant.scope3_upstreamFreight !== null ? plant.scope3_upstreamFreight : (revMil * EF.s3_upstreamFreight);
+            let useSold = plant.scope3_useOfSold !== null ? plant.scope3_useOfSold : (revMil * EF.s3_useOfSold);
+            let other = plant.scope3_other !== null ? plant.scope3_other : (revMil * EF.s3_wasteOther);
+            let total = purchased + freight + useSold + other;
+            return { purchasedGoods: Math.round(purchased), upstreamTransport: Math.round(freight), useOfSold: Math.round(useSold), other: Math.round(other), total: Math.round(total) };
+        }
+        
+        // Credit surplus/deficit position
+        function getCreditPosition(plant, totalEmissions, carbonPrice) {
+            let balance = plant.allowance - totalEmissions;
+            let financial = balance * carbonPrice;
+            return { surplusMT: Math.round(balance * 10)/10, financialValue: Math.round(financial), status: balance >= 0 ? 'Surplus 🔋' : 'Deficit ⚠️' };
+        }
+        
+        // ----- Initial Plant Portfolio (based on business plan pilot assets) -----
+        let plantsData = [
+            { id: "P1", name: "Chemical Processing - Houston", naturalGasMMBtu: 42500, dieselGallons: 8200, electricityMWh: 18700, processEmissionsMT: 1250, annualRevenueMillions: 210, scope3_purchasedGoods: null, scope3_upstreamFreight: null, scope3_useOfSold: null, scope3_other: 320, allowance: 9800, productionUnits: 34000 },
+            { id: "P2", name: "Steel Mill - Pennsylvania", naturalGasMMBtu: 112000, dieselGallons: 24500, electricityMWh: 48900, processEmissionsMT: 8700, annualRevenueMillions: 520, scope3_purchasedGoods: null, scope3_upstreamFreight: null, scope3_useOfSold: null, scope3_other: 980, allowance: 27800, productionUnits: 128000 },
+            { id: "P3", name: "Food Manufacturing - Illinois", naturalGasMMBtu: 15400, dieselGallons: 3100, electricityMWh: 7200, processEmissionsMT: 210, annualRevenueMillions: 88, scope3_purchasedGoods: null, scope3_upstreamFreight: null, scope3_useOfSold: null, scope3_other: 110, allowance: 3850, productionUnits: 22500 }
+        ];
+        
+        let globalCarbonPrice = 42;     // $/MT CO2e
+        let activeTab = "dashboard";
+        let scenarioState = { plantId: "P1", productionMult: 1.0, allowanceAdj: 0, carbonPriceAdj: 0 };
+        
+        // Enrich plants with real-time calculations
+        function enrichPlants(plants, price) {
+            return plants.map(p => {
+                const { scope1, scope2, total12 } = computeScope12(p);
+                const scope3Data = computeScope3(p);
+                const totalEmissions = total12 + scope3Data.total;
+                const credit = getCreditPosition(p, totalEmissions, price);
+                const intensity = (totalEmissions / p.productionUnits) * 1000;
+                let benchmark = p.name.includes("Chemical") ? 72 : (p.name.includes("Steel") ? 185 : 42);
+                let efficiency = intensity <= benchmark * 0.9 ? "Efficient" : (intensity >= benchmark * 1.1 ? "Inefficient" : "Average");
+                let deltaIntensity = Math.round(intensity - benchmark);
+                return { ...p, scope1, scope2, total12, scope3Data, totalEmissions, credit, intensity: Math.round(intensity * 10)/10, benchmark, efficiency, deltaIntensity };
+            });
+        }
+        
+        let currentPlants = enrichPlants(plantsData, globalCarbonPrice);
+        
+        // ----- Helper functions to update & re-render -----
+        function updatePlantField(plantId, field, value) {
+            const idx = plantsData.findIndex(p => p.id === plantId);
+            if (idx !== -1) {
+                plantsData[idx][field] = value;
+                if (field === "scope3_purchasedGoods" && value === "") plantsData[idx][field] = null;
+                if (field === "scope3_upstreamFreight" && value === "") plantsData[idx][field] = null;
+                if (field === "scope3_useOfSold" && value === "") plantsData[idx][field] = null;
+                if (field === "scope3_other" && value === "") plantsData[idx][field] = null;
+                currentPlants = enrichPlants(plantsData, globalCarbonPrice);
+                renderApp();
+            }
+        }
+        
+        function applyScenario() {
+            const target = plantsData.find(p => p.id === scenarioState.plantId);
+            if (target) {
+                let mult = scenarioState.productionMult;
+                target.naturalGasMMBtu = Math.max(100, Math.round(target.naturalGasMMBtu * mult));
+                target.electricityMWh = Math.max(50, Math.round(target.electricityMWh * mult));
+                target.dieselGallons = Math.max(100, Math.round(target.dieselGallons * mult));
+                target.processEmissionsMT = Math.max(0, Math.round(target.processEmissionsMT * mult));
+                target.allowance = Math.max(0, target.allowance + scenarioState.allowanceAdj);
+                globalCarbonPrice = Math.max(5, globalCarbonPrice + scenarioState.carbonPriceAdj);
+                currentPlants = enrichPlants(plantsData, globalCarbonPrice);
+                renderApp();
+            }
+        }
+        
+        function resetToOriginal() {
+            plantsData = [
+                { id: "P1", name: "Chemical Processing - Houston", naturalGasMMBtu: 42500, dieselGallons: 8200, electricityMWh: 18700, processEmissionsMT: 1250, annualRevenueMillions: 210, scope3_purchasedGoods: null, scope3_upstreamFreight: null, scope3_useOfSold: null, scope3_other: 320, allowance: 9800, productionUnits: 34000 },
+                { id: "P2", name: "Steel Mill - Pennsylvania", naturalGasMMBtu: 112000, dieselGallons: 24500, electricityMWh: 48900, processEmissionsMT: 8700, annualRevenueMillions: 520, scope3_purchasedGoods: null, scope3_upstreamFreight: null, scope3_useOfSold: null, scope3_other: 980, allowance: 27800, productionUnits: 128000 },
+                { id: "P3", name: "Food Manufacturing - Illinois", naturalGasMMBtu: 15400, dieselGallons: 3100, electricityMWh: 7200, processEmissionsMT: 210, annualRevenueMillions: 88, scope3_purchasedGoods: null, scope3_upstreamFreight: null, scope3_useOfSold: null, scope3_other: 110, allowance: 3850, productionUnits: 22500 }
+            ];
+            globalCarbonPrice = 42;
+            scenarioState = { plantId: "P1", productionMult: 1.0, allowanceAdj: 0, carbonPriceAdj: 0 };
+            currentPlants = enrichPlants(plantsData, globalCarbonPrice);
+            renderApp();
+        }
+        
+        // Compliance report generator
+        function generateComplianceReport() {
+            let report = `📄 CARBONSCOPE360 OFFICIAL COMPLIANCE REPORT\nDate: ${new Date().toUTCString()}\nCarbon Price: $${globalCarbonPrice}/MT CO2e\nStandards: EPA 40 CFR Part 98 | SEC Rule | UK SECR | GHG Protocol\n\n`;
+            currentPlants.forEach(p => {
+                report += `\n🏭 ${p.name}\n   Scope 1+2: ${p.total12} MT   |   Scope 3: ${p.scope3Data.total} MT\n   Total Emissions: ${p.totalEmissions} MT\n   Allowance: ${p.allowance} MT → ${p.credit.status} ${Math.abs(p.credit.surplusMT)} MT\n   Financial Impact: $${p.credit.financialValue.toLocaleString()}\n   Intensity: ${p.intensity} kg/unit (benchmark ${p.benchmark}) → ${p.efficiency}\n   Scope 3 breakdown: Purch.Goods ${p.scope3Data.purchasedGoods} | Freight ${p.scope3Data.upstreamTransport} | Use of Sold ${p.scope3Data.useOfSold} MT\n`;
+            });
+            report += `\n📊 Portfolio total emissions: ${currentPlants.reduce((a,b)=>a+b.totalEmissions,0)} MT CO2e\n💰 Net carbon financial position: $${currentPlants.reduce((a,b)=>a+b.credit.financialValue,0).toLocaleString()}\n✅ Verified with EmissionsCore™ v2.0, auditable factor provenance.`;
+            alert(report);
+        }
+        
+        // Global chart reference
+        let emissionsChart = null;
+        function renderChart() {
+            const canvas = document.getElementById("portfolioChart");
+            if (!canvas) return;
+            if (emissionsChart) emissionsChart.destroy();
+            const ctx = canvas.getContext("2d");
+            const labels = currentPlants.map(p => p.name.split(" -")[0]);
+            const scope12Data = currentPlants.map(p => p.total12);
+            const scope3Data = currentPlants.map(p => p.scope3Data.total);
+            emissionsChart = new Chart(ctx, {
+                type: "bar",
+                data: { labels, datasets: [{ label: "Scope 1+2 (MT CO₂e)", data: scope12Data, backgroundColor: "#1e6f5c", borderRadius: 12 }, { label: "Scope 3 (MT CO₂e)", data: scope3Data, backgroundColor: "#74c69d", borderRadius: 12 }] },
+                options: { responsive: true, maintainAspectRatio: true, plugins: { tooltip: { callbacks: { label: (ctx) => `${ctx.dataset.label}: ${ctx.raw.toLocaleString()} MT` } }, legend: { position: "top" } } }
+            });
+        }
+        
+        // ----- Dynamic Render (complete UI with responsive design) -----
+        function renderApp() {
+            const root = document.getElementById("root");
+            if (!root) return;
+            const totalPortfolioEmissions = currentPlants.reduce((s,p)=>s+p.totalEmissions,0);
+            const totalFinancial = currentPlants.reduce((s,p)=>s+p.credit.financialValue,0);
+            const avgIntensity = currentPlants.reduce((s,p)=>s+p.intensity,0)/currentPlants.length;
+            
+            const tabs = [
+                { id: "dashboard", label: "📊 Executive Dashboard", icon: "fa-chart-line" },
+                { id: "emissions", label: "⚡ EmissionsCore™", icon: "fa-microchip" },
+                { id: "credit", label: "💳 Credit Management", icon: "fa-coins" },
+                { id: "scenario", label: "🔄 Scenario Lab", icon: "fa-flask" },
+                { id: "scope3", label: "🔗 Value Chain (Scope 3)", icon: "fa-link" }
+            ];
+            
+            let contentHtml = "";
+            
+            // ----- DASHBOARD -----
+            if (activeTab === "dashboard") {
+                contentHtml = `
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+                        <div class="stat-card flex items-center gap-4"><div class="bg-emerald-100 p-3 rounded-2xl"><i class="fas fa-industry text-2xl text-emerald-700"></i></div><div><p class="text-slate-500 text-sm">Total Portfolio Emissions</p><p class="text-2xl font-bold text-slate-800">${totalPortfolioEmissions.toLocaleString()} MT</p></div></div>
+                        <div class="stat-card flex items-center gap-4"><div class="bg-blue-100 p-3 rounded-2xl"><i class="fas fa-chart-simple text-2xl text-blue-700"></i></div><div><p class="text-slate-500 text-sm">Avg. Intensity (kg/unit)</p><p class="text-2xl font-bold text-slate-800">${Math.round(avgIntensity)} kg</p></div></div>
+                        <div class="stat-card flex items-center gap-4"><div class="bg-amber-100 p-3 rounded-2xl"><i class="fas fa-dollar-sign text-2xl text-amber-700"></i></div><div><p class="text-slate-500 text-sm">Net Carbon Asset Value</p><p class="text-2xl font-bold ${totalFinancial>=0?'text-emerald-600':'text-rose-600'}">$${totalFinancial.toLocaleString()}</p></div></div>
+                    </div>
+                    <div class="card-glass p-5 mb-6"><h3 class="font-bold text-lg mb-3"><i class="fas fa-chart-column mr-2 text-emerald-600"></i> Facility Benchmark & Efficiency</h3><canvas id="portfolioChart" style="height:320px; width:100%"></canvas></div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                        ${currentPlants.map(p => `
+                            <div class="card-glass p-5 card-hover">
+                                <div class="flex justify-between items-start"><h2 class="font-bold text-lg">${p.name}</h2><span class="badge ${p.efficiency==='Efficient'?'bg-green-100 text-green-700':p.efficiency==='Inefficient'?'bg-red-100 text-red-700':'bg-gray-100'}">${p.efficiency}</span></div>
+                                <div class="mt-3 space-y-2 text-sm"><div class="flex justify-between"><span>Total CO₂e:</span><span class="font-mono font-bold">${p.totalEmissions} MT</span></div><div class="flex justify-between"><span>Intensity:</span><span>${p.intensity} kg/unit <span class="text-xs text-slate-400">(benchmark ${p.benchmark})</span></span></div><div class="flex justify-between"><span>Credit position:</span><span class="${p.credit.surplusMT>=0?'text-emerald-600':'text-rose-600'} font-semibold">${p.credit.status} ${Math.abs(p.credit.surplusMT)} MT</span></div><div class="flex justify-between border-t pt-1 mt-1"><span>Financial:</span><span>$${p.credit.financialValue.toLocaleString()}</span></div></div>
+                                ${p.deltaIntensity > 10 ? `<div class="mt-2 text-xs bg-amber-50 p-2 rounded"><i class="fas fa-exclamation-triangle"></i> ${p.deltaIntensity} kg/unit above benchmark – reduction opportunity</div>` : p.deltaIntensity < -5 ? `<div class="mt-2 text-xs bg-green-50 p-2 rounded"><i class="fas fa-leaf"></i> Below benchmark – efficient operations</div>` : ""}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+            
+            // ----- EMISSIONSCORE™ ENGINE (Scope 1+2 live inputs) -----
+            if (activeTab === "emissions") {
+                contentHtml = `
+                    <div class="bg-gradient-to-r from-emerald-50 to-teal-50 p-5 rounded-2xl mb-6 flex items-center gap-3 flex-wrap"><i class="fas fa-microchip text-3xl text-emerald-700"></i><div><h2 class="font-bold text-xl">EmissionsCore™ Engine Active</h2><p class="text-sm">Real-time CO₂e calculation using EPA 40 CFR Part 98 & eGRID. Modify parameters → instantaneous updates.</p></div></div>
+                    ${currentPlants.map(p => `
+                        <div class="card-glass p-5 mb-6">
+                            <div class="flex flex-wrap justify-between items-center mb-2"><h3 class="font-bold text-xl">${p.name}</h3><span class="bg-white px-3 py-1 rounded-full text-sm shadow-sm">Total: ${p.total12 + p.scope3Data.total} MT CO₂e</span></div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                                <div><label class="text-sm text-slate-500">Natural Gas (MMBtu)</label><input type="number" value="${p.naturalGasMMBtu}" onchange="updatePlantField('${p.id}','naturalGasMMBtu',parseFloat(this.value)||0)"></div>
+                                <div><label class="text-sm text-slate-500">Electricity (MWh)</label><input type="number" value="${p.electricityMWh}" onchange="updatePlantField('${p.id}','electricityMWh',parseFloat(this.value)||0)"></div>
+                                <div><label class="text-sm text-slate-500">Diesel (gallons)</label><input type="number" value="${p.dieselGallons}" onchange="updatePlantField('${p.id}','dieselGallons',parseFloat(this.value)||0)"></div>
+                                <div><label class="text-sm text-slate-500">Process Emissions (MT)</label><input type="number" value="${p.processEmissionsMT}" onchange="updatePlantField('${p.id}','processEmissionsMT',parseFloat(this.value)||0)"></div>
+                            </div>
+                            <div class="mt-4 bg-slate-50 p-3 rounded-xl flex flex-wrap justify-between text-sm"><span>Scope 1 (Direct): <strong>${p.scope1} MT</strong></span><span>Scope 2 (Electricity): <strong>${p.scope2} MT</strong></span><span>Total 1+2: <strong>${p.total12} MT</strong></span><span class="text-emerald-600">Allowance used: ${Math.round((p.total12/p.allowance)*100)}%</span></div>
+                        </div>
+                    `).join('')}
+                `;
+            }
+            
+            // ----- CREDIT MANAGEMENT -----
+            if (activeTab === "credit") {
+                contentHtml = `
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        ${currentPlants.map(p => `
+                            <div class="card-glass p-5 border-l-8 border-l-emerald-500">
+                                <h3 class="font-bold text-xl">${p.name}</h3>
+                                <div class="mt-3 space-y-2"><div class="flex justify-between"><span>Total Emissions (1+2+3):</span><span>${p.totalEmissions} MT</span></div><div class="flex justify-between"><span>Regulatory Cap / Allowance:</span><span>${p.allowance} MT</span></div><div class="flex justify-between text-lg font-bold"><span>Carbon Credit Position:</span><span class="${p.credit.surplusMT>=0?'text-emerald-600':'text-rose-600'}">${p.credit.surplusMT>=0?'+':''}${p.credit.surplusMT} MT (${p.credit.status})</span></div><div class="flex justify-between bg-gray-50 p-3 rounded-lg"><span>💰 Financial Value @ $${globalCarbonPrice}/MT:</span><span class="font-bold">$${p.credit.financialValue.toLocaleString()}</span></div></div>
+                                <button onclick="updatePlantField('${p.id}','allowance', Math.max(0, ${p.allowance} + (${p.credit.surplusMT>0? -150 : 150})))" class="mt-4 text-sm bg-slate-100 hover:bg-slate-200 px-4 py-2 rounded-full w-full"><i class="fas fa-sliders-h"></i> Adjust allowance (±150 MT)</button>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="mt-6 card-glass p-5 bg-emerald-50 text-center"><i class="fas fa-chart-line mr-2"></i> Portfolio carbon asset value: <span class="font-bold text-xl">$${totalFinancial.toLocaleString()}</span> — Real-time exposure & trading readiness (TradeDesk™ integration)</div>
+                `;
+            }
+            
+            // ----- SCENARIO SIMULATOR -----
+            if (activeTab === "scenario") {
+                contentHtml = `
+                    <div class="card-glass p-6">
+                        <h2 class="text-2xl font-bold mb-2"><i class="fas fa-flask text-emerald-600"></i> Strategic Scenario Simulator</h2>
+                        <p class="text-slate-500 mb-5">Model production changes, regulatory cap adjustments, carbon price volatility — see real-time financial & emissions impact.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div><label class="font-medium">Target Facility</label><select id="scenarioPlant" class="mt-1">${currentPlants.map(p=>`<option value="${p.id}" ${scenarioState.plantId===p.id?'selected':''}>${p.name}</option>`).join('')}</select></div>
+                            <div><label>Production Multiplier <span id="multValue" class="text-emerald-600 font-bold">${scenarioState.productionMult}x</span></label><input type="range" id="prodRange" min="0.5" max="2.0" step="0.05" value="${scenarioState.productionMult}" class="w-full mt-1"></div>
+                            <div><label>Allowance Change (MT)</label><input type="number" id="allowAdj" value="${scenarioState.allowanceAdj}" class="mt-1"></div>
+                            <div><label>Carbon Price Adjustment ($/MT)</label><input type="number" id="priceAdj" value="${scenarioState.carbonPriceAdj}" class="mt-1"></div>
+                        </div>
+                        <div class="flex gap-3 mt-6 flex-wrap"><button id="applyScenarioBtn" class="bg-emerald-700 text-white px-6 py-2 rounded-full shadow-md hover:bg-emerald-800"><i class="fas fa-play"></i> Run Simulation</button><button id="resetScenarioBtn" class="border border-slate-300 px-6 py-2 rounded-full">Reset to Baseline</button></div>
+                        <div class="mt-6 bg-slate-50 p-4 rounded-xl text-sm"><i class="fas fa-lightbulb"></i> Tip: Increasing production proportionally scales energy & process emissions. Use allowance adjustment to simulate EPA "Clean Power Plan 2.0" tightening. Updated carbon price instantly revalues credits.</div>
+                    </div>
+                `;
+            }
+            
+            // ----- SCOPE 3 DEEP TRACKING (value chain) -----
+            if (activeTab === "scope3") {
+                contentHtml = `
+                    <div class="card-glass p-5 mb-6"><h2 class="font-bold text-xl"><i class="fas fa-globe-americas"></i> Scope 3 Value Chain Intelligence</h2><p class="text-slate-500">GHG Protocol Categories 1,4,11,12 — hybrid supplier-specific + EEIO methodology. Override any category to reflect primary data.</p></div>
+                    ${currentPlants.map(p => `
+                        <div class="card-glass p-5 mb-5">
+                            <div class="flex flex-wrap justify-between"><h3 class="font-bold text-lg">${p.name}</h3><span class="bg-emerald-100 px-3 py-1 rounded-full text-sm">Total Scope 3: ${p.scope3Data.total} MT CO₂e</span></div>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                                <div><label class="text-xs text-slate-500">Purchased Goods (MT)</label><input type="number" value="${p.scope3Data.purchasedGoods}" onchange="updatePlantField('${p.id}','scope3_purchasedGoods', parseFloat(this.value)||0)"></div>
+                                <div><label class="text-xs text-slate-500">Upstream Freight (MT)</label><input type="number" value="${p.scope3Data.upstreamTransport}" onchange="updatePlantField('${p.id}','scope3_upstreamFreight', parseFloat(this.value)||0)"></div>
+                                <div><label class="text-xs text-slate-500">Use of Sold Products (MT)</label><input type="number" value="${p.scope3Data.useOfSold}" onchange="updatePlantField('${p.id}','scope3_useOfSold', parseFloat(this.value)||0)"></div>
+                                <div><label class="text-xs text-slate-500">Other (Waste/Lease)</label><input type="number" value="${p.scope3Data.other}" onchange="updatePlantField('${p.id}','scope3_other', parseFloat(this.value)||0)"></div>
+                            </div>
+                            <div class="mt-3 text-xs text-slate-400 border-t pt-2">ScopeLink™ ready: Supplier portal integration for primary data, otherwise EEIO factors (USEEIO v2.0).</div>
+                        </div>
+                    `).join('')}
+                `;
+            }
+            
+            const tabsHtml = `
+                <div class="flex flex-wrap gap-1 md:gap-2 border-b border-slate-200 pb-1 mb-6 overflow-x-auto">
+                    ${tabs.map(tab => `<button data-tab="${tab.id}" class="flex items-center gap-2 px-4 py-2 rounded-t-xl text-sm md:text-base transition ${activeTab===tab.id ? 'tab-active' : 'tab-inactive'}"><i class="fas ${tab.icon}"></i><span>${tab.label}</span></button>`).join('')}
+                </div>
+            `;
+            
+            const fullHtml = `
+                <div class="max-w-7xl mx-auto px-3 sm:px-5 py-5 md:py-7">
+                    <div class="flex flex-wrap justify-between items-center mb-6">
+                        <div><h1 class="text-3xl md:text-4xl font-extrabold gradient-text">CarbonScope360</h1><p class="text-slate-500 text-sm">Carbon Trading Framework | EmissionsCore™ SaaS</p></div>
+                        <div class="flex gap-2 mt-2"><div class="bg-white px-4 py-2 rounded-full shadow-sm text-sm"><i class="fas fa-dollar-sign text-emerald-600"></i> $${globalCarbonPrice} / MT CO₂e</div><button id="complianceBtnGlobal" class="bg-emerald-700 text-white px-4 py-2 rounded-full text-sm shadow-md hover:bg-emerald-800"><i class="fas fa-file-pdf"></i> Compliance Report</button></div>
+                    </div>
+                    ${tabsHtml}
+                    <div id="mainContent">${contentHtml}</div>
+                    <div class="mt-12 text-center text-xs text-slate-400 border-t pt-6 flex justify-between"><span>© 2026 CarbonScope360 — Avalanche Consulting, LLC</span><span>EPA 40 CFR Part 98 | SEC | UK SECR | GHG Protocol</span></div>
+                </div>
+            `;
+            
+            root.innerHTML = fullHtml;
+            
+            // attach event handlers
+            document.querySelectorAll("[data-tab]").forEach(btn => {
+                btn.addEventListener("click", (e) => { activeTab = btn.getAttribute("data-tab"); renderApp(); });
+            });
+            document.getElementById("complianceBtnGlobal")?.addEventListener("click", generateComplianceReport);
+            if (activeTab === "dashboard") renderChart();
+            if (activeTab === "scenario") {
+                const plantSel = document.getElementById("scenarioPlant");
+                const range = document.getElementById("prodRange");
+                const multSpan = document.getElementById("multValue");
+                const allowAdj = document.getElementById("allowAdj");
+                const priceAdj = document.getElementById("priceAdj");
+                if (range) range.addEventListener("input", () => { if(multSpan) multSpan.innerText = range.value + "x"; });
+                document.getElementById("applyScenarioBtn")?.addEventListener("click", () => {
+                    scenarioState = { plantId: plantSel?.value || "P1", productionMult: parseFloat(range?.value||1), allowanceAdj: parseInt(allowAdj?.value||0), carbonPriceAdj: parseInt(priceAdj?.value||0) };
+                    applyScenario();
+                });
+                document.getElementById("resetScenarioBtn")?.addEventListener("click", resetToOriginal);
+            }
+        }
+        
+        // expose functions globally for inline onchange
+        window.updatePlantField = updatePlantField;
+        window.renderApp = renderApp;
+        renderApp();
+    </script>
+</body>
+</html>
