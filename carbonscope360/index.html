@@ -3,6 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Open Graph / Facebook / LinkedIn -->
+    <meta property="og:title" content="CarbonScope360 | Enterprise Carbon Intelligence">
+    <meta property="og:description" content="Real‑time carbon accounting, credit simulations, and compliance tracking by Avalanche Consulting & Management Services, LLC.">
+    <meta property="og:image" content="https://www.avalancheconsults.org/assets/images/carbonscope360.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.avalancheconsults.org/carbonscope360/">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="CarbonScope360 | Enterprise Carbon Intelligence">
+    <meta name="twitter:description" content="Real‑time carbon accounting, credit simulations, and compliance tracking.">
+    <meta name="twitter:image" content="https://www.avalancheconsults.org/assets/images/carbonscope360.png">
+
+    <!-- Generic link image (for some older platforms) -->
+    <link rel="image_src" href="https://www.avalancheconsults.org/assets/images/carbonscope360.png">
+
     <title>CarbonScope360 | Enterprise Carbon Intelligence</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%231e6f5c'/%3E%3Ctext x='50' y='68' font-size='48' text-anchor='middle' fill='white'%3E🌿%3C/text%3E%3C/svg%3E">
     <script src="https://cdn.tailwindcss.com">
@@ -339,6 +357,8 @@
             backdrop-filter: blur(12px);
             transition: all 0.25s;
             padding: 1rem;
+            overflow: hidden;
+            min-width: 0;
         }
         .card:hover {
             border-color: rgba(74, 222, 128, 0.25);
@@ -485,6 +505,7 @@
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
             max-width: 100%;
+            width: 100%;
         }
         .data-table {
             width: 100%;
@@ -2202,7 +2223,6 @@
 
         renderCurrentTab();
         window.addEventListener('resize', () => {
-            // Refresh charts on resize for the active tab
             if (activeTab === 'dashboard') renderDashboardCharts();
             else if (activeTab === 'tradedesk') renderTradeDeskCharts();
             else if (activeTab === 'predictiq') renderPredictIQCharts([2026, 2027, 2028, 2029, 2030, 2031, 2032].map((
