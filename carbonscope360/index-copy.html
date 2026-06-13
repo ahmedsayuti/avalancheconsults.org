@@ -1165,7 +1165,7 @@
                 const s2 = currentPlants.reduce((s,p)=>s+p.scope2,0);
                 const s3 = currentPlants.reduce((s,p)=>s+p.s3.total,0);
                 setTimeout(()=>renderESGCharts(),120);
-                return `<div class="fade-in"><div style="display:flex;align-items:center;gap:8px;margin-bottom:1rem;flex-wrap:wrap;"><div class="card-title" style="margin:0;"><i class="fas fa-leaf"></i> ESGPulse™ Reporting Suite</div><span class="badge badge-green">GRI 305</span><span class="badge badge-blue">TCFD</span><span class="badge badge-purple">CDP</span><span class="badge badge-amber">SEC S-K 1500</span></div><div class="resp-grid-auto" style="margin-bottom:1rem;"><div class="metric-card green" style="padding:0.75rem;"><div class="metric-label">GRI 305-1 (Scope 1)</div><div class="metric-value" style="color:#4ade80;font-size:1.2rem;">${Math.round(s1).toLocaleString()}</div><div class="metric-sub">MT CO₂e · Direct</div></div><div class="metric-card blue" style="padding:0.75rem;"><div class="metric-label">GRI 305-2 (Scope 2)</div><div class="metric-value" style="color:#60a5fa;font-size:1.2rem;">${Math.round(s2).toLocaleString()}</div><div class="metric-sub">MT CO₂e · Purchased Energy</div></div><div class="metric-card amber" style="padding:0.75rem;"><div class="metric-label">GRI 305-3 (Scope 3)</div><div class="metric-value" style="color:#fbbf24;font-size:1.2rem;">${Math.round(s3).toLocaleString()}</div><div class="metric-sub">MT CO₂e · Value Chain</div></div><div class="metric-card rose" style="padding:0.75rem;"><div class="metric-label">Total (All Scopes)</div><div class="metric-value" style="color:#c4b5fd;font-size:1.2rem;">${Math.round(totalCO2).toLocaleString()}</div><div class="metric-sub">MT CO₂e · Portfolio</div></div></div><div class="resp-grid-2" style="margin-bottom:1rem;"><div class="card"><div class="card-title"><i class="fas fa-chart-bar"></i> Scope 3 Category Breakdown</div><div class="chart-wrap-lg"><canvas id="s3CatChart"></canvas></div></div><div class="card"><div class="card-title"><i class="fas fa-industry"></i> Emissions by Industry Vertical</div><div class="chart-wrap-lg"><canvas id="industryChart"></canvas></div></div></div><div class="card" style="margin-bottom:1rem;"><div class="card-title"><i class="fas fa-file-alt"></i> TCFD Scenario Analysis</div><div class="resp-grid-auto">${[{name:'1.5°C Pathway',color:'#4ade80',text:'Emissions must fall 45% by 2030. Portfolio on track for 38% reduction. Gap: 7%. Capital expenditure required: ~$12M in efficiency upgrades.',risk:'Low physical risk · Transition risk: Medium'},{name:'2°C Scenario',color:'#fbbf24',text:'Manageable transition costs. Carbon price rises to $85/MT by 2035. Current portfolio would face ~$2.1M additional annual cost at that price.',risk:'Low physical risk · Financial exposure: Moderate'},{name:'3°C Pathway',color:'#f87171',text:'High physical risk for coastal assets. Blue Ridge Cement and Gulf Coast Chemicals face flooding exposure by 2045. Insurance costs +$450K/yr estimated.',risk:'High physical risk · Adaptation costs critical'}].map(s=>`<div style="background:rgba(0,0,0,0.2);border-left:3px solid ${s.color};padding:0.75rem;border-radius:0 10px 10px 0;"><div style="font-weight:700;color:${s.color};margin-bottom:5px;">${s.name}</div><div style="font-size:0.74rem;color:#94a3b8;line-height:1.45;margin-bottom:5px;">${s.text}</div><div style="font-size:0.66rem;color:#64748b;">${s.risk}</div></div>`).join('')}</div></div><div class="card"><div class="card-title"><i class="fas fa-download"></i> Disclosure Exports</div><div style="display:flex;gap:0.6rem;flex-wrap:wrap;">${[{label:'SEC S-K 1500 Draft',icon:'fa-file-contract',color:'#60a5fa'},{label:'CDP Response',icon:'fa-leaf',color:'#4ade80'},{label:'GRI 305 Table',icon:'fa-table',color:'#c4b5fd'},{label:'TCFD Report',icon:'fa-globe',color:'#fbbf24'},{label:'ESG Data Package',icon:'fa-database',color:'#34d399'}].map(e=>`<button onclick="alert('📄 Generating ${e.label}...')" class="btn-ghost" style="border-color:${e.color}30;color:${e.color};padding:0.45rem 0.8rem;"><i class="fas ${e.icon}" style="margin-right:5px;"></i>${e.label}</button>`).join('')}</div></div></div>`;
+                return `<div class="fade-in"><div style="display:flex;align-items:center;gap:8px;margin-bottom:1rem;flex-wrap:wrap;"><div class="card-title" style="margin:0;"><i class="fas fa-leaf"></i> ESGPulse™ Reporting Suite</div><span class="badge badge-green">GRI 305</span><span class="badge badge-blue">TCFD</span><span class="badge badge-purple">CDP</span><span class="badge badge-amber">SEC S-K 1500</span></div><div class="resp-grid-auto" style="margin-bottom:1rem;"><div class="metric-card green" style="padding:0.75rem;"><div class="metric-label">GRI 305-1 (Scope 1)</div><div class="metric-value" style="color:#4ade80;font-size:1.2rem;">${Math.round(s1).toLocaleString()}</div><div class="metric-sub">MT CO₂e · Direct</div></div><div class="metric-card blue" style="padding:0.75rem;"><div class="metric-label">GRI 305-2 (Scope 2)</div><div class="metric-value" style="color:#60a5fa;font-size:1.2rem;">${Math.round(s2).toLocaleString()}</div><div class="metric-sub">MT CO₂e · Purchased Energy</div></div><div class="metric-card amber" style="padding:0.75rem;"><div class="metric-label">GRI 305-3 (Scope 3)</div><div class="metric-value" style="color:#fbbf24;font-size:1.2rem;">${Math.round(s3).toLocaleString()}</div><div class="metric-sub">MT CO₂e · Value Chain</div></div><div class="metric-card rose" style="padding:0.75rem;"><div class="metric-label">Total (All Scopes)</div><div class="metric-value" style="color:#c4b5fd;font-size:1.2rem;">${Math.round(totalCO2).toLocaleString()}</div><div class="metric-sub">MT CO₂e · Portfolio</div></div></div><div class="resp-grid-2" style="margin-bottom:1rem;"><div class="card"><div class="card-title"><i class="fas fa-chart-bar"></i> Scope 3 Category Breakdown</div><div class="chart-wrap-lg"><canvas id="s3CatChart"></canvas></div></div><div class="card"><div class="card-title"><i class="fas fa-industry"></i> Emissions by Industry Vertical</div><div class="chart-wrap-lg"><canvas id="industryChart"></canvas></div></div></div><div class="card" style="margin-bottom:1rem;"><div class="card-title"><i class="fas fa-file-alt"></i> TCFD Scenario Analysis</div><div class="resp-grid-auto">${[{name:'1.5°C Pathway',color:'#4ade80',text:'Emissions must fall 45% by 2030. Portfolio on track for 38% reduction. Gap: 7%. Capital expenditure required: ~$12M in efficiency upgrades.',risk:'Low physical risk · Transition risk: Medium'},{name:'2°C Scenario',color:'#fbbf24',text:'Manageable transition costs. Carbon price rises to $85/MT by 2035. Current portfolio would face ~$2.1M additional annual cost at that price.',risk:'Low physical risk · Financial exposure: Moderate'},{name:'3°C Pathway',color:'#f87171',text:'High physical risk for coastal assets. Blue Ridge Cement and Gulf Coast Chemicals face flooding exposure by 2045. Insurance costs +$450K/yr estimated.',risk:'High physical risk · Adaptation costs critical'}].map(s=>`<div style="background:rgba(0,0,0,0.2);border-left:3px solid ${s.color};padding:0.75rem;border-radius:0 10px 10px 0;"><div style="font-weight:700;color:${s.color};margin-bottom:5px;">${s.name}</div><div style="font-size:0.74rem;color:#94a3b8;line-height:1.45;margin-bottom:5px;">${s.text}</div><div style="font-size:0.66rem;color:#64748b;">${s.risk}</div></div>`).join('')}</div></div><div class="card"><div class="card-title"><i class="fas fa-download"></i> Disclosure Exports</div><div style="display:flex;gap:0.6rem;flex-wrap:wrap;"><button onclick="generateSECDisclosure()" class="btn-ghost" style="border-color:#60a5fa30;color:#60a5fa;padding:0.45rem 0.8rem;"><i class="fas fa-file-contract" style="margin-right:5px;"></i>SEC S-K 1500 Draft</button><button onclick="generateCDPResponse()" class="btn-ghost" style="border-color:#4ade8030;color:#4ade80;padding:0.45rem 0.8rem;"><i class="fas fa-leaf" style="margin-right:5px;"></i>CDP Response</button><button onclick="generateGRI305Table()" class="btn-ghost" style="border-color:#c4b5fd30;color:#c4b5fd;padding:0.45rem 0.8rem;"><i class="fas fa-table" style="margin-right:5px;"></i>GRI 305 Table</button><button onclick="generateTCFDReport()" class="btn-ghost" style="border-color:#fbbf2430;color:#fbbf24;padding:0.45rem 0.8rem;"><i class="fas fa-globe" style="margin-right:5px;"></i>TCFD Report</button><button onclick="generateESGDataPackage()" class="btn-ghost" style="border-color:#34d39930;color:#34d399;padding:0.45rem 0.8rem;"><i class="fas fa-database" style="margin-right:5px;"></i>ESG Data Package</button></div></div></div>`;
             }
 
             function renderESGCharts() {
@@ -1790,6 +1790,828 @@
                 }
                 animate();
             })();
+
+            // ===============================================
+            // ESG DISCLOSURE EXPORT FUNCTIONS
+            // ===============================================
+
+            // ── Shared PDF helpers ──────────────────────────────────────────
+            function esgPdfSetup() {
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const PW = 210, PH = 297, ML = 15, MR = 15, MT = 18;
+                const CW = PW - ML - MR;
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                const C = {
+                    brand: [30,111,92], brandDk: [16,70,55], accent: [74,222,128],
+                    blue: [96,165,250], cyan: [34,211,238], amber: [251,191,36],
+                    rose: [248,113,113], purple: [167,139,250],
+                    bg: [245,253,249], bgDk: [230,248,240], white: [255,255,255],
+                    gray1: [30,41,59], gray2: [71,85,105], gray3: [148,163,184],
+                    gray4: [203,213,225], black: [15,23,42]
+                };
+                let pageNum = 0;
+
+                function rgb(c) { pdf.setTextColor(c[0], c[1], c[2]); }
+                function fill(c) { pdf.setFillColor(c[0], c[1], c[2]); }
+                function stroke(c) { pdf.setDrawColor(c[0], c[1], c[2]); }
+                function fmtN(n) { return Math.round(n).toLocaleString(); }
+
+                function addPage(headerTitle, accentColor) {
+                    if (pageNum > 0) pdf.addPage();
+                    pageNum++;
+                    const ac = accentColor || C.brand;
+                    fill(C.brandDk); pdf.rect(0, 0, PW, 11, 'F');
+                    fill(ac); pdf.rect(0, 11, PW, 2, 'F');
+                    fill([240,253,249]); pdf.rect(0, PH - 9, PW, 9, 'F');
+                    stroke(C.brand); pdf.setLineWidth(0.3); pdf.line(0, PH - 9, PW, PH - 9);
+                    pdf.setFontSize(7); rgb(C.gray2); pdf.setFont('helvetica', 'normal');
+                    pdf.text('CarbonScope360 · Avalanche Consulting & Management Services, LLC · Prepared: ' + dateStr, PW/2, PH - 4, { align: 'center' });
+                    pdf.text('Page ' + pageNum, PW - ML, PH - 4, { align: 'right' });
+                    pdf.setFontSize(8); rgb(C.white); pdf.setFont('helvetica', 'bold');
+                    pdf.text('CarbonScope360  |  ' + headerTitle, ML, 7);
+                    pdf.setFont('helvetica', 'normal');
+                    pdf.text(dateStr + ' · ' + timeStr, PW - MR, 7, { align: 'right' });
+                }
+
+                function sectionTitle(text, y, accentColor) {
+                    const ac = accentColor || C.brand;
+                    fill(C.bg); pdf.rect(ML, y, CW, 8, 'F');
+                    fill(ac); pdf.rect(ML, y, 2, 8, 'F');
+                    pdf.setFontSize(9.5); pdf.setFont('helvetica', 'bold');
+                    pdf.setTextColor(ac[0], ac[1], ac[2]);
+                    pdf.text(text, ML + 5, y + 5.5);
+                    return y + 11;
+                }
+
+                function tblHead(cols, x, y) {
+                    const rh = 6.5;
+                    fill(C.brandDk); pdf.rect(x, y, cols.reduce((s,c)=>s+c.w,0), rh, 'F');
+                    pdf.setFontSize(7); pdf.setFont('helvetica', 'bold'); rgb(C.white);
+                    let cx = x;
+                    cols.forEach(col => {
+                        pdf.text(col.h, cx + (col.r ? col.w - 2 : 2), y + rh - 1.5, { align: col.r ? 'right' : 'left' });
+                        cx += col.w;
+                    });
+                    return y + rh;
+                }
+
+                function tblRow(cols, data, x, y, even) {
+                    const rh = 7;
+                    fill(even ? C.bg : C.white); stroke(C.bgDk); pdf.setLineWidth(0.1);
+                    const tw = cols.reduce((s,c)=>s+c.w,0);
+                    pdf.rect(x, y, tw, rh, 'FD');
+                    pdf.setFontSize(7.5); pdf.setFont('helvetica', 'normal');
+                    let cx = x;
+                    cols.forEach((col, i) => {
+                        const clr = col.clr || C.gray1;
+                        pdf.setTextColor(clr[0], clr[1], clr[2]);
+                        pdf.text(String(data[i] || ''), cx + (col.r ? col.w - 2 : 2), y + rh - 1.8, { align: col.r ? 'right' : 'left' });
+                        cx += col.w;
+                    });
+                    return y + rh;
+                }
+
+                function infoBox(x, y, w, h, label, value, sub, clr) {
+                    fill(C.bg); stroke(C.bgDk); pdf.setLineWidth(0.3);
+                    pdf.roundedRect(x, y, w, h, 2, 2, 'FD');
+                    fill(clr); pdf.rect(x, y, 2, h, 'F');
+                    pdf.setFontSize(7); rgb(C.gray2); pdf.setFont('helvetica', 'normal');
+                    pdf.text(label, x + 4, y + 5);
+                    pdf.setFontSize(10); pdf.setFont('helvetica', 'bold');
+                    pdf.setTextColor(clr[0], clr[1], clr[2]);
+                    pdf.text(value, x + 4, y + 12);
+                    pdf.setFontSize(7); rgb(C.gray3); pdf.setFont('helvetica', 'normal');
+                    pdf.text(sub, x + 4, y + 17);
+                }
+
+                function textBlock(x, y, w, lines, fontSize) {
+                    pdf.setFontSize(fontSize || 8.5); pdf.setFont('helvetica', 'normal'); rgb(C.gray1);
+                    lines.forEach((line, i) => {
+                        const wrapped = pdf.splitTextToSize(line, w);
+                        wrapped.forEach((wl, j) => {
+                            pdf.text(wl, x, y + (i * 6) + (j * 4.5));
+                        });
+                    });
+                }
+
+                function labeledField(x, y, w, label, value, labelColor, valueColor) {
+                    pdf.setFontSize(7); pdf.setFont('helvetica', 'bold');
+                    pdf.setTextColor((labelColor||C.gray3)[0], (labelColor||C.gray3)[1], (labelColor||C.gray3)[2]);
+                    pdf.text(label, x, y);
+                    pdf.setFontSize(8.5); pdf.setFont('helvetica', 'normal');
+                    pdf.setTextColor((valueColor||C.gray1)[0], (valueColor||C.gray1)[1], (valueColor||C.gray1)[2]);
+                    const wrapped = pdf.splitTextToSize(value, w);
+                    wrapped.forEach((wl, i) => pdf.text(wl, x, y + 5 + i * 4.5));
+                    return y + 5 + wrapped.length * 4.5 + 2;
+                }
+
+                function divider(y) {
+                    stroke(C.bgDk); pdf.setLineWidth(0.3);
+                    pdf.line(ML, y, ML + CW, y);
+                    return y + 4;
+                }
+
+                return { pdf, PW, PH, ML, MR, MT, CW, C, now, dateStr, timeStr,
+                         rgb, fill, stroke, fmtN, addPage, sectionTitle,
+                         tblHead, tblRow, infoBox, textBlock, labeledField, divider };
+            }
+
+            function esgShowProgress(msg) {
+                const prog = document.createElement('div');
+                prog.className = 'modal-backdrop';
+                prog.id = 'esg-prog-modal';
+                prog.innerHTML = `<div class="modal-box" style="text-align:center;max-width:340px;">
+                  <i class="fas fa-spinner fa-spin" style="color:#4ade80;font-size:2rem;margin-bottom:1rem;"></i>
+                  <p style="color:#4ade80;font-weight:700;margin-bottom:4px;">Generating Document</p>
+                  <p style="color:#94a3b8;font-size:0.78rem;">${msg}</p></div>`;
+                document.body.appendChild(prog);
+                return prog;
+            }
+
+            // ── 1. SEC S-K 1500 Climate Disclosure Draft ─────────────────────
+            window.generateSECDisclosure = function() {
+                const prog = esgShowProgress('Building SEC S-K 1500 Climate Disclosure…');
+                setTimeout(() => {
+                    try {
+                        const h = esgPdfSetup();
+                        const { pdf, PW, PH, ML, MR, MT, CW, C, dateStr, fmtN,
+                                addPage, sectionTitle, tblHead, tblRow, infoBox,
+                                textBlock, labeledField, divider, rgb, fill, stroke } = h;
+                        const plants = enrichAll();
+                        const s1 = plants.reduce((s,p)=>s+p.scope1, 0);
+                        const s2 = plants.reduce((s,p)=>s+p.scope2, 0);
+                        const s3 = plants.reduce((s,p)=>s+p.s3.total, 0);
+                        const tot = s1 + s2 + s3;
+                        const netCredit = plants.reduce((s,p)=>s+p.credit.surplusMT, 0);
+                        const finVal = plants.reduce((s,p)=>s+p.credit.financialValue, 0);
+
+                        // PAGE 1 — COVER & OVERVIEW
+                        addPage('SEC S-K 1500 — Climate-Related Disclosure (DRAFT)', C.blue);
+                        let y = MT;
+
+                        // Cover band
+                        fill(C.brandDk); pdf.rect(0, 14, PW, 38, 'F');
+                        fill(C.blue); pdf.rect(0, 52, PW, 2, 'F');
+                        pdf.setFontSize(18); pdf.setFont('helvetica', 'bold');
+                        pdf.setTextColor(96,165,250);
+                        pdf.text('Securities & Exchange Commission', PW/2, 26, { align: 'center' });
+                        pdf.setFontSize(12); pdf.setTextColor(255,255,255);
+                        pdf.text('Climate-Related Disclosure — Reg. S-K, Item 1500  |  DRAFT', PW/2, 35, { align: 'center' });
+                        pdf.setFontSize(8.5); pdf.setTextColor(203,213,225);
+                        pdf.text('Avalanche Consulting & Management Services, LLC  ·  CarbonScope360 Platform', PW/2, 43, { align: 'center' });
+                        pdf.text('Reporting Period: January 1 – December 31, 2025  |  Generated: ' + dateStr, PW/2, 50, { align: 'center' });
+
+                        y = 60;
+                        // KPI strip
+                        const kpis = [
+                            { l: 'Scope 1 Direct', v: fmtN(s1)+' MT', s: 'GHG Protocol', c: C.blue },
+                            { l: 'Scope 2 Indirect', v: fmtN(s2)+' MT', s: 'Market-based', c: C.cyan },
+                            { l: 'Scope 3 Value Chain', v: fmtN(s3)+' MT', s: 'EEIO/Primary', c: C.accent },
+                            { l: 'Total Gross Emissions', v: fmtN(tot)+' MT', s: 'All Scopes', c: C.purple },
+                            { l: 'Net Credit Position', v: (netCredit>=0?'+':'')+fmtN(netCredit)+' MT', s: netCredit>=0?'Surplus':'Deficit', c: netCredit>=0?C.accent:C.rose },
+                        ];
+                        const kw = (CW - 8) / 5;
+                        kpis.forEach((k, i) => infoBox(ML + i*(kw+2), y, kw, 22, k.l, k.v, k.s, k.c));
+                        y += 27;
+
+                        y = sectionTitle('Item 1500(a) — Governance: Board Oversight of Climate-Related Risks', y, C.blue);
+                        const govText = [
+                            'The Board of Directors maintains active oversight of climate-related risks and opportunities through its Environment, Social, and Governance (ESG) Committee, which meets quarterly. The Committee reviews climate risk assessments, emissions performance against targets, capital allocation for decarbonisation initiatives, and regulatory compliance status across all eight portfolio facilities.',
+                            'Senior management, led by the Chief Sustainability Officer (CSO), is responsible for identifying, assessing, and managing climate-related risks. Management provides quarterly briefings to the Board and maintains operational-level controls through the CarbonScope360 Enterprise Carbon Intelligence Platform. All material climate disclosures are reviewed by internal counsel and external auditors prior to filing.',
+                        ];
+                        govText.forEach((para, i) => {
+                            const wrapped = pdf.splitTextToSize(para, CW);
+                            pdf.setFontSize(8.5); pdf.setFont('helvetica', 'normal'); rgb(C.gray1);
+                            wrapped.forEach((line, j) => pdf.text(line, ML, y + j * 4.5));
+                            y += wrapped.length * 4.5 + 5;
+                        });
+
+                        y = divider(y);
+                        y = sectionTitle('Item 1500(b) — Strategy: Climate Risk Identification & Business Impact', y, C.blue);
+                        const stratRows = [
+                            ['Risk Category', 'Description', 'Affected Assets', 'Financial Exposure', 'Time Horizon'],
+                            ['Transition — Policy', 'Carbon pricing mechanisms and cap-and-trade expansion under EPA Clean Air Act and IRA provisions', 'All 8 facilities', '$'+fmtN(Math.abs(finVal)), 'Near-term 1–3yr'],
+                            ['Transition — Technology', 'Disruption from electrification and CCUS mandates displacing combustion-based processes', 'Steel, Cement, Chemicals', '~$24.5M capex', 'Medium 3–7yr'],
+                            ['Physical — Acute', 'Increased frequency of extreme weather events (flood, storm) impacting Gulf Coast and coastal facilities', 'GCC, BRC', '~$3.2M/yr insurance', 'Medium 3–7yr'],
+                            ['Physical — Chronic', 'Sea level rise and long-term temperature change affecting facility operations and supply chains', 'GCC, BRC, PAP', '~$8.1M asset value at risk', 'Long-term 7–15yr'],
+                            ['Transition — Market', 'Demand shifts toward low-carbon products and customer sustainability procurement requirements', 'All sectors', 'Revenue risk: moderate', 'Near-term 1–3yr'],
+                            ['Transition — Reputation', 'Stakeholder expectations on climate performance affecting access to capital and insurance', 'Portfolio-wide', 'Capital cost implications', 'Near-term 1–3yr'],
+                        ];
+                        const sCols = [{h:'Risk Category',w:36},{h:'Description',w:65},{h:'Affected Assets',w:28},{h:'Fin. Exposure',w:28},{h:'Time Horizon',w:CW-157}];
+                        y = tblHead(sCols, ML, y);
+                        stratRows.slice(1).forEach((r, i) => {
+                            y = tblRow(sCols, r, ML, y, i%2===0);
+                            if (y > PH - 40) { addPage('SEC S-K 1500 — Climate-Related Disclosure (DRAFT)', C.blue); y = MT; }
+                        });
+
+                        // PAGE 2 — EMISSIONS DATA & TARGETS
+                        addPage('SEC S-K 1500 — Climate-Related Disclosure (DRAFT)', C.blue);
+                        y = MT;
+                        y = sectionTitle('Item 1500(c) — Greenhouse Gas Emissions Data (GHG Protocol Aligned)', y, C.blue);
+                        const emCols = [
+                            {h:'Facility',w:40},{h:'Industry',w:28},{h:'Scope 1 (MT)',w:26,r:true},{h:'Scope 2 (MT)',w:26,r:true},{h:'Scope 3 (MT)',w:26,r:true},{h:'Total (MT)',w:26,r:true},{h:'Intensity (kg/unit)',w:CW-172,r:true}
+                        ];
+                        y = tblHead(emCols, ML, y);
+                        plants.forEach((p, i) => {
+                            y = tblRow(emCols, [p.name, p.industry, fmtN(p.scope1), fmtN(p.scope2), fmtN(p.s3.total), fmtN(p.total), p.intensity+' kg'], ML, y, i%2===0);
+                        });
+                        // Totals
+                        fill(C.bgDk); pdf.rect(ML, y, CW, 7.5, 'F');
+                        fill(C.brand); pdf.rect(ML, y, 2, 7.5, 'F');
+                        pdf.setFontSize(7.5); pdf.setFont('helvetica', 'bold');
+                        const totW = [40,28,26,26,26,26,CW-172];
+                        const totD = ['PORTFOLIO TOTAL','', fmtN(s1), fmtN(s2), fmtN(s3), fmtN(tot), '—'];
+                        let tx = ML;
+                        totD.forEach((v, i) => {
+                            pdf.setTextColor(...(i===0?C.brand:C.brand));
+                            pdf.text(v, tx + (i>1?totW[i]-2:2), y+5.5, {align:i>1?'right':'left'});
+                            tx += totW[i];
+                        });
+                        y += 10;
+
+                        y = sectionTitle('Emission Calculation Methodology', y, C.blue);
+                        const methRows = [
+                            ['Scope 1', 'Natural Gas Combustion', 'EPA AP-42 / 40 CFR Part 98', '53.06 kg CO₂e/MMBtu', 'IPCC AR6 GWP100'],
+                            ['Scope 1', 'Diesel Combustion', 'EPA 40 CFR Part 98 Table C-1', '10.21 kg CO₂e/gal', 'IPCC AR6 GWP100'],
+                            ['Scope 1', 'Process Emissions', 'Facility-specific measured', 'Facility-reported MT', 'Direct monitoring'],
+                            ['Scope 2', 'Purchased Electricity', 'eGRID 2024 regional factors', '0.403 MT CO₂e/MWh', 'Market-based method'],
+                            ['Scope 3', 'Purchased Goods & Services', 'USEEIO v2.1 + Primary data', 'Economic input-output', 'GHG Protocol Scope 3'],
+                            ['Scope 3', 'Freight & Logistics', 'USEEIO v2.1 + Carrier data', 'Revenue-based hybrid', 'GHG Protocol Scope 3'],
+                            ['Scope 3', 'Use of Sold Products', 'Product lifecycle assessment', 'Revenue-based EEIO', 'GHG Protocol Scope 3'],
+                        ];
+                        const mCols = [{h:'Scope',w:16},{h:'Category',w:44},{h:'Standard / Method',w:46},{h:'Emission Factor',w:42},{h:'GWP Basis',w:CW-148}];
+                        y = tblHead(mCols, ML, y);
+                        methRows.forEach((r, i) => { y = tblRow(mCols, r, ML, y, i%2===0); });
+
+                        y += 5;
+                        y = sectionTitle('Item 1500(d) — Climate Targets & Transition Plans', y, C.blue);
+                        const targetRows = [
+                            ['Net Zero Scope 1+2', '2040', '-55% vs 2022 baseline', 'Science-Based Target (SBTi validated)', 'On Track'],
+                            ['Scope 3 Reduction', '2035', '-30% vs 2023 baseline', 'Supply chain engagement + product redesign', 'In Progress'],
+                            ['100% Renewable Electricity', '2030', '0 MT Scope 2 (market-based)', 'Power Purchase Agreements (PPA) portfolio', 'On Track'],
+                            ['Carbon Credit Retirement', '2026', '≥5,000 MT offsets retired', 'Verra VCS + Gold Standard projects only', 'On Track'],
+                            ['Intensity Reduction', '2028', '-20% kg CO₂e/unit portfolio avg', 'Process efficiency + fuel switching', 'In Progress'],
+                        ];
+                        const tgCols = [{h:'Target',w:46},{h:'Year',w:16},{h:'Metric',w:40},{h:'Strategy',w:60},{h:'Status',w:CW-162}];
+                        y = tblHead(tgCols, ML, y);
+                        targetRows.forEach((r, i) => { y = tblRow(tgCols, r, ML, y, i%2===0); });
+
+                        y += 8;
+                        fill(C.bg); pdf.rect(ML, y, CW, 18, 'F');
+                        stroke(C.bgDk); pdf.setLineWidth(0.3); pdf.rect(ML, y, CW, 18, 'D');
+                        fill(C.blue); pdf.rect(ML, y, 2, 18, 'F');
+                        pdf.setFontSize(7); pdf.setFont('helvetica', 'italic'); rgb(C.gray2);
+                        const disc = 'DRAFT DOCUMENT — FOR INTERNAL REVIEW ONLY. This disclosure was prepared using the CarbonScope360 platform in accordance with SEC Reg. S-K, Item 1500 climate disclosure requirements effective fiscal year 2025. Emission data reflects facility-level activity data processed through EPA 40 CFR Part 98, IPCC AR6 GWP100, and GHG Protocol methodologies. Forward-looking statements regarding targets and transition plans are subject to material risks and uncertainties. This document does not constitute a final SEC filing. Legal review required before submission.';
+                        pdf.splitTextToSize(disc, CW - 6).forEach((line, i) => pdf.text(line, ML + 4, y + 4 + i * 4));
+
+                        pdf.save('CarbonScope360_SEC_SK1500_Draft_' + new Date().toISOString().slice(0,10) + '.pdf');
+                        prog.remove();
+                    } catch(err) {
+                        prog.remove();
+                        console.error(err);
+                        alert('Export error: ' + err.message);
+                    }
+                }, 100);
+            };
+
+            // ── 2. CDP Climate Response ───────────────────────────────────────
+            window.generateCDPResponse = function() {
+                const prog = esgShowProgress('Building CDP Climate Response Package…');
+                setTimeout(() => {
+                    try {
+                        const h = esgPdfSetup();
+                        const { pdf, PW, PH, ML, MR, MT, CW, C, dateStr, fmtN,
+                                addPage, sectionTitle, tblHead, tblRow, infoBox,
+                                textBlock, labeledField, divider, rgb, fill, stroke } = h;
+                        const plants = enrichAll();
+                        const s1 = plants.reduce((s,p)=>s+p.scope1, 0);
+                        const s2 = plants.reduce((s,p)=>s+p.scope2, 0);
+                        const s3 = plants.reduce((s,p)=>s+p.s3.total, 0);
+                        const tot = s1 + s2 + s3;
+
+                        // COVER
+                        addPage('CDP Climate Change Response 2025', C.accent);
+                        let y = MT;
+                        fill(C.brandDk); pdf.rect(0, 14, PW, 40, 'F');
+                        fill(C.accent); pdf.rect(0, 54, PW, 2, 'F');
+                        pdf.setFontSize(20); pdf.setFont('helvetica', 'bold');
+                        pdf.setTextColor(74,222,128);
+                        pdf.text('CDP', PW/2, 26, { align: 'center' });
+                        pdf.setFontSize(12); rgb(C.white);
+                        pdf.text('Climate Change Response — Questionnaire 2025', PW/2, 36, { align: 'center' });
+                        pdf.setFontSize(8.5); pdf.setTextColor(203,213,225);
+                        pdf.text('Avalanche Consulting & Management Services, LLC', PW/2, 45, { align: 'center' });
+                        pdf.text('Sector: Industrials / Chemicals / Materials  |  Reporting Year: 2025  |  ' + dateStr, PW/2, 52, { align: 'center' });
+                        y = 62;
+
+                        const cdpKpis = [
+                            {l:'Total GHG Emissions', v:fmtN(tot)+' MT', s:'Scopes 1+2+3', c:C.accent},
+                            {l:'Scope 1', v:fmtN(s1)+' MT', s:'Direct emissions', c:C.blue},
+                            {l:'Scope 2 (Market)', v:fmtN(s2)+' MT', s:'Purchased energy', c:C.cyan},
+                            {l:'Scope 3', v:fmtN(s3)+' MT', s:'Value chain', c:C.amber},
+                            {l:'CDP Score Target', v:'A–', s:'Climate leadership', c:C.purple},
+                        ];
+                        const kw2 = (CW - 8) / 5;
+                        cdpKpis.forEach((k, i) => infoBox(ML + i*(kw2+2), y, kw2, 22, k.l, k.v, k.s, k.c));
+                        y += 28;
+
+                        // C1 Governance
+                        y = sectionTitle('C1 — Governance', y, C.accent);
+                        const c1Fields = [
+                            ['C1.1 Board oversight', 'The Board has overall responsibility for climate change. The ESG & Sustainability Committee reviews and guides strategy quarterly. Climate risks are a standing Board agenda item.'],
+                            ['C1.1a Board mechanisms', 'Board reviews: (1) GHG emissions performance dashboard, (2) climate risk register, (3) capital allocation proposals for low-carbon transitions, (4) progress against SBT targets.'],
+                            ['C1.2 Management responsibility', 'The Chief Sustainability Officer (CSO), reporting directly to the CEO, holds day-to-day management responsibility. Incentive compensation for senior management is linked to GHG reduction targets.'],
+                            ['C1.2a Management mechanisms', 'Management conducts: quarterly facility-level emissions reviews via CarbonScope360, annual Scope 3 supplier engagement through ScopeLink™, bi-annual TCFD scenario analysis updates.'],
+                        ];
+                        c1Fields.forEach(([label, val]) => {
+                            if (y > PH - 50) { addPage('CDP Climate Change Response 2025', C.accent); y = MT; }
+                            y = labeledField(ML, y, CW, label, val, C.accent, C.gray1);
+                            y += 2;
+                        });
+
+                        y = divider(y + 2);
+                        y = sectionTitle('C2 — Risks & Opportunities', y, C.accent);
+                        const c2Rows = [
+                            ['C2.2a', 'Carbon pricing — EPA cap-and-trade expansion', 'Regulatory', 'Near-term', 'Moderate', fmtN(Math.abs(plants.reduce((s,p)=>s+p.credit.financialValue,0)))+' USD'],
+                            ['C2.2a', 'Technology shift to electrified processes', 'Technology', 'Medium-term', 'High', '$24.5M capex exposure'],
+                            ['C2.2a', 'Physical flood risk — Gulf Coast facilities', 'Physical acute', 'Medium-term', 'Low', '$3.2M/yr insurance'],
+                            ['C2.2b', 'Low-carbon product demand growth', 'Market opp.', 'Near-term', 'High', 'Revenue upside $15M+'],
+                            ['C2.2b', 'Green finance & sustainability-linked bonds', 'Financing opp.', 'Near-term', 'Moderate', 'Cost of capital reduction'],
+                        ];
+                        const c2Cols = [{h:'Ref.',w:14},{h:'Risk / Opportunity',w:58},{h:'Type',w:26},{h:'Horizon',w:22},{h:'Impact',w:20},{h:'Financial Impact',w:CW-140}];
+                        y = tblHead(c2Cols, ML, y);
+                        c2Rows.forEach((r, i) => { y = tblRow(c2Cols, r, ML, y, i%2===0); });
+
+                        // C4 Targets
+                        if (y > PH - 70) { addPage('CDP Climate Change Response 2025', C.accent); y = MT; }
+                        y += 5;
+                        y = sectionTitle('C4 — Targets & Performance', y, C.accent);
+                        const c4Rows = [
+                            ['Abs1', 'Absolute Scope 1+2 reduction', '2022', '2040', '-55%', 'SBTi 1.5°C aligned', 'On Track'],
+                            ['Int1', 'Emission intensity (kg CO₂e/unit)', '2023', '2028', '-20% avg', 'GHG Protocol', 'On Track'],
+                            ['Abs2', 'Scope 3 reduction (purchased goods)', '2023', '2035', '-30%', 'SBTi FLAG', 'In Progress'],
+                            ['RE100', '100% renewable electricity', '2023', '2030', '0 MT Scope 2', 'RE100 initiative', 'In Progress'],
+                        ];
+                        const c4Cols = [{h:'ID',w:14},{h:'Target Description',w:55},{h:'Base',w:14},{h:'Year',w:14},{h:'Reduction',w:22},{h:'Standard',w:30},{h:'Status',w:CW-149}];
+                        y = tblHead(c4Cols, ML, y);
+                        c4Rows.forEach((r, i) => { y = tblRow(c4Cols, r, ML, y, i%2===0); });
+
+                        // PAGE 2 — Emissions (C6 + C7)
+                        addPage('CDP Climate Change Response 2025', C.accent);
+                        y = MT;
+                        y = sectionTitle('C6 — Emissions Data (Scopes 1 & 2)', y, C.accent);
+                        const c6Cols = [{h:'Facility',w:42},{h:'Industry Sector',w:30},{h:'Country',w:20},{h:'Scope 1 (MT CO₂e)',w:36,r:true},{h:'Scope 2 LB (MT)',w:30,r:true},{h:'Scope 2 MB (MT)',w:30,r:true},{h:'Total S1+S2',w:CW-188,r:true}];
+                        y = tblHead(c6Cols, ML, y);
+                        plants.forEach((p, i) => {
+                            y = tblRow(c6Cols, [p.name, p.industry, 'United States', fmtN(p.scope1), fmtN(p.scope2), fmtN(p.scope2), fmtN(p.scope1+p.scope2)], ML, y, i%2===0);
+                        });
+                        fill(C.bgDk); pdf.rect(ML,y,CW,7.5,'F');
+                        fill(C.accent); pdf.rect(ML,y,2,7.5,'F');
+                        pdf.setFontSize(7.5); pdf.setFont('helvetica','bold');
+                        pdf.setTextColor(...C.brand);
+                        pdf.text('TOTAL', ML+2, y+5);
+                        pdf.text(fmtN(s1), ML+42+30+20+36-2, y+5, {align:'right'});
+                        pdf.text(fmtN(s2), ML+42+30+20+36+30-2, y+5, {align:'right'});
+                        pdf.text(fmtN(s2), ML+42+30+20+36+30+30-2, y+5, {align:'right'});
+                        pdf.text(fmtN(s1+s2), ML+CW-2, y+5, {align:'right'});
+                        y += 10;
+
+                        y = sectionTitle('C7 — Emissions Breakdown (Scope 3 — 15 Categories)', y, C.accent);
+                        const s3cats = [
+                            ['1','Purchased goods & services', fmtN(Math.round(s3*0.28)), 'USEEIO v2.1 + primary data from 2 suppliers', 'Relevant, calculated'],
+                            ['2','Capital goods', fmtN(Math.round(s3*0.07)), 'USEEIO v2.1 economic input-output', 'Relevant, calculated'],
+                            ['3','Fuel- and energy-related activities', fmtN(Math.round(s3*0.04)), 'eGRID + natural gas T&D loss factors', 'Relevant, calculated'],
+                            ['4','Upstream transportation & distribution', fmtN(Math.round(s3*0.08)), 'Carrier-reported + USEEIO hybrid', 'Relevant, calculated'],
+                            ['5','Waste generated in operations', fmtN(Math.round(s3*0.03)), 'Waste audit data + EPA WARM model', 'Relevant, calculated'],
+                            ['6','Business travel', fmtN(Math.round(s3*0.02)), 'Expense system + DEFRA flight factors', 'Relevant, calculated'],
+                            ['7','Employee commuting', fmtN(Math.round(s3*0.03)), 'Employee survey modal split', 'Relevant, calculated'],
+                            ['11','Use of sold products', fmtN(Math.round(s3*0.22)), 'Product LCA + USEEIO revenue-based', 'Relevant, calculated'],
+                            ['12','End-of-life treatment', fmtN(Math.round(s3*0.04)), 'Industry-average end-of-life rates', 'Relevant, estimated'],
+                            ['Other','Other relevant categories', fmtN(Math.round(s3*0.19)), 'Portfolio residual categories', 'Relevant, estimated'],
+                        ];
+                        const s3Cols = [{h:'Cat.',w:14},{h:'Category Name',w:54},{h:'MT CO₂e',w:26,r:true},{h:'Calculation Method',w:62},{h:'Inclusion Status',w:CW-156}];
+                        y = tblHead(s3Cols, ML, y);
+                        s3cats.forEach((r, i) => { y = tblRow(s3Cols, r, ML, y, i%2===0); });
+                        fill(C.bgDk); pdf.rect(ML,y,CW,7,'F');
+                        pdf.setFontSize(7.5); pdf.setFont('helvetica','bold'); pdf.setTextColor(...C.brand);
+                        pdf.text('SCOPE 3 TOTAL', ML+2, y+4.5);
+                        pdf.text(fmtN(s3), ML+14+54+26-2, y+4.5, {align:'right'});
+                        y += 10;
+
+                        pdf.setFontSize(7); pdf.setFont('helvetica', 'italic'); rgb(C.gray3);
+                        pdf.text('CDP Climate Change Questionnaire 2025 · Aligned with TCFD framework · Verified by third-party auditor pending ISO 14064-1 Q3 2026 · For submission to CDP portal', ML, y + 5);
+
+                        pdf.save('CarbonScope360_CDP_Response_' + new Date().toISOString().slice(0,10) + '.pdf');
+                        prog.remove();
+                    } catch(err) {
+                        prog.remove();
+                        console.error(err);
+                        alert('Export error: ' + err.message);
+                    }
+                }, 100);
+            };
+
+            // ── 3. GRI 305 Emissions Table ────────────────────────────────────
+            window.generateGRI305Table = function() {
+                const prog = esgShowProgress('Building GRI 305 Emissions Standards Table…');
+                setTimeout(() => {
+                    try {
+                        const h = esgPdfSetup();
+                        const { pdf, PW, PH, ML, MR, MT, CW, C, dateStr, fmtN,
+                                addPage, sectionTitle, tblHead, tblRow, infoBox,
+                                textBlock, labeledField, divider, rgb, fill, stroke } = h;
+                        const plants = enrichAll();
+                        const s1 = plants.reduce((s,p)=>s+p.scope1, 0);
+                        const s2 = plants.reduce((s,p)=>s+p.scope2, 0);
+                        const s3 = plants.reduce((s,p)=>s+p.s3.total, 0);
+                        const tot = s1 + s2 + s3;
+
+                        addPage('GRI 305: Emissions Standard — Disclosure Tables', C.purple);
+                        let y = MT;
+
+                        fill(C.brandDk); pdf.rect(0, 14, PW, 36, 'F');
+                        fill(C.purple); pdf.rect(0, 50, PW, 2, 'F');
+                        pdf.setFontSize(18); pdf.setFont('helvetica', 'bold');
+                        pdf.setTextColor(167,139,250);
+                        pdf.text('GRI Standards: Topic 305 — Emissions', PW/2, 25, { align: 'center' });
+                        pdf.setFontSize(11); rgb(C.white);
+                        pdf.text('Prepared in accordance with GRI 305: Emissions 2016 (updated 2024)', PW/2, 34, { align: 'center' });
+                        pdf.setFontSize(8.5); pdf.setTextColor(203,213,225);
+                        pdf.text('Avalanche Consulting & Management Services, LLC  ·  Reporting Year: 2025  ·  ' + dateStr, PW/2, 42, { align: 'center' });
+                        pdf.text('GHG Protocol Corporate Standard  ·  IPCC AR6 GWP100  ·  EPA 40 CFR Part 98', PW/2, 49, { align: 'center' });
+
+                        y = 58;
+                        // Summary KPIs
+                        const gKpis = [
+                            {l:'GRI 305-1 (Scope 1)', v:fmtN(s1)+' MT', s:'Direct GHG', c:C.blue},
+                            {l:'GRI 305-2 (Scope 2)', v:fmtN(s2)+' MT', s:'Energy indirect', c:C.cyan},
+                            {l:'GRI 305-3 (Scope 3)', v:fmtN(s3)+' MT', s:'Other indirect', c:C.accent},
+                            {l:'GRI 305-4 (Intensity)', v:(plants.reduce((s,p)=>s+p.intensity,0)/plants.length).toFixed(1)+' kg/unit', s:'Portfolio avg', c:C.amber},
+                            {l:'GRI 305-5 (Reductions)', v:fmtN(Math.round(tot*0.04))+' MT', s:'YoY reduction est.', c:C.purple},
+                        ];
+                        const gkw = (CW - 8) / 5;
+                        gKpis.forEach((k, i) => infoBox(ML + i*(gkw+2), y, gkw, 22, k.l, k.v, k.s, k.c));
+                        y += 28;
+
+                        // GRI 305-1
+                        y = sectionTitle('GRI 305-1 — Direct (Scope 1) GHG Emissions', y, C.blue);
+                        const g1Cols = [{h:'Facility',w:42},{h:'Industry',w:28},{h:'NG (MMBtu)',w:24,r:true},{h:'Diesel (gal)',w:24,r:true},{h:'Process (MT)',w:24,r:true},{h:'Scope 1 Total (MT CO₂e)',w:38,r:true},{h:'Biogenic CO₂',w:CW-180,r:true}];
+                        y = tblHead(g1Cols, ML, y);
+                        plants.forEach((p, i) => {
+                            y = tblRow(g1Cols, [p.name, p.industry, fmtN(p.ng), fmtN(p.diesel), fmtN(p.process), fmtN(p.scope1), '0 MT'], ML, y, i%2===0);
+                        });
+                        fill(C.bgDk); pdf.rect(ML,y,CW,7,'F'); fill(C.blue); pdf.rect(ML,y,2,7,'F');
+                        pdf.setFontSize(7.5); pdf.setFont('helvetica','bold'); pdf.setTextColor(...C.brand);
+                        pdf.text('TOTAL — GRI 305-1', ML+2, y+5); pdf.text(fmtN(s1), ML+CW-2-40, y+5, {align:'right'}); y += 9;
+
+                        y = sectionTitle('GRI 305-1 Methodology Notes', y, C.blue);
+                        const g1Notes = [
+                            '• Emission factors: EPA 40 CFR Part 98, Table C-1 (natural gas: 53.06 kg CO₂/MMBtu; diesel: 10.21 kg CO₂/gal)',
+                            '• Consolidation approach: Operational control boundary; 100% attribution for all managed facilities',
+                            '• GWP values: IPCC Sixth Assessment Report (AR6) 100-year GWP; CO₂=1, CH₄=27.9, N₂O=273',
+                            '• Combustion correction uplift factor applied: 1.02 (accounts for fugitive losses and measurement uncertainty)',
+                        ];
+                        g1Notes.forEach((note, i) => {
+                            pdf.setFontSize(8); pdf.setFont('helvetica', 'normal'); rgb(C.gray1);
+                            pdf.text(note, ML+2, y + i*5);
+                        });
+                        y += g1Notes.length * 5 + 5;
+
+                        // GRI 305-2
+                        y = sectionTitle('GRI 305-2 — Energy Indirect (Scope 2) GHG Emissions', y, C.cyan);
+                        const g2Cols = [{h:'Facility',w:42},{h:'MWh Purchased',w:30,r:true},{h:'Market-Based (MT)',w:34,r:true},{h:'Location-Based (MT)',w:34,r:true},{h:'Grid Region',w:30},{h:'EF (MT/MWh)',w:CW-170}];
+                        y = tblHead(g2Cols, ML, y);
+                        const grids = ['SERC','RFC','MRO','SERC','RFC','NPCC','WECC','WECC'];
+                        plants.forEach((p, i) => {
+                            const lbEF = (0.38 + (i*0.03)).toFixed(3);
+                            y = tblRow(g2Cols, [p.name, fmtN(p.elec), fmtN(p.scope2), fmtN(Math.round(p.elec*parseFloat(lbEF))), grids[i], '0.403 MB / '+lbEF+' LB'], ML, y, i%2===0);
+                        });
+                        fill(C.bgDk); pdf.rect(ML,y,CW,7,'F'); fill(C.cyan); pdf.rect(ML,y,2,7,'F');
+                        pdf.setFontSize(7.5); pdf.setFont('helvetica','bold'); pdf.setTextColor(...C.brand);
+                        pdf.text('TOTAL — GRI 305-2', ML+2, y+5); pdf.text(fmtN(s2), ML+42+30+34-2, y+5, {align:'right'}); y += 9;
+
+                        // PAGE 2 — Scope 3 + Intensity + Reductions
+                        addPage('GRI 305: Emissions Standard — Disclosure Tables', C.purple);
+                        y = MT;
+                        y = sectionTitle('GRI 305-3 — Other Indirect (Scope 3) GHG Emissions by Facility', y, C.accent);
+                        const g3Cols = [{h:'Facility',w:38},{h:'Cat 1: Purch.',w:26,r:true},{h:'Cat 4: Freight',w:24,r:true},{h:'Cat 11: Use',w:24,r:true},{h:'Other Cats',w:22,r:true},{h:'Scope 3 Total',w:26,r:true},{h:'Data Quality',w:CW-160}];
+                        y = tblHead(g3Cols, ML, y);
+                        plants.forEach((p, i) => {
+                            const dq = p.s3.purchased > 3000 ? 'Primary (Cat1)' : 'EEIO default';
+                            y = tblRow(g3Cols, [p.name, fmtN(p.s3.purchased), fmtN(p.s3.freight), fmtN(p.s3.useOfSold), fmtN(p.s3.other), fmtN(p.s3.total), dq], ML, y, i%2===0);
+                        });
+                        fill(C.bgDk); pdf.rect(ML,y,CW,7,'F'); fill(C.accent); pdf.rect(ML,y,2,7,'F');
+                        pdf.setFontSize(7.5); pdf.setFont('helvetica','bold'); pdf.setTextColor(...C.brand);
+                        pdf.text('TOTAL — GRI 305-3', ML+2, y+5);
+                        pdf.text(fmtN(s3), ML+38+26+24+24+22+26-2, y+5, {align:'right'}); y += 10;
+
+                        y = sectionTitle('GRI 305-4 — GHG Emission Intensity by Facility', y, C.amber);
+                        const g4Cols = [{h:'Facility',w:42},{h:'Industry',w:28},{h:'Total CO₂e (MT)',w:32,r:true},{h:'Production Units',w:30,r:true},{h:'Intensity (kg/unit)',w:32,r:true},{h:'Industry Benchmark',w:30,r:true},{h:'vs Benchmark',w:CW-194}];
+                        y = tblHead(g4Cols, ML, y);
+                        plants.forEach((p, i) => {
+                            const diff = ((p.intensity/p.benchmark-1)*100).toFixed(1);
+                            const cmp = parseFloat(diff) <= 0 ? '✓ '+ Math.abs(diff)+'% below' : '▲ '+diff+'% above';
+                            y = tblRow(g4Cols, [p.name, p.industry, fmtN(p.total), fmtN(p.prodUnits), p.intensity+' kg', p.benchmark+' kg', cmp], ML, y, i%2===0);
+                        });
+                        y += 5;
+
+                        y = sectionTitle('GRI 305-5 — Reduction of GHG Emissions (Year-on-Year)', y, C.purple);
+                        const g5Rows = [
+                            ['Scope 1 reductions', fmtN(Math.round(s1*0.035)), 'Process optimization + fuel efficiency', '35% confidence', 'Operational control'],
+                            ['Scope 2 reductions (MB)', fmtN(Math.round(s2*0.055)), 'Renewable energy procurement (PPAs)', '80% confidence', 'Market-based'],
+                            ['Scope 3 reductions (Cat 1)', fmtN(Math.round(s3*0.012)), 'Supplier engagement — 2 suppliers primary data', '55% confidence', 'ScopeLink™ data'],
+                            ['Avoided emissions (offsets)', fmtN(1330), 'Verra VCS + Gold Standard retired credits', 'Verified', 'Third-party registry'],
+                        ];
+                        const g5Cols = [{h:'Reduction Source',w:48},{h:'MT CO₂e Reduced',w:32,r:true},{h:'Initiative',w:64},{h:'Confidence',w:26},{h:'Boundary',w:CW-170}];
+                        y = tblHead(g5Cols, ML, y);
+                        g5Rows.forEach((r, i) => { y = tblRow(g5Cols, r, ML, y, i%2===0); });
+
+                        y += 8;
+                        y = sectionTitle('GRI 305-6 & 305-7 — ODS and NOₓ/SOₓ Emissions', y, C.gray3);
+                        pdf.setFontSize(8.5); pdf.setFont('helvetica', 'normal'); rgb(C.gray1);
+                        const ozoneText = 'GRI 305-6 Ozone-depleting substances: Refrigerant losses from HVAC systems estimated at 0.42 MT CO₂e equivalent. CFC-11 equivalent: 0.0002 MT. All facilities comply with EPA Section 608 refrigerant management regulations. PharmaCore Labs HVAC replacement project initiated Q2 2026 targeting elimination of R-22 refrigerant.\n\nGRI 305-7 NOₓ/SOₓ and other significant air emissions: Combined portfolio NOₓ: approximately 18.4 MT/yr (combustion sources). SOₓ: 3.2 MT/yr. Particulate matter (PM10): 1.8 MT/yr. All values are below applicable EPA National Ambient Air Quality Standards (NAAQS) thresholds for the relevant facility locations.';
+                        pdf.splitTextToSize(ozoneText, CW).forEach((line, i) => pdf.text(line, ML, y + i * 4.5));
+
+                        pdf.save('CarbonScope360_GRI305_Emissions_Table_' + new Date().toISOString().slice(0,10) + '.pdf');
+                        prog.remove();
+                    } catch(err) {
+                        prog.remove();
+                        console.error(err);
+                        alert('Export error: ' + err.message);
+                    }
+                }, 100);
+            };
+
+            // ── 4. TCFD Report ────────────────────────────────────────────────
+            window.generateTCFDReport = function() {
+                const prog = esgShowProgress('Building TCFD Climate Disclosure Report…');
+                setTimeout(() => {
+                    try {
+                        const h = esgPdfSetup();
+                        const { pdf, PW, PH, ML, MR, MT, CW, C, dateStr, fmtN,
+                                addPage, sectionTitle, tblHead, tblRow, infoBox,
+                                textBlock, labeledField, divider, rgb, fill, stroke } = h;
+                        const plants = enrichAll();
+                        const s1 = plants.reduce((s,p)=>s+p.scope1, 0);
+                        const s2 = plants.reduce((s,p)=>s+p.scope2, 0);
+                        const s3 = plants.reduce((s,p)=>s+p.s3.total, 0);
+                        const tot = s1 + s2 + s3;
+                        const totalCredit = plants.reduce((s,p)=>s+p.credit.surplusMT, 0);
+                        const totalFinancial = plants.reduce((s,p)=>s+p.credit.financialValue, 0);
+
+                        // COVER
+                        addPage('TCFD — Task Force on Climate-related Financial Disclosures', C.amber);
+                        let y = MT;
+                        fill(C.brandDk); pdf.rect(0, 14, PW, 42, 'F');
+                        fill(C.amber); pdf.rect(0, 56, PW, 2.5, 'F');
+                        pdf.setFontSize(9); pdf.setFont('helvetica', 'normal');
+                        pdf.setTextColor(203,213,225);
+                        pdf.text('TASK FORCE ON CLIMATE-RELATED FINANCIAL DISCLOSURES', PW/2, 22, { align: 'center' });
+                        pdf.setFontSize(16); pdf.setFont('helvetica', 'bold');
+                        pdf.setTextColor(251,191,36);
+                        pdf.text('Climate Risk & Opportunity Report 2025', PW/2, 33, { align: 'center' });
+                        pdf.setFontSize(9); rgb(C.white);
+                        pdf.text('Avalanche Consulting & Management Services, LLC', PW/2, 43, { align: 'center' });
+                        pdf.setFontSize(8); pdf.setTextColor(148,163,184);
+                        pdf.text('Aligned with TCFD Recommendations (June 2017, updated 2021)  ·  ' + dateStr, PW/2, 52, { align: 'center' });
+                        y = 65;
+
+                        const tcfdKpis = [
+                            {l:'Carbon Price Exposure', v:'$'+fmtN(Math.abs(totalFinancial)), s:'@ $'+globalCarbonPrice+'/MT', c:C.amber},
+                            {l:'Total GHG Emissions', v:fmtN(tot)+' MT', s:'All scopes 2025', c:C.accent},
+                            {l:'Net Credit Position', v:(totalCredit>=0?'+':'')+fmtN(totalCredit)+' MT', s:totalCredit>=0?'Surplus':'Deficit', c:totalCredit>=0?C.accent:C.rose},
+                            {l:'1.5°C Gap', v:'-7%', s:'vs 38% achieved', c:C.rose},
+                            {l:'Scenario Coverage', v:'3 Scenarios', s:'1.5°C · 2°C · 3°C', c:C.blue},
+                        ];
+                        const tkw = (CW - 8) / 5;
+                        tcfdKpis.forEach((k, i) => infoBox(ML + i*(tkw+2), y, tkw, 22, k.l, k.v, k.s, k.c));
+                        y += 30;
+
+                        // GOVERNANCE
+                        y = sectionTitle('TCFD Pillar 1: Governance', y, C.amber);
+                        const govRows = [
+                            ['Board Oversight', 'ESG & Sustainability Committee (Board-level), quarterly meetings. Climate risk is a standing agenda item. Board reviews: emissions performance, capital allocation for low-carbon transitions, scenario analysis results, and progress against SBTs.'],
+                            ['Management Role', 'Chief Sustainability Officer (CSO) leads day-to-day climate risk management. Annual incentive compensation for CSO and facility GMs linked to Scope 1+2 intensity reduction targets. CarbonScope360 platform provides real-time oversight.'],
+                            ['Reporting Lines', 'CSO → CEO → Board ESG Committee. Quarterly operational reports to Board. Annual climate disclosure reviewed by external auditors. Material risks reported to Audit Committee within 30 days of identification.'],
+                        ];
+                        govRows.forEach(([label, text]) => {
+                            if (y > PH - 55) { addPage('TCFD — Task Force on Climate-related Financial Disclosures', C.amber); y = MT; }
+                            y = labeledField(ML, y, CW, label, text, C.amber, C.gray1);
+                            y += 3;
+                        });
+
+                        // STRATEGY
+                        y = divider(y + 2);
+                        y = sectionTitle('TCFD Pillar 2: Strategy — Scenario Analysis Results', y, C.amber);
+                        const scenRows = [
+                            ['1.5°C Pathway\n(IEA NZE 2050)', 'Rapid decarbonisation across all sectors. Carbon price rises to $130/MT by 2030. Electricity grid fully decarbonised by 2035. Fossil fuel demand decline accelerates.', '-45% Scope 1+2 by 2030\n$12M capex required\n$8.5M OPEX savings by 2030', 'Low physical risk\nHigh transition risk\nStranded asset risk: moderate', '1.5°C gap: 7%\nAction: accelerate capex\nForecast: On track by 2028'],
+                            ['2°C Scenario\n(IPCC SSP1)', 'Managed transition. Carbon price reaches $85/MT by 2035. Policy mix of carbon pricing, efficiency standards, and technology support. Some physical risk by 2040.', '-30% Scope 1+2 by 2030\n$6M capex required\n$4.2M additional carbon cost', 'Low-moderate physical risk\nModerate transition cost\nInsurance increase: $450K/yr', 'Most likely scenario\nBase planning case\nFinancially manageable'],
+                            ['3°C Pathway\n(IPCC SSP2-4.5)', 'Business as usual with delayed policy action. Significant physical climate impacts by 2040-2050. Gulf Coast flooding, extreme heat affecting operations. Regulatory catch-up risk.', '-10% Scope 1+2 by 2030\n$0 transition capex short-term\n$18M physical risk exposure', 'High physical risk\nMajor facility adaptation\nFlood risk: GCC, BRC assets', 'Highest total cost scenario\nPhysical risk dominant\nInsurance unavailability risk'],
+                        ];
+                        const scCols = [{h:'Scenario',w:30},{h:'Macro Context',w:52},{h:'Financial Impact',w:44},{h:'Risk Profile',w:38},{h:'Strategic Response',w:CW-164}];
+                        y = tblHead(scCols, ML, y);
+                        scenRows.forEach((r, i) => {
+                            if (y > PH - 35) { addPage('TCFD — Task Force on Climate-related Financial Disclosures', C.amber); y = MT; }
+                            const rowH = 22;
+                            fill(i%2===0?C.bg:C.white); stroke(C.bgDk); pdf.setLineWidth(0.1);
+                            const tw = scCols.reduce((s,c)=>s+c.w,0);
+                            pdf.rect(ML, y, tw, rowH, 'FD');
+                            pdf.setFontSize(7.5); pdf.setFont('helvetica','normal');
+                            let cx = ML;
+                            r.forEach((cell, ci) => {
+                                rgb(C.gray1);
+                                const lines = cell.split('\n');
+                                lines.forEach((line, li) => pdf.text(line, cx+2, y + 5 + li*4.2));
+                                cx += scCols[ci].w;
+                            });
+                            y += rowH;
+                        });
+
+                        // PAGE 2 — Risk Management + Metrics
+                        addPage('TCFD — Task Force on Climate-related Financial Disclosures', C.amber);
+                        y = MT;
+                        y = sectionTitle('TCFD Pillar 3: Risk Management', y, C.amber);
+                        const rmRows = [
+                            ['Identification', 'Climate risks identified through: annual TCFD scenario analysis, EPA regulatory watch (CarbonScope360 RegWatch™), peer benchmarking, supply chain assessment via ScopeLink™, and engagement with industry associations (ACC, AISI, PCA).'],
+                            ['Assessment', 'Risks assessed on likelihood × financial impact matrix. Physical risks: 5-year flood return period analysis for coastal facilities. Transition risks: carbon price sensitivity analysis across three price paths ($42, $85, $130/MT). Results inform capital allocation decisions.'],
+                            ['Management', 'Risk owners assigned per facility and at portfolio level. Mitigation includes: carbon credit hedging via TradeDesk™, energy efficiency capex program ($24M over 5 years), supplier diversification to reduce Scope 3 concentration, and renewable energy procurement strategy.'],
+                            ['Integration', 'Climate risk factors integrated into: annual capital allocation process (hurdle rate adjusted for carbon cost), M&A due diligence checklist, insurance renewal process, and new facility design standards (minimum 30% emissions intensity improvement vs existing portfolio).'],
+                        ];
+                        rmRows.forEach(([label, text]) => {
+                            if (y > PH - 45) { addPage('TCFD — Task Force on Climate-related Financial Disclosures', C.amber); y = MT; }
+                            y = labeledField(ML, y, CW, label, text, C.amber, C.gray1);
+                            y += 3;
+                        });
+
+                        y = divider(y + 2);
+                        y = sectionTitle('TCFD Pillar 4: Metrics & Targets', y, C.amber);
+                        const metRows = [
+                            ['Scope 1 GHG Emissions', fmtN(s1)+' MT CO₂e', 'Down 3.8% YoY', 'Target: −55% by 2040', 'EPA 40 CFR Part 98'],
+                            ['Scope 2 GHG Emissions', fmtN(s2)+' MT CO₂e', 'Down 5.2% YoY', 'Target: −100% by 2030', 'eGRID market-based'],
+                            ['Scope 3 GHG Emissions', fmtN(s3)+' MT CO₂e', 'Estimated (EEIO)', 'Target: −30% by 2035', 'USEEIO v2.1 + primary'],
+                            ['GHG Intensity (avg)', (plants.reduce((s,p)=>s+p.intensity,0)/plants.length).toFixed(1)+' kg/unit', 'Down 4.1% YoY', 'Target: −20% by 2028', 'GHG Protocol'],
+                            ['Carbon Credit Position', (totalCredit>=0?'+':'')+fmtN(totalCredit)+' MT', 'Net surplus', 'Maintain positive position', 'Xpansiv CBL market'],
+                            ['Internal Carbon Price', '$'+globalCarbonPrice+'/MT', 'Used in decisions', '$65/MT by 2027', 'CarbonScope360 TradeDesk™'],
+                            ['Renewable Electricity', Math.round(plants.reduce((s,p)=>s+p.elec,0)*0.22)+' MWh', '22% of total portfolio', 'Target: 100% by 2030', 'RE100 tracking'],
+                            ['TCFD-Aligned Disclosures', '100%', 'Full TCFD alignment', 'Annual reporting', 'External verification 2026'],
+                        ];
+                        const metCols = [{h:'Metric',w:46},{h:'Current Value',w:30,r:true},{h:'YoY Trend',w:28},{h:'Target',w:38},{h:'Data Source',w:CW-142}];
+                        y = tblHead(metCols, ML, y);
+                        metRows.forEach((r, i) => { y = tblRow(metCols, r, ML, y, i%2===0); });
+
+                        y += 8;
+                        fill(C.bg); pdf.rect(ML,y,CW,16,'F'); stroke(C.bgDk); pdf.setLineWidth(0.3); pdf.rect(ML,y,CW,16,'D');
+                        fill(C.amber); pdf.rect(ML,y,2,16,'F');
+                        pdf.setFontSize(7); pdf.setFont('helvetica','italic'); rgb(C.gray2);
+                        const tcfdDisc = 'This TCFD report was prepared in accordance with the recommendations of the Task Force on Climate-related Financial Disclosures (June 2017, updated 2021). Scenario analysis is based on IEA World Energy Outlook 2024 and IPCC Sixth Assessment Report (AR6) pathways. Forward-looking statements are based on current expectations and are subject to material risks, uncertainties, and assumptions. All financial exposure estimates are indicative and for scenario planning purposes only. This report has not been subject to external assurance. External verification is planned for Q3 2026.';
+                        pdf.splitTextToSize(tcfdDisc, CW-6).forEach((line, i) => pdf.text(line, ML+4, y+4+i*4));
+
+                        pdf.save('CarbonScope360_TCFD_Report_' + new Date().toISOString().slice(0,10) + '.pdf');
+                        prog.remove();
+                    } catch(err) {
+                        prog.remove();
+                        console.error(err);
+                        alert('Export error: ' + err.message);
+                    }
+                }, 100);
+            };
+
+            // ── 5. ESG Data Package (CSV) ─────────────────────────────────────
+            window.generateESGDataPackage = function() {
+                const prog = esgShowProgress('Building ESG Data Package (CSV)…');
+                setTimeout(() => {
+                    try {
+                        const plants = enrichAll();
+                        const now = new Date();
+                        const dateStr = now.toISOString().slice(0,10);
+
+                        function csvEscape(val) {
+                            const s = String(val);
+                            return (s.includes(',') || s.includes('"') || s.includes('\n')) ? '"' + s.replace(/"/g, '""') + '"' : s;
+                        }
+                        function toCSV(rows) {
+                            return rows.map(r => r.map(csvEscape).join(',')).join('\r\n');
+                        }
+
+                        // Build multi-section CSV
+                        const sections = [];
+
+                        sections.push([
+                            ['CarbonScope360 ESG Data Package'],
+                            ['Avalanche Consulting & Management Services, LLC'],
+                            ['Generated:', dateStr],
+                            ['Reporting Period:', '2025 (Jan 1 – Dec 31, 2025)'],
+                            ['Platform:', 'CarbonScope360 v2.0'],
+                            ['Standards:', 'GHG Protocol · EPA 40 CFR Part 98 · GRI 305 · TCFD · CDP · ISO 14064'],
+                            [],
+                        ]);
+
+                        // Section 1: Scope 1+2
+                        sections.push([
+                            ['=== SECTION 1: SCOPE 1 & SCOPE 2 EMISSIONS ==='],
+                            ['Facility ID','Facility Name','Industry','Natural Gas (MMBtu)','Diesel (gal)','Process Emissions (MT)','Scope 1 Direct (MT CO2e)','Electricity (MWh)','Scope 2 Indirect (MT CO2e)','Total Scope 1+2 (MT CO2e)','Production Units','Intensity (kg/unit)'],
+                        ]);
+                        plants.forEach(p => {
+                            sections.push([[p.id, p.name, p.industry, p.ng, p.diesel, p.process, Math.round(p.scope1), p.elec, Math.round(p.scope2), Math.round(p.scope1+p.scope2), p.prodUnits, p.intensity]]);
+                        });
+                        const s1T = Math.round(plants.reduce((s,p)=>s+p.scope1,0));
+                        const s2T = Math.round(plants.reduce((s,p)=>s+p.scope2,0));
+                        sections.push([['TOTAL','','','','','',s1T,'',s2T,s1T+s2T,'','']]);
+                        sections.push([[]]);
+
+                        // Section 2: Scope 3
+                        sections.push([
+                            ['=== SECTION 2: SCOPE 3 VALUE-CHAIN EMISSIONS ==='],
+                            ['Facility ID','Facility Name','Cat 1: Purchased Goods (MT)','Cat 4: Freight & Logistics (MT)','Cat 11: Use of Sold Products (MT)','Other Categories (MT)','Scope 3 Total (MT CO2e)','Data Coverage (%)'],
+                        ]);
+                        plants.forEach(p => {
+                            const sup = supplierMaster[p.id] || {};
+                            let priCount = 0, totCat = 3;
+                            if (sup.purchased?.primaryMT != null) priCount++;
+                            if (sup.freight?.primaryMT != null) priCount++;
+                            if (sup.useSold?.primaryMT != null) priCount++;
+                            const cov = Math.round((priCount/totCat)*100);
+                            sections.push([[p.id, p.name, Math.round(p.s3.purchased), Math.round(p.s3.freight), Math.round(p.s3.useOfSold), Math.round(p.s3.other), Math.round(p.s3.total), cov+'%']]);
+                        });
+                        const s3T = Math.round(plants.reduce((s,p)=>s+p.s3.total,0));
+                        sections.push([['TOTAL','',Math.round(plants.reduce((s,p)=>s+p.s3.purchased,0)),Math.round(plants.reduce((s,p)=>s+p.s3.freight,0)),Math.round(plants.reduce((s,p)=>s+p.s3.useOfSold,0)),Math.round(plants.reduce((s,p)=>s+p.s3.other,0)),s3T,'']]);
+                        sections.push([[]]);
+
+                        // Section 3: Credit Positions
+                        sections.push([
+                            ['=== SECTION 3: CARBON CREDIT POSITIONS ==='],
+                            ['Facility ID','Facility Name','Industry','Total Emissions (MT)','Allowance (MT)','Net Credit Position (MT)','Credit Status','Financial Value (USD)','Emission Efficiency'],
+                        ]);
+                        plants.forEach(p => {
+                            sections.push([[p.id, p.name, p.industry, Math.round(p.total), p.allowance, Math.round(p.credit.surplusMT), p.credit.status, p.credit.financialValue, p.efficiency]]);
+                        });
+                        sections.push([[]]);
+
+                        // Section 4: Trade Ledger
+                        sections.push([
+                            ['=== SECTION 4: CARBON CREDIT TRADE LEDGER ==='],
+                            ['Trade ID','Date','Facility','Type','Registry','Credits (MT)','Price (USD/MT)','Total Value (USD)','Status','Project'],
+                        ]);
+                        tradeBook.forEach(t => {
+                            sections.push([[t.id, t.date, t.plant, t.type, t.registry, t.credits, t.price, t.value, t.status, t.project]]);
+                        });
+                        sections.push([[]]);
+
+                        // Section 5: Regulatory Status
+                        sections.push([
+                            ['=== SECTION 5: REGULATORY COMPLIANCE STATUS ==='],
+                            ['Framework','Progress (%)','Status','Deadline','Notes'],
+                            ['EPA 40 CFR Part 98', 94, 'On Track', 'Aug 31 2026', '8 facilities reporting - e-GGRT submission ready'],
+                            ['SEC Climate Disclosure (S-K 1500)', 71, 'In Progress', 'Annual 2026', 'Scope 1&2 quantified - Scope 3 materiality review pending'],
+                            ['UK SECR', 100, 'Complete', 'Filed Mar 2026', 'Energy & carbon report submitted - LCP threshold met'],
+                            ['CDP Supply Chain', 55, 'In Progress', 'Jul 31 2026', 'Supplier questionnaires 55% returned'],
+                            ['California AB 1305', 40, 'Needs Attention', 'Oct 1 2026', 'Carbon market disclosure - offset claims need verification'],
+                            ['EU CBAM (Steel/Cement)', 62, 'In Progress', 'Dec 31 2026', 'Embedded emissions data for Keystone Steel & Blue Ridge Cement'],
+                            ['ISO 14064-1 Audit', 30, 'Scheduled', 'Q3 2026', 'Third-party verification engagement in progress'],
+                            ['GRI Standards 305', 78, 'On Track', 'Annual Report', 'GHG data prepared - GRI index mapping 78% complete'],
+                        ]);
+                        sections.push([[]]);
+
+                        // Section 6: Emission Factors
+                        sections.push([
+                            ['=== SECTION 6: EMISSION FACTORS USED ==='],
+                            ['Source','Fuel/Activity','Emission Factor','Units','Authority','GWP Basis'],
+                            ['Combustion','Natural Gas', 53.06,'kg CO2e/MMBtu','EPA 40 CFR Part 98 Table C-1','IPCC AR6'],
+                            ['Combustion','Diesel/Distillate', 10.21,'kg CO2e/gal','EPA 40 CFR Part 98 Table C-1','IPCC AR6'],
+                            ['Electricity','Grid Average (Market-based)', 0.403,'MT CO2e/MWh','eGRID 2024','IPCC AR6'],
+                            ['Scope 3 Cat 1','Purchased Goods (EEIO)', 18.5,'MT/million USD revenue','USEEIO v2.1','IPCC AR6'],
+                            ['Scope 3 Cat 4','Freight & Logistics (EEIO)', 4.2,'MT/million USD revenue','USEEIO v2.1','IPCC AR6'],
+                            ['Scope 3 Cat 11','Use of Sold Products (EEIO)', 12.3,'MT/million USD revenue','USEEIO v2.1','IPCC AR6'],
+                            ['Correction','Combustion uplift factor', 1.02,'multiplier','GHG Protocol / IPCC','N/A'],
+                        ]);
+
+                        // Flatten all sections to rows
+                        const allRows = sections.flat();
+                        const csvContent = toCSV(allRows);
+
+                        // Download
+                        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'CarbonScope360_ESG_Data_Package_' + dateStr + '.csv';
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(url);
+
+                        prog.remove();
+                    } catch(err) {
+                        prog.remove();
+                        console.error(err);
+                        alert('Export error: ' + err.message);
+                    }
+                }, 100);
+            };
+
         })();
     </script>
 </body>
